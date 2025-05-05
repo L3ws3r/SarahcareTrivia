@@ -3,174 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SarahCare Trivia</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f4f4;
-      text-align: center;
-    }
-    header {
-      background: #006699;
-      color: white;
-      padding: 1em;
-    }
-    #logo {
-      height: 50px;
-      vertical-align: middle;
-      margin-right: 10px;
-    }
-    .category-buttons button {
-      background: #007bff;
-      color: white;
-      padding: 10px 15px;
-      margin: 5px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .category-buttons button:hover {
-      background: #0056b3;
-    }
-    .question-container {
-      background: white;
-      margin: 20px auto;
-      padding: 20px;
-      width: 90%;
-      max-width: 700px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .question-image {
-      max-width: 100%;
-      height: auto;
-      margin-bottom: 20px;
-    }
-    .answers button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
-    }
-    .score {
-      font-weight: bold;
-      margin-top: 1em;
-    }
-  </style>
+  <title>SarahCare Trivia App</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header>
-    <img id="logo" src="images/sarahcare-logo.png" alt="SarahCare Logo">
-    <span style="font-size: 1.5em; font-weight: bold;">Senior Trivia</span>
+    <img src="logo.png" alt="SarahCare Logo" height="50" />
+    <h1>Senior Trivia</h1>
   </header>
-
-  <div style="margin: 20px;">
-    <div class="category-buttons">
-      <button onclick="setCategory('Classic TV')">Classic TV</button>
-      <button onclick="setCategory('Golden Oldies')">Golden Oldies</button>
-      <button onclick="setCategory('Movie Stars')">Movie Stars</button>
-      <button onclick="setCategory('60s Icons')">60s Icons</button>
-      <button onclick="setCategory('Famous Places')">Famous Places</button>
+  <main>
+    <div id="category-buttons">
+      <button>Classic TV</button>
+      <button>Golden Oldies</button>
+      <button>Movie Stars</button>
+      <button>60s Icons</button>
+      <button>Famous Places</button>
     </div>
-    <input type="text" id="customCategory" placeholder="Enter custom category" />
-    <select id="questionCount">
+    <input type="text" placeholder="Enter custom category"/>
+    <select id="question-count">
       <option value="5">5</option>
       <option value="10" selected>10</option>
       <option value="15">15</option>
     </select>
     <button onclick="generateTrivia()">Generate Trivia</button>
-  </div>
-
-  <div id="trivia-container"></div>
-
-  <script>
-    let questions = [];
-    let currentQuestionIndex = 0;
-    let score = 0;
-
-    function setCategory(cat) {
-      document.getElementById('customCategory').value = cat;
-    }
-
-    async function generateTrivia() {
-      const category = document.getElementById('customCategory').value.trim();
-      const count = document.getElementById('questionCount').value;
-
-      if (!category) {
-        alert("Please enter or select a category.");
-        return;
-      }
-
-      try {
-        const res = await fetch('/api/trivia', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ category, count })
-        });
-        questions = await res.json();
-        if (!questions || !questions[0]) throw new Error("Invalid response");
-        score = 0;
-        currentQuestionIndex = 0;
-        showQuestion();
-      } catch (err) {
-        console.error(err);
-        document.getElementById('trivia-container').innerHTML = "<p>Trivia generation failed.</p>";
-      }
-    }
-
-    async function showQuestion() {
-      const q = questions[currentQuestionIndex];
-      const img = await fetchImage(q.question);
-
-      const container = document.getElementById('trivia-container');
-      container.innerHTML = `
-        <div class="question-container">
-          ${img ? `<img class="question-image" src="${img}" alt="Trivia image" />` : ''}
-          <h2>${q.question}</h2>
-          <div class="answers">
-            ${q.options.map(opt => `<button onclick="checkAnswer(this, '${opt}', '${q.answer}')">${opt}</button>`).join('')}
-          </div>
-          <div class="score">Question ${currentQuestionIndex + 1} of ${questions.length} | Score: ${score}</div>
-        </div>
-      `;
-    }
-
-    function checkAnswer(btn, selected, correct) {
-      const buttons = btn.parentNode.querySelectorAll("button");
-      buttons.forEach(b => b.disabled = true);
-      if (selected === correct) {
-        btn.style.background = "green";
-        score++;
-      } else {
-        btn.style.background = "red";
-      }
-      setTimeout(() => {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < questions.length) {
-          showQuestion();
-        } else {
-          document.getElementById('trivia-container').innerHTML = `
-            <div class="question-container">
-              <h2>All done!</h2>
-              <p>Your final score is ${score} out of ${questions.length}.</p>
-            </div>
-          `;
-        }
-      }, 1000);
-    }
-
-    async function fetchImage(query) {
-      try {
-        const res = await fetch(`/image?q=${encodeURIComponent(query)}`);
-        const data = await res.json();
-        return data.image || null;
-      } catch {
-        return null;
-      }
-    }
-  </script>
+    <div id="trivia-container"></div>
+  </main>
+  <script src="script.js"></script>
 </body>
 </html>

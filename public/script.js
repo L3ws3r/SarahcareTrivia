@@ -1,0 +1,1 @@
+function generateTrivia() { console.log('Generate Trivia'); }
