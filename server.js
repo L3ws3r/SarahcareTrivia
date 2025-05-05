@@ -2,61 +2,57 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAI = require('openai');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Set up OpenAI API
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+// ✅ Setup OpenAI v4
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
 });
-const openai = new OpenAIApi(configuration);
 
-// Middleware
+// ✅ Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Trivia endpoint
+// ✅ Trivia endpoint using ChatGPT
 app.post('/api/trivia', async (req, res) => {
   try {
     const { category = "General", count = 10 } = req.body;
 
-    const prompt = `Generate ${count} multiple-choice trivia questions in the category "${category}". 
-Each should be a JSON object like this:
+    const prompt = `Generate ${count} multiple-choice trivia questions about "${category}". Format each question as a JSON object:
 {
   "question": "What is the capital of France?",
-  "choices": ["Berlin", "Paris", "London", "Madrid"],
+  "choices": ["Paris", "London", "Rome", "Berlin"],
   "answer": "Paris"
 }
-Return an array of exactly ${count} questions. Do NOT include markdown or explanation, just raw JSON.`;
+Return ONLY a raw JSON array of ${count} such objects — no markdown, no extra text.`;
 
-    const response = await openai.createChatCompletion({
+    const chatResponse = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
+      messages: [{ role: 'user', content: prompt }]
     });
 
-    const content = response.data.choices[0].message.content;
+    const rawContent = chatResponse.choices[0].message.content;
+    console.log("GPT Response:\n", rawContent);
 
-    // Optional debug log
-    console.log("GPT Response:", content);
-
-    const questions = JSON.parse(content);
+    const questions = JSON.parse(rawContent);
     res.json({ questions });
   } catch (err) {
-    console.error("Trivia generation failed:", err.message);
+    console.error("Trivia generation failed:", err.message || err);
     res.status(500).json({ error: "Trivia generation failed." });
   }
 });
 
-// Fallback to index.html for frontend routing
+// ✅ Fallback route for SPA
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-// Start server
+// ✅ Start the server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
