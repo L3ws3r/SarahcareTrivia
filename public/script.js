@@ -1,28 +1,27 @@
-const form = document.getElementById('category-form');
-const categorySelect = document.getElementById('category');
-const customCategoryInput = document.getElementById('custom-category');
-const questionContainer = document.getElementById('question-container');
-const loadingIndicator = document.getElementById('loading');
+const customCategoryInput = document.getElementById('customCategory');
+const generateBtn = document.getElementById('generateBtn');
+const questionContainer = document.getElementById('trivia-container');
 
 let currentQuestionIndex = 0;
 let questions = [];
 
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const selectedCategory = categorySelect.value === 'custom'
-    ? customCategoryInput.value.trim()
-    : categorySelect.value;
+document.querySelectorAll('.category-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    customCategoryInput.value = btn.dataset.category;
+  });
+});
 
-  if (!selectedCategory) return;
+generateBtn.addEventListener('click', async () => {
+  const category = customCategoryInput.value.trim();
+  if (!category) return;
 
-  loadingIndicator.style.display = 'block';
-  questionContainer.innerHTML = '';
+  questionContainer.innerHTML = '<p>Loading questions...</p>';
 
   try {
     const response = await fetch('/api/trivia', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ category: selectedCategory, count: 10 }),
+      body: JSON.stringify({ category, count: 10 }),
     });
 
     const data = await response.json();
@@ -35,8 +34,6 @@ form.addEventListener('submit', async (e) => {
     showQuestion();
   } catch (err) {
     questionContainer.innerHTML = `<p class="text-danger">Trivia fetch failed: ${err.message}</p>`;
-  } finally {
-    loadingIndicator.style.display = 'none';
   }
 });
 
@@ -68,11 +65,8 @@ function showQuestion() {
     btn.className = 'btn btn-outline-primary m-2';
     btn.textContent = choice;
     btn.onclick = () => {
-      if (choice === q.answer) {
-        btn.classList.replace('btn-outline-primary', 'btn-success');
-      } else {
-        btn.classList.replace('btn-outline-primary', 'btn-danger');
-      }
+      btn.classList.remove('btn-outline-primary');
+      btn.classList.add(choice === q.answer ? 'btn-success' : 'btn-danger');
 
       setTimeout(() => {
         currentQuestionIndex++;
