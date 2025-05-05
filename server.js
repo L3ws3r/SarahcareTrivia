@@ -6,6 +6,27 @@ require('dotenv').config();
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+app.get('/image', async (req, res) => {
+  const query = req.query.q;
+  if (!query) return res.status(400).json({ error: 'Missing query parameter' });
+
+  try {
+    const response = await fetch(`https://duckduckgo.com/i.js?l=us-en&o=json&q=${encodeURIComponent(query)}`, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0'
+      }
+    });
+
+    if (!response.ok) throw new Error('DuckDuckGo image request failed');
+    const data = await response.json();
+    const imageUrl = data.results?.[0]?.image || '';
+
+    res.json({ image: imageUrl });
+  } catch (err) {
+    console.error('DuckDuckGo error:', err.message);
+    res.status(500).json({ error: 'Image lookup failed' });
+  }
+});
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
