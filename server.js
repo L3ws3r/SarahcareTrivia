@@ -1,35 +1,36 @@
-// server.js
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const OpenAI = require('openai');
-require('dotenv').config();
+const fetch = require('node-fetch');
+const cheerio = require('cheerio');
 
-const app = express();
-const PORT = process.env.PORT || 10000;
+async function fetchDuckDuckGoImage(query) {
+  try {
+    const searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}&iax=images&ia=images`;
+    const html = await fetch(searchUrl).then(res => res.text());
+    const vqdMatch = html.match(/vqd='([\d-]+)'/);
+    if (!vqdMatch) return null;
 
-// ✅ Setup OpenAI v4
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+    const vqd = vqdMatch[1];
+    const imgApiUrl = `https://duckduckgo.com/i.js?l=us-en&o=json&q=${encodeURIComponent(query)}&vqd=${vqd}`;
+    const response = await fetch(imgApiUrl);
+    const data = await response.json();
 
-// ✅ Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+    return data.results?.[0]?.image || null;
+  } catch (err) {
+    console.error('DuckDuckGo image fetch failed:', err.message);
+    return null;
+  }
+}
 
-// ✅ Trivia endpoint using ChatGPT
 app.post('/api/trivia', async (req, res) => {
   try {
     const { category = "General", count = 10 } = req.body;
 
-    const prompt = `Generate ${count} multiple-choice trivia questions about "${category}". Format each question as a JSON object:
+    const prompt = `Generate ${count} multiple-choice trivia questions about "${category}". Format each question as:
 {
   "question": "What is the capital of France?",
   "choices": ["Paris", "London", "Rome", "Berlin"],
   "answer": "Paris"
 }
-Return ONLY a raw JSON array of ${count} such objects — no markdown, no extra text.`;
+Return ONLY a raw JSON array — no markdown or text.`;
 
     const chatResponse = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
@@ -37,22 +38,17 @@ Return ONLY a raw JSON array of ${count} such objects — no markdown, no extra 
     });
 
     const rawContent = chatResponse.choices[0].message.content;
-    console.log("GPT Response:\n", rawContent);
-
     const questions = JSON.parse(rawContent);
+
+    // Attach images
+    for (const q of questions) {
+      const keyword = q.answer || q.question;
+      q.image = await fetchDuckDuckGoImage(keyword);
+    }
+
     res.json({ questions });
   } catch (err) {
-    console.error("Trivia generation failed:", err.message || err);
+    console.error("Trivia generation failed:", err.message);
     res.status(500).json({ error: "Trivia generation failed." });
   }
-});
-
-// ✅ Fallback route for SPA
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
-});
-
-// ✅ Start the server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
 });
