@@ -2,99 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SarahCare Trivia App</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f8f8f8;
-      padding: 20px;
-      text-align: center;
-    }
-
-    header {
-      background-color: #005e90;
-      color: white;
-      padding: 20px 0;
-      margin-bottom: 20px;
-    }
-
-    header img {
-      height: 50px;
-      vertical-align: middle;
-    }
-
-    header h1 {
-      display: inline-block;
-      margin-left: 10px;
-      font-size: 28px;
-      vertical-align: middle;
-    }
-
-    .button-group {
-      margin-bottom: 10px;
-    }
-
-    .button-group button {
-      padding: 10px;
-      margin: 5px;
-      background-color: #007bff;
-      border: none;
-      color: white;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-
-    .button-group button:hover {
-      background-color: #0056b3;
-    }
-
-    #trivia-container {
-      margin-top: 30px;
-      text-align: left;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .question {
-      background: white;
-      padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-  </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-  <header>
-    <img src="logo.png" alt="SarahCare Logo" />
-    <h1>Senior Trivia</h1>
-  </header>
+<body class="bg-light">
+  <nav class="navbar navbar-dark bg-primary mb-4">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="public/sarahcare-logo.png" alt="SarahCare Logo" width="40" height="40" class="me-2">
+        SarahCare Trivia
+      </a>
+    </div>
+  </nav>
 
-  <div class="button-group">
-    <button onclick="selectCategory('Classic TV')">Classic TV</button>
-    <button onclick="selectCategory('Golden Oldies')">Golden Oldies</button>
-    <button onclick="selectCategory('Movie Stars')">Movie Stars</button>
-    <button onclick="selectCategory('60s Icons')">60s Icons</button>
-    <button onclick="selectCategory('Famous Places')">Famous Places</button>
+  <div class="container text-center">
+    <div class="mb-3">
+      <button class="btn btn-primary m-1 category-btn" data-category="Classic TV">Classic TV</button>
+      <button class="btn btn-primary m-1 category-btn" data-category="Golden Oldies">Golden Oldies</button>
+      <button class="btn btn-primary m-1 category-btn" data-category="Movie Stars">Movie Stars</button>
+      <button class="btn btn-primary m-1 category-btn" data-category="60s Icons">60s Icons</button>
+      <button class="btn btn-primary m-1 category-btn" data-category="Famous Places">Famous Places</button>
+    </div>
+
+    <div class="input-group mb-3 justify-content-center">
+      <input type="text" id="customCategory" class="form-control w-auto" placeholder="Enter custom category">
+      <button id="generateBtn" class="btn btn-success">Generate Trivia</button>
+    </div>
+
+    <div id="trivia-container" class="mt-4"></div>
   </div>
 
-  <input type="text" placeholder="Enter custom category" />
-  <select>
-    <option value="5">5</option>
-    <option value="10" selected>10</option>
-    <option value="15">15</option>
-  </select>
-  <button onclick="generateTrivia()">Generate Trivia</button>
-
-  <div id="trivia-container"></div>
-
   <script src="script.js"></script>
-  <script>
-    function selectCategory(name) {
-      document.querySelector('input[type="text"]').value = name;
-    }
-  </script>
 </body>
 </html>
