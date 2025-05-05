@@ -2,17 +2,68 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
-const OpenAI = require("openai");
-const duckduckgoImages = require("duckduckgo-images-api");
+const { OpenAI } = require("openai");
+const { image_search } = require("duckduckgo-images-api");
 
 dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 10000;
+
 app.use(cors());
 app.use(bodyParser.json());
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// ✅ Serve static frontend files (HTML, CSS, JS, images)
+app.use(express.static("public"));
 
+// 🧠 Set up OpenAI
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+// 📚 Trivia Question Generator
+async function generateTriviaQuestions(category, count = 10) {
+  const prompt = `
+Generate ${count} trivia questions about "${category}". 
+Each should have a question, 1 correct answer, and 3 incorrect answers. 
+Format as JSON like this:
+
+[
+  {
+    "question": "...",
+    "answer": "...",
+    "choices": ["...", "...", "...", "..."]
+  }
+]`;
+
+  const chatResponse = await openai.chat.completions.create({
+    model: "gpt-4",
+    messages: [{ role: "user", content: prompt }],
+    temperature: 0.7,
+  });
+
+  try {
+    const jsonStart = chatResponse.choices[0].message.content.indexOf("[");
+    const json = chatResponse.choices[0].message.content.slice(jsonStart);
+    return JSON.parse(json);
+  } catch (err) {
+    console.error("❌ Error parsing trivia JSON:", err);
+    return [];
+  }
+}
+
+// 🖼️ DuckDuckGo image fetcher
+async function getFirstImageUrl(query) {
+  try {
+    const results = await image_search({ query, moderate: true });
+    return results?.[0]?.image || null;
+  } catch (err) {
+    console.error("❌ Image fetch error:", err);
+    return null;
+  }
+}
+
+// 🚀 API route for trivia generation
 app.post("/api/trivia", async (req, res) => {
   const { category, count } = req.body;
 
@@ -21,37 +72,22 @@ app.post("/api/trivia", async (req, res) => {
   }
 
   try {
-    const prompt = `Generate ${count || 5} fun, simple trivia questions for seniors. Each should include a multiple choice format with 1 correct answer and 3 wrong answers. The category is "${category}". Return as JSON array like: [{"question":"...","choices":["A","B","C","D"],"answer":"A"}]`;
+    const questions = await generateTriviaQuestions(category, count || 10);
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [{ role: "user", content: prompt }],
-    });
+    const enhancedQuestions = await Promise.all(
+      questions.map(async (q) => {
+        const image = await getFirstImageUrl(`${category} ${q.question}`);
+        return { ...q, image };
+      })
+    );
 
-    const raw = completion.choices[0].message.content;
-
-    // Attempt to extract a valid JSON block
-    const jsonStart = raw.indexOf("[");
-    const jsonEnd = raw.lastIndexOf("]") + 1;
-    const jsonString = raw.slice(jsonStart, jsonEnd);
-    let questions = JSON.parse(jsonString);
-
-    // Get related image for each question (optional)
-    for (let q of questions) {
-      const imageResults = await duckduckgoImages.image_search({ query: q.question, moderate: true });
-      if (imageResults.length > 0) {
-        q.image = imageResults[0].image;
-      }
-    }
-
-    res.json({ questions });
+    res.json({ questions: enhancedQuestions });
   } catch (err) {
-    console.error("Error generating trivia:", err);
+    console.error("❌ Trivia generation failed:", err);
     res.status(500).json({ error: "Trivia generation failed" });
   }
 });
 
-const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
