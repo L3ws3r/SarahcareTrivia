@@ -1,20 +1,25 @@
 async function generateTrivia() {
   const category = document.querySelector('input[type="text"]').value || 'General';
-  const count = parseInt(document.querySelector('select').value || '10', 10);
+  const count = parseInt(document.querySelector('select').value) || 10;
 
   try {
-    const response = await fetch('https://sarahcare-trivia.onrender.com/api/trivia', {
+    const res = await fetch('/api/trivia', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ category, count }),
+      body: JSON.stringify({ category, count })
     });
 
-    if (!response.ok) throw new Error('Invalid response');
+    const questions = await res.json();
 
-    const questions = await response.json();
-    console.log('Questions:', questions); // For now
+    const container = document.getElementById('trivia-container');
+    container.innerHTML = ''; // clear previous content
 
-    // TODO: display them on screen — would you like help with that next?
+    questions.forEach((q, i) => {
+      const div = document.createElement('div');
+      div.classList.add('question');
+      div.innerHTML = `<strong>Q${i + 1}:</strong> ${q.question}`;
+      container.appendChild(div);
+    });
   } catch (err) {
     console.error('Trivia fetch failed:', err);
   }
