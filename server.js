@@ -1,83 +1,67 @@
-// server.js
-
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
-const fetch = require('node-fetch');
-const cheerio = require('cheerio');
-const OpenAI = require('openai');
+const bodyParser = require('body-parser');
+const { Configuration, OpenAIApi } = require('openai');
+const duckduckgoImages = require('duckduckgo-images-api');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
-
+// Middleware
 app.use(cors());
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
+app.use(express.static('public'));
 
-// 🔍 DuckDuckGo image search function
-async function fetchDuckDuckGoImage(query) {
-  try {
-    const searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}&iax=images&ia=images`;
-    const html = await fetch(searchUrl).then(res => res.text());
-    const vqdMatch = html.match(/vqd='([\d-]+)'/);
-    if (!vqdMatch) return null;
+// OpenAI setup
+const openai = new OpenAIApi(
+  new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  })
+);
 
-    const vqd = vqdMatch[1];
-    const imgApiUrl = `https://duckduckgo.com/i.js?l=us-en&o=json&q=${encodeURIComponent(query)}&vqd=${vqd}`;
-    const response = await fetch(imgApiUrl);
-    const data = await response.json();
-
-    return data.results?.[0]?.image || null;
-  } catch (err) {
-    console.error('Image fetch error:', err.message);
-    return null;
-  }
-}
-
-// 🧠 Trivia route
+// Trivia endpoint
 app.post('/api/trivia', async (req, res) => {
+  const { category, count } = req.body;
+
+  if (!category || !count) {
+    return res.status(400).json({ error: 'Missing category or count' });
+  }
+
   try {
-    const { category = "General", count = 10 } = req.body;
+    const prompt = `Generate ${count} multiple choice trivia questions about ${category}. Each should be an object with: question, 4 choices (including one correct), and an answer. Return a JSON array like this: [{ "question": "", "choices": [], "answer": "" }]`;
 
-    const prompt = `Generate ${count} multiple-choice trivia questions about "${category}". Format each question as:
-{
-  "question": "What is the capital of France?",
-  "choices": ["Paris", "London", "Rome", "Berlin"],
-  "answer": "Paris"
-}
-Return ONLY a raw JSON array — no markdown or commentary.`;
-
-    const chatResponse = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }]
+    const chatResponse = await openai.createChatCompletion({
+      model: 'gpt-4',
+      messages: [{ role: 'user', content: prompt }],
     });
 
-    const rawContent = chatResponse.choices[0].message.content;
-    const questions = JSON.parse(rawContent);
+    let questions;
 
-    // Attach DuckDuckGo image to each question
-    for (const q of questions) {
-      const keyword = q.answer || q.question;
-      q.image = await fetchDuckDuckGoImage(keyword);
+    try {
+      questions = JSON.parse(chatResponse.data.choices[0].message.content);
+    } catch (err) {
+      return res.status(500).json({ error: 'Invalid JSON from OpenAI' });
+    }
+
+    // Attach image to each question
+    for (let q of questions) {
+      try {
+        const results = await duckduckgoImages.image_search({ query: q.question, moderate: true });
+        q.image = results[0]?.image || null;
+      } catch {
+        q.image = null;
+      }
     }
 
     res.json({ questions });
   } catch (err) {
-    console.error("Trivia generation failed:", err.message);
-    res.status(500).json({ error: "Trivia generation failed." });
+    console.error('Trivia generation failed:', err);
+    res.status(500).json({ error: 'Trivia generation failed' });
   }
 });
 
-// SPA fallback
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
-});
-
+// Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
