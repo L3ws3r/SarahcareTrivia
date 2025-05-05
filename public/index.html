@@ -2,32 +2,99 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SarahCare Trivia App</title>
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header {
+      background-color: #005e90;
+      color: white;
+      padding: 20px 0;
+      margin-bottom: 20px;
+    }
+
+    header img {
+      height: 50px;
+      vertical-align: middle;
+    }
+
+    header h1 {
+      display: inline-block;
+      margin-left: 10px;
+      font-size: 28px;
+      vertical-align: middle;
+    }
+
+    .button-group {
+      margin-bottom: 10px;
+    }
+
+    .button-group button {
+      padding: 10px;
+      margin: 5px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .button-group button:hover {
+      background-color: #0056b3;
+    }
+
+    #trivia-container {
+      margin-top: 30px;
+      text-align: left;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .question {
+      background: white;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+  </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="SarahCare Logo" height="50" />
+    <img src="logo.png" alt="SarahCare Logo" />
     <h1>Senior Trivia</h1>
   </header>
-  <main>
-    <div id="category-buttons">
-      <button>Classic TV</button>
-      <button>Golden Oldies</button>
-      <button>Movie Stars</button>
-      <button>60s Icons</button>
-      <button>Famous Places</button>
-    </div>
-    <input type="text" placeholder="Enter custom category"/>
-    <select id="question-count">
-      <option value="5">5</option>
-      <option value="10" selected>10</option>
-      <option value="15">15</option>
-    </select>
-    <button onclick="generateTrivia()">Generate Trivia</button>
-    <div id="trivia-container"></div>
-  </main>
+
+  <div class="button-group">
+    <button onclick="selectCategory('Classic TV')">Classic TV</button>
+    <button onclick="selectCategory('Golden Oldies')">Golden Oldies</button>
+    <button onclick="selectCategory('Movie Stars')">Movie Stars</button>
+    <button onclick="selectCategory('60s Icons')">60s Icons</button>
+    <button onclick="selectCategory('Famous Places')">Famous Places</button>
+  </div>
+
+  <input type="text" placeholder="Enter custom category" />
+  <select>
+    <option value="5">5</option>
+    <option value="10" selected>10</option>
+    <option value="15">15</option>
+  </select>
+  <button onclick="generateTrivia()">Generate Trivia</button>
+
+  <div id="trivia-container"></div>
+
   <script src="script.js"></script>
+  <script>
+    function selectCategory(name) {
+      document.querySelector('input[type="text"]').value = name;
+    }
+  </script>
 </body>
 </html>
