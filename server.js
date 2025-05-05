@@ -1,6 +1,25 @@
+// server.js
+
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
+const OpenAI = require('openai');
+require('dotenv').config();
 
+const app = express();
+const PORT = process.env.PORT || 10000;
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// 🔍 DuckDuckGo image search function
 async function fetchDuckDuckGoImage(query) {
   try {
     const searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}&iax=images&ia=images`;
@@ -15,11 +34,12 @@ async function fetchDuckDuckGoImage(query) {
 
     return data.results?.[0]?.image || null;
   } catch (err) {
-    console.error('DuckDuckGo image fetch failed:', err.message);
+    console.error('Image fetch error:', err.message);
     return null;
   }
 }
 
+// 🧠 Trivia route
 app.post('/api/trivia', async (req, res) => {
   try {
     const { category = "General", count = 10 } = req.body;
@@ -30,7 +50,7 @@ app.post('/api/trivia', async (req, res) => {
   "choices": ["Paris", "London", "Rome", "Berlin"],
   "answer": "Paris"
 }
-Return ONLY a raw JSON array — no markdown or text.`;
+Return ONLY a raw JSON array — no markdown or commentary.`;
 
     const chatResponse = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
@@ -40,7 +60,7 @@ Return ONLY a raw JSON array — no markdown or text.`;
     const rawContent = chatResponse.choices[0].message.content;
     const questions = JSON.parse(rawContent);
 
-    // Attach images
+    // Attach DuckDuckGo image to each question
     for (const q of questions) {
       const keyword = q.answer || q.question;
       q.image = await fetchDuckDuckGoImage(keyword);
@@ -51,4 +71,13 @@ Return ONLY a raw JSON array — no markdown or text.`;
     console.error("Trivia generation failed:", err.message);
     res.status(500).json({ error: "Trivia generation failed." });
   }
+});
+
+// SPA fallback
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
