@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const { ChatOpenAI } = require('langchain/chat_models/openai');
-const { PromptTemplate } = require('langchain/prompts');
+const { ChatOpenAI } = require("@langchain/openai");
+const { PromptTemplate } = require("@langchain/core/prompts");
 const { DuckDuckGoImages } = require('duckduckgo-images-api');
 
 require('dotenv').config();
