@@ -2,61 +2,72 @@ const express = require('express');
 const fetch = require('node-fetch');
 const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 3000;
+require('dotenv').config();
 
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-// OpenAI route
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const OPENAI_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
+
+// Trivia endpoint
 app.post('/api/trivia', async (req, res) => {
   const { category, count } = req.body;
-  const OPENAI_KEY = process.env.OPENAI_API_KEY;
-  if (!OPENAI_KEY) return res.status(500).json({ error: "Missing OpenAI API key." });
+
+  const prompt = `
+Create ${count} trivia questions about "${category}". Each should include:
+- A "question" string
+- An "options" array with 4 choices
+- An "answer" string that matches one of the options
+
+Return only a raw JSON array. Do NOT include markdown or explanation.
+Example:
+[
+  {
+    "question": "Who played the lead role of Atticus Finch in the 1962 film 'To Kill a Mockingbird'?",
+    "options": ["James Stewart", "Henry Fonda", "Gregory Peck", "Cary Grant"],
+    "answer": "Gregory Peck"
+  }
+]
+`;
 
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
+    const response = await fetch(OPENAI_ENDPOINT, {
+      method: 'POST',
       headers: {
-        "Authorization": `Bearer ${OPENAI_KEY}`,
-        "Content-Type": "application/json"
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         model: "gpt-3.5-turbo",
-        messages: [{
-          role: "user",
-          content: `Create ${count} multiple choice trivia questions about ${category}. Format as JSON array with: question, options, answer`
-        }]
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.7
       })
     });
 
     const data = await response.json();
-    const raw = data.choices?.[0]?.message?.content;
-    const parsed = JSON.parse(raw);
-    res.json(parsed);
+    const content = data.choices?.[0]?.message?.content;
+
+    const trivia = JSON.parse(content);
+    res.json(trivia);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to generate trivia." });
+    console.error('Trivia error:', err);
+    res.status(500).json({ error: 'Failed to generate trivia.' });
   }
 });
 
-// Image route (DuckDuckGo)
+// Image fetch (DuckDuckGo fallback)
 app.get('/image', async (req, res) => {
   const query = req.query.q;
   try {
-    const ddgUrl = `https://duckduckgo.com/i.js?l=us-en&o=json&q=${encodeURIComponent(query)}`;
-    const response = await fetch(ddgUrl, {
-      headers: { 'User-Agent': 'Mozilla/5.0' }
-    });
+    const response = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_redirect=1`);
     const data = await response.json();
-    if (data.results?.length > 0) {
-      return res.json({ image: data.results[0].image });
-    }
-    res.status(404).json({ error: "No image found" });
-  } catch {
-    res.status(500).json({ error: "Image lookup failed" });
+    const image = data.Image || '';
+    res.json({ image });
+  } catch (err) {
+    res.json({ image: '' });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
