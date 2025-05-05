@@ -1,93 +1,88 @@
-const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const dotenv = require("dotenv");
-const { OpenAI } = require("openai");
-const { image_search } = require("duckduckgo-images-api");
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const { ChatOpenAI } = require('langchain/chat_models/openai');
+const { PromptTemplate } = require('langchain/prompts');
+const { DuckDuckGoImages } = require('duckduckgo-images-api');
 
-dotenv.config();
+require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 10000;
+const port = process.env.PORT || 10000;
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static('public')); // Serves your HTML, CSS, images
 
-// ✅ Serve static frontend files (HTML, CSS, JS, images)
-app.use(express.static("public"));
-
-// 🧠 Set up OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-// 📚 Trivia Question Generator
-async function generateTriviaQuestions(category, count = 10) {
-  const prompt = `
-Generate ${count} trivia questions about "${category}". 
-Each should have a question, 1 correct answer, and 3 incorrect answers. 
-Format as JSON like this:
-
-[
-  {
-    "question": "...",
-    "answer": "...",
-    "choices": ["...", "...", "...", "..."]
-  }
-]`;
-
-  const chatResponse = await openai.chat.completions.create({
-    model: "gpt-4",
-    messages: [{ role: "user", content: prompt }],
-    temperature: 0.7,
-  });
-
-  try {
-    const jsonStart = chatResponse.choices[0].message.content.indexOf("[");
-    const json = chatResponse.choices[0].message.content.slice(jsonStart);
-    return JSON.parse(json);
-  } catch (err) {
-    console.error("❌ Error parsing trivia JSON:", err);
-    return [];
-  }
-}
-
-// 🖼️ DuckDuckGo image fetcher
+// 🔍 Helper function to get an image
 async function getFirstImageUrl(query) {
   try {
-    const results = await image_search({ query, moderate: true });
-    return results?.[0]?.image || null;
+    const results = await DuckDuckGoImages.search({ query, moderate: true });
+    return results[0]?.image;
   } catch (err) {
-    console.error("❌ Image fetch error:", err);
+    console.error("Image fetch error:", err);
     return null;
   }
 }
 
-// 🚀 API route for trivia generation
-app.post("/api/trivia", async (req, res) => {
-  const { category, count } = req.body;
+// 🧠 Trivia generation endpoint
+app.post('/api/trivia', async (req, res) => {
+  const category = req.body.category || 'General';
+  const count = req.body.count || 10;
 
-  if (!category) {
-    return res.status(400).json({ error: "Category is required" });
-  }
+  const prompt = new PromptTemplate({
+    inputVariables: ['category', 'count'],
+    template: `
+Generate {count} fun trivia questions about "{category}".
+For each question, include:
+- The question
+- The correct answer
+- 3 plausible wrong answers
+Respond in JSON format:
+[
+  {{
+    "question": "Question text",
+    "answer": "Correct Answer",
+    "choices": ["Correct", "Wrong1", "Wrong2", "Wrong3"]
+  }},
+  ...
+]
+`,
+  });
 
   try {
-    const questions = await generateTriviaQuestions(category, count || 10);
+    const chat = new ChatOpenAI({
+      temperature: 0.7,
+      modelName: 'gpt-4',
+      openAIApiKey: process.env.OPENAI_API_KEY,
+    });
 
-    const enhancedQuestions = await Promise.all(
+    const promptText = await prompt.format({ category, count });
+    const response = await chat.call([{ role: 'user', content: promptText }]);
+
+    let questions = [];
+    try {
+      questions = JSON.parse(response.content);
+    } catch {
+      return res.status(500).json({ error: 'AI returned invalid JSON' });
+    }
+
+    // Add image to each question
+    const enriched = await Promise.all(
       questions.map(async (q) => {
         const image = await getFirstImageUrl(`${category} ${q.question}`);
-        return { ...q, image };
+        const fallback = 'https://upload.wikimedia.org/wikipedia/commons/6/65/Big_question_mark.svg';
+        return { ...q, image: image || fallback };
       })
     );
 
-    res.json({ questions: enhancedQuestions });
+    res.json({ questions: enriched });
   } catch (err) {
-    console.error("❌ Trivia generation failed:", err);
-    res.status(500).json({ error: "Trivia generation failed" });
+    console.error(err);
+    res.status(500).json({ error: 'Failed to generate trivia' });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
