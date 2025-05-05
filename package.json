@@ -13,6 +13,7 @@
   "cheerio": "^1.0.0-rc.12",
   "node-fetch": "^2.6.7",
    "duckduckgo-images-api": "^1.0.0",
-   "langchain": "^0.1.22"
+   "@langchain/openai": "^0.0.12",
+   "@langchain/core": "^0.0.12"
 }
 }
