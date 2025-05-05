@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,7 +63,7 @@
 </head>
 <body>
   <header>
-<img id="logo" src="images/sarahcare-logo.png" alt="SarahCare Logo">
+    <img id="logo" src="images/sarahcare-logo.png" alt="SarahCare Logo">
     <span style="font-size: 1.5em; font-weight: bold;">Senior Trivia</span>
   </header>
 
@@ -105,30 +104,20 @@
         return;
       }
 
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer YOUR_OPENAI_API_KEY'
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [{
-            role: "user",
-            content: `Create ${count} multiple choice trivia questions about ${category}. Format as JSON array with: question, options, answer`
-          }]
-        })
-      });
-
-      const data = await response.json();
-      const rawText = data.choices[0].message.content;
       try {
-        questions = JSON.parse(rawText);
+        const res = await fetch('/api/trivia', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ category, count })
+        });
+        questions = await res.json();
+        if (!questions || !questions[0]) throw new Error("Invalid response");
         score = 0;
         currentQuestionIndex = 0;
         showQuestion();
-      } catch (e) {
-        document.getElementById('trivia-container').innerHTML = "<p>Error parsing trivia questions.</p>";
+      } catch (err) {
+        console.error(err);
+        document.getElementById('trivia-container').innerHTML = "<p>Trivia generation failed.</p>";
       }
     }
 
