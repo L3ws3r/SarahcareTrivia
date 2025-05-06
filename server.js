@@ -58,7 +58,8 @@ Respond in JSON format:
     });
 
     const promptText = await prompt.format({ category, count });
-    const response = await chat.invoke([{ role: 'user', content: promptText }]); // ✅ FIXED
+    const response = await chat.invoke(promptText);
+
 
     let questions = [];
     try {
