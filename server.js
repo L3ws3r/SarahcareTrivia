@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const { ChatOpenAI } = require('@langchain/openai');
 const { PromptTemplate } = require('@langchain/core/prompts');
 const { DuckDuckGoImages } = require('duckduckgo-images-api');
-
 require('dotenv').config();
 
 const app = express();
@@ -12,20 +11,22 @@ const port = process.env.PORT || 10000;
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static('public'));
+app.use(express.static('public')); // For serving your HTML/CSS/images
 
-// 🔍 Helper to get an image from DuckDuckGo
+// 🔍 Helper function to get an image
 async function getFirstImageUrl(query) {
   try {
     const results = await DuckDuckGoImages.search({ query, moderate: true });
-    return results[0]?.image || null;
+    if (results && results[0] && results[0].image) {
+      return results[0].image;
+    }
   } catch (err) {
-    console.error('Image fetch error:', err.message);
-    return null;
+    console.error("❌ Image fetch error:", err.message);
   }
+  return null;
 }
 
-// 🧠 Trivia route
+// 🧠 Trivia generation endpoint
 app.post('/api/trivia', async (req, res) => {
   const category = req.body.category || 'General';
   const count = req.body.count || 10;
@@ -47,7 +48,7 @@ Respond in JSON format:
   }},
   ...
 ]
-    `,
+`,
   });
 
   try {
@@ -58,29 +59,30 @@ Respond in JSON format:
     });
 
     const promptText = await prompt.format({ category, count });
-    const response = await chat.invoke(promptText);
+    const response = await chat.call([{ role: 'user', content: promptText }]);
 
-    let questions;
+    let questions = [];
     try {
       questions = JSON.parse(response.content);
-    } catch (err) {
-      console.error('❌ Failed to parse AI response as JSON:', response.content);
+    } catch {
       return res.status(500).json({ error: 'AI returned invalid JSON' });
     }
 
-    // Add image to each question
+    // 📸 Enrich questions with image (fallback included)
     const enriched = await Promise.all(
       questions.map(async (q) => {
         const image = await getFirstImageUrl(`${category} ${q.question}`);
         const fallback = 'https://upload.wikimedia.org/wikipedia/commons/6/65/Big_question_mark.svg';
-        return { ...q, image: image || fallback };
+        const safeImage = image || fallback;
+        console.log(`📷 Image for "${q.question}": ${safeImage}`);
+        return { ...q, image: safeImage };
       })
     );
 
     res.json({ questions: enriched });
   } catch (err) {
     console.error('🔥 Trivia generation error:', err.message);
-    res.status(500).json({ error: err.message || 'Failed to generate trivia' });
+    res.status(500).json({ error: 'Failed to generate trivia' });
   }
 });
 
