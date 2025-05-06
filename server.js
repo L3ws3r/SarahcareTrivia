@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const { ChatOpenAI } = require("@langchain/openai");
-const { PromptTemplate } = require("@langchain/core/prompts");
+const { ChatOpenAI } = require('@langchain/openai');
+const { PromptTemplate } = require('@langchain/core/prompts');
 const { DuckDuckGoImages } = require('duckduckgo-images-api');
 
 require('dotenv').config();
@@ -12,20 +12,20 @@ const port = process.env.PORT || 10000;
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static('public')); // Serves your HTML, CSS, images
+app.use(express.static('public'));
 
-// 🔍 Helper function to get an image
+// 🔍 Helper to get an image from DuckDuckGo
 async function getFirstImageUrl(query) {
   try {
     const results = await DuckDuckGoImages.search({ query, moderate: true });
-    return results[0]?.image;
+    return results[0]?.image || null;
   } catch (err) {
-    console.error("Image fetch error:", err);
+    console.error('Image fetch error:', err.message);
     return null;
   }
 }
 
-// 🧠 Trivia generation endpoint
+// 🧠 Trivia route
 app.post('/api/trivia', async (req, res) => {
   const category = req.body.category || 'General';
   const count = req.body.count || 10;
@@ -47,7 +47,7 @@ Respond in JSON format:
   }},
   ...
 ]
-`,
+    `,
   });
 
   try {
@@ -60,10 +60,11 @@ Respond in JSON format:
     const promptText = await prompt.format({ category, count });
     const response = await chat.call([{ role: 'user', content: promptText }]);
 
-    let questions = [];
+    let questions;
     try {
       questions = JSON.parse(response.content);
-    } catch {
+    } catch (err) {
+      console.error('❌ Failed to parse AI response as JSON:', response.content);
       return res.status(500).json({ error: 'AI returned invalid JSON' });
     }
 
@@ -78,11 +79,11 @@ Respond in JSON format:
 
     res.json({ questions: enriched });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to generate trivia' });
+    console.error('🔥 Trivia generation error:', err.message);
+    res.status(500).json({ error: err.message || 'Failed to generate trivia' });
   }
 });
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`✅ Server running on port ${port}`);
 });
