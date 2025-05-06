@@ -25,10 +25,14 @@
       <button class="btn btn-primary m-1 category-btn" data-category="Famous Places">Famous Places</button>
     </div>
 
-    <form id="category-form" class="input-group mb-3 justify-content-center">
-      <input type="text" id="custom-category" class="form-control w-auto" placeholder="Enter custom category">
-      <button type="submit" id="generateBtn" class="btn btn-success">Generate Trivia</button>
-    </form>
+  <form id="trivia-form">
+  <input id="category" type="text" />
+  <input id="count" type="number" value="5" />
+  <button type="submit">Generate</button>
+</form>
+
+
+
 
     <div id="loading" style="display:none;" class="my-3">Loading trivia...</div>
     <div id="question-container" class="mt-4"></div>
