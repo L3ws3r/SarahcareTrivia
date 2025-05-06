@@ -10,7 +10,7 @@
   <nav class="navbar navbar-dark bg-primary mb-4">
     <div class="container-fluid">
       <a class="navbar-brand d-flex align-items-center" href="#">
-       <img src="/images/sarahcare-logo.png" alt="SarahCare Logo" width="40" height="40" class="me-2">
+        <img src="/images/sarahcare-logo.png" alt="SarahCare Logo" width="40" height="40" class="me-2">
         SarahCare Trivia
       </a>
     </div>
@@ -25,14 +25,16 @@
       <button class="btn btn-primary m-1 category-btn" data-category="Famous Places">Famous Places</button>
     </div>
 
-    <div class="input-group mb-3 justify-content-center">
-      <input type="text" id="customCategory" class="form-control w-auto" placeholder="Enter custom category">
-      <button id="generateBtn" class="btn btn-success">Generate Trivia</button>
-    </div>
+    <form id="category-form" class="input-group mb-3 justify-content-center">
+      <input type="text" id="custom-category" class="form-control w-auto" placeholder="Enter custom category">
+      <button type="submit" id="generateBtn" class="btn btn-success">Generate Trivia</button>
+    </form>
 
-    <div id="trivia-container" class="mt-4"></div>
+    <div id="loading" style="display:none;" class="my-3">Loading trivia...</div>
+    <div id="question-container" class="mt-4"></div>
   </div>
 
+  <!-- ✅ Script moved here to ensure DOM is ready -->
   <script src="script.js"></script>
 </body>
 </html>
