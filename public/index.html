@@ -3,42 +3,124 @@
 <html>
 <head>
   <title>SarahCare Trivia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: sans-serif; text-align: center; background: #f1f1f1; margin: 0; padding: 2rem; }
-    h1 { margin-bottom: 1rem; }
-    .btn { padding: 0.75rem 1.25rem; font-size: 16px; margin: 0.25rem; border-radius: 8px; border: none; cursor: pointer; }
-    .answer-btn { display: block; margin: 0.5rem auto; width: 80%; font-size: 20px; }
-    #question-text { font-size: 28px; font-weight: bold; margin-bottom: 1rem; }
-    #answers, #feedback, #fun-fact { margin-top: 1rem; }
-    #home-btn { position: absolute; top: 10px; left: 10px; }
-    input[type="text"], input[type="number"] { padding: 0.5rem; font-size: 16px; margin: 0.5rem; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #004c99;
+    }
+
+    .btn {
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      margin: 0.5rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: #005fa3;
+    }
+
+    .answer-btn {
+      display: block;
+      margin: 0.5rem auto;
+      width: 80%;
+      font-size: 1.2rem;
+      padding: 1rem;
+    }
+
+    #question-text {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #222;
+      margin: 1rem 0;
+    }
+
+    #home-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+
+    .input-panel {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+
+    label, input, select {
+      font-size: 1rem;
+      margin: 0.5rem 0;
+    }
+
+    input[type="text"], input[type="number"] {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 80%;
+    }
+
+    #feedback {
+      font-size: 1.25rem;
+      margin-top: 1rem;
+      color: #333;
+    }
+
+    #fun-fact {
+      font-size: 1rem;
+      margin-top: 1rem;
+      color: #555;
+    }
   </style>
 </head>
 <body>
   <div id="home-screen" class="screen visible">
     <h1>Welcome to SarahCare Trivia</h1>
-    <input type="text" id="category-input" placeholder="Type a category" />
-    <div>
-      <button class="btn" onclick="setCategory('Classic TV')">Classic TV</button>
-      <button class="btn" onclick="setCategory('60s Music')">60s Music</button>
-      <button class="btn" onclick="setCategory('Hollywood')">Hollywood</button>
+    <div class="input-panel">
+      <input type="text" id="category-input" placeholder="Type a category" />
+      <div>
+        <button class="btn" onclick="setCategory('Classic TV')">📺 Classic TV</button>
+        <button class="btn" onclick="setCategory('60s Music')">🎶 60s Music</button>
+        <button class="btn" onclick="setCategory('Hollywood')">🎬 Hollywood</button>
+      </div>
+      <div>
+        <label>Number of Questions:</label>
+        <input type="number" id="question-count" value="5" />
+        <br />
+        <label><input type="checkbox" id="five-answers" /> Use 5 Answers</label>
+      </div>
+      <button class="btn" onclick="startGame()">Start Game</button>
     </div>
-    <div>
-      <label>Number of Questions:</label>
-      <input type="number" id="question-count" value="5" />
-      <label><input type="checkbox" id="five-answers" /> Use 5 Answers</label>
-    </div>
-    <button class="btn" onclick="startGame()">Start Game</button>
   </div>
 
   <div id="trivia-screen" class="screen" style="display:none;">
-    <button class="btn" id="home-btn" onclick="goHome()">Home</button>
+    <button class="btn" id="home-btn" onclick="goHome()">🏠 Home</button>
     <div id="question-text">Question will appear here</div>
     <div id="answers"></div>
     <div id="feedback"></div>
-    <button class="btn" onclick="showHint()">Hint</button>
-    <button class="btn" onclick="toggleFunFact()">Show Fun Fact</button>
-    <button class="btn" onclick="nextQuestion()">Next</button>
+    <button class="btn" onclick="showHint()">💡 Hint</button>
+    <button class="btn" onclick="toggleFunFact()">🧠 Show Fun Fact</button>
+    <button class="btn" onclick="nextQuestion()">➡️ Next</button>
     <div id="fun-fact" style="display:none;"></div>
   </div>
 
