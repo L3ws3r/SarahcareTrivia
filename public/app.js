@@ -123,3 +123,12 @@ function showHint() {
     alert("Hint: " + (data.question || "No hint available."));
   });
 }
+
+
+function applyThemeColor() {
+  const color = document.getElementById("theme-color")?.value || "#0077cc";
+  document.querySelectorAll(".btn").forEach(btn => {
+    btn.style.backgroundColor = color;
+  });
+}
+window.applyThemeColor = applyThemeColor;
