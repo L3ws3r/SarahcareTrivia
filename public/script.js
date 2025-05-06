@@ -1,69 +1,57 @@
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('#trivia-form');
-  const questionList = document.querySelector('#question-list');
+  const categoryInput = document.querySelector('#category');
+  const countInput = document.querySelector('#count');
   const loading = document.querySelector('#loading');
+  const questionContainer = document.querySelector('#question-container');
+  const categoryButtons = document.querySelectorAll('.category-btn');
+
+  // Hook up the category buttons
+  categoryButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      categoryInput.value = btn.dataset.category;
+    });
+  });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const category = document.querySelector('#category').value;
-    const count = document.querySelector('#count').value;
+    const category = categoryInput.value;
+    const count = countInput.value || 5;
 
-    questionList.innerHTML = '';
     loading.style.display = 'block';
+    questionContainer.innerHTML = '';
 
     try {
-      const res = await fetch('/api/trivia', {
+      const res = await fetch('https://sarahcare-trivia.onrender.com/api/trivia', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ category, count: Number(count) })
+        body: JSON.stringify({ category, count })
       });
 
       const data = await res.json();
-      loading.style.display = 'none';
-
-      if (data.error) {
-        questionList.innerHTML = `<p class="text-red-500">${data.error}</p>`;
-        return;
-      }
-
-      data.questions.forEach((q, i) => {
-        const qDiv = document.createElement('div');
-        qDiv.className = 'my-6 p-4 border rounded shadow';
-
-        const img = document.createElement('img');
-        img.src = q.image;
-        img.alt = q.question;
-        img.className = 'w-full h-60 object-cover mb-2';
-
-        const question = document.createElement('h3');
-        question.textContent = `${i + 1}. ${q.question}`;
-        question.className = 'font-semibold mb-2';
-
-        const ul = document.createElement('ul');
-        q.choices.forEach(choice => {
-          const li = document.createElement('li');
-          li.textContent = choice;
-          li.className = 'hover:bg-blue-100 cursor-pointer px-2 py-1 rounded';
-          li.addEventListener('click', () => {
-            if (choice === q.answer) {
-              li.classList.add('bg-green-300');
-            } else {
-              li.classList.add('bg-red-300');
-            }
-          });
-          ul.appendChild(li);
+      if (data.questions) {
+        data.questions.forEach(q => {
+          const div = document.createElement('div');
+          div.className = 'card mb-3';
+          div.innerHTML = `
+            <img src="${q.image}" class="card-img-top" alt="Related visual" onerror="this.style.display='none'">
+            <div class="card-body">
+              <h5 class="card-title">${q.question}</h5>
+              ${q.choices.map(choice =>
+                `<button class="btn btn-outline-primary m-1">${choice}</button>`
+              ).join('')}
+            </div>
+          `;
+          questionContainer.appendChild(div);
         });
-
-        qDiv.appendChild(img);
-        qDiv.appendChild(question);
-        qDiv.appendChild(ul);
-        questionList.appendChild(qDiv);
-      });
-
+      } else {
+        questionContainer.innerHTML = '<p>Failed to load trivia questions.</p>';
+      }
     } catch (err) {
-      console.error(err);
+      console.error('Fetch error:', err);
+      questionContainer.innerHTML = '<p>Error fetching trivia questions.</p>';
+    } finally {
       loading.style.display = 'none';
-      questionList.innerHTML = `<p class="text-red-500">Error fetching trivia questions. Try again later.</p>`;
     }
   });
 });
