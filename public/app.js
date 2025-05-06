@@ -79,6 +79,7 @@ function toggleFunFact() {
 function nextQuestion() {
   currentQuestionIndex++;
   if (currentQuestionIndex >= currentQuestions.length) {
+    endGame();
     
 function endGame() {
   document.getElementById("trivia-screen").style.display = "none";
