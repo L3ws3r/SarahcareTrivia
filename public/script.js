@@ -1,82 +1,69 @@
-const generateBtn = document.getElementById('generateBtn');
-const categoryInput = document.getElementById('customCategory');
-const questionContainer = document.getElementById('trivia-container');
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.querySelector('#trivia-form');
+  const questionList = document.querySelector('#question-list');
+  const loading = document.querySelector('#loading');
 
-let currentQuestionIndex = 0;
-let questions = [];
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const category = document.querySelector('#category').value;
+    const count = document.querySelector('#count').value;
 
-generateBtn.addEventListener('click', async () => {
-  const selectedCategory = categoryInput.value.trim();
-  if (!selectedCategory) return;
+    questionList.innerHTML = '';
+    loading.style.display = 'block';
 
-  questionContainer.innerHTML = '<p>Loading...</p>';
+    try {
+      const res = await fetch('/api/trivia', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category, count: Number(count) })
+      });
 
-  try {
-    const response = await fetch('/api/trivia', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ category: selectedCategory, count: 10 }),
-    });
+      const data = await res.json();
+      loading.style.display = 'none';
 
-    const data = await response.json();
-    if (!data.questions || !Array.isArray(data.questions)) {
-      throw new Error("Invalid trivia data");
-    }
-
-    questions = data.questions;
-    currentQuestionIndex = 0;
-    showQuestion();
-  } catch (err) {
-    questionContainer.innerHTML = `<p class="text-danger">Trivia fetch failed: ${err.message}</p>`;
-  }
-});
-
-function showQuestion() {
-  const q = questions[currentQuestionIndex];
-  if (!q) {
-    questionContainer.innerHTML = '<p class="text-success">All questions completed!</p>';
-    return;
-  }
-
-  const card = document.createElement('div');
-  card.className = 'card p-4';
-
-  if (q.image) {
-    const img = document.createElement('img');
-    img.src = q.image;
-    img.alt = 'Related visual';
-    img.className = 'img-fluid mb-3';
-    card.appendChild(img);
-  }
-
-  const questionText = document.createElement('h5');
-  questionText.textContent = q.question;
-  card.appendChild(questionText);
-
-  const choices = shuffleArray([...q.choices]);
-  choices.forEach((choice) => {
-    const btn = document.createElement('button');
-    btn.className = 'btn btn-outline-primary m-2';
-    btn.textContent = choice;
-    btn.onclick = () => {
-      if (choice === q.answer) {
-        btn.classList.replace('btn-outline-primary', 'btn-success');
-      } else {
-        btn.classList.replace('btn-outline-primary', 'btn-danger');
+      if (data.error) {
+        questionList.innerHTML = `<p class="text-red-500">${data.error}</p>`;
+        return;
       }
 
-      setTimeout(() => {
-        currentQuestionIndex++;
-        showQuestion();
-      }, 1000);
-    };
-    card.appendChild(btn);
+      data.questions.forEach((q, i) => {
+        const qDiv = document.createElement('div');
+        qDiv.className = 'my-6 p-4 border rounded shadow';
+
+        const img = document.createElement('img');
+        img.src = q.image;
+        img.alt = q.question;
+        img.className = 'w-full h-60 object-cover mb-2';
+
+        const question = document.createElement('h3');
+        question.textContent = `${i + 1}. ${q.question}`;
+        question.className = 'font-semibold mb-2';
+
+        const ul = document.createElement('ul');
+        q.choices.forEach(choice => {
+          const li = document.createElement('li');
+          li.textContent = choice;
+          li.className = 'hover:bg-blue-100 cursor-pointer px-2 py-1 rounded';
+          li.addEventListener('click', () => {
+            if (choice === q.answer) {
+              li.classList.add('bg-green-300');
+            } else {
+              li.classList.add('bg-red-300');
+            }
+          });
+          ul.appendChild(li);
+        });
+
+        qDiv.appendChild(img);
+        qDiv.appendChild(question);
+        qDiv.appendChild(ul);
+        questionList.appendChild(qDiv);
+      });
+
+    } catch (err) {
+      console.error(err);
+      loading.style.display = 'none';
+      questionList.innerHTML = `<p class="text-red-500">Error fetching trivia questions. Try again later.</p>`;
+    }
   });
-
-  questionContainer.innerHTML = '';
-  questionContainer.appendChild(card);
-}
-
-function shuffleArray(arr) {
-  return arr.sort(() => Math.random() - 0.5);
-}
+});
