@@ -79,8 +79,24 @@ function toggleFunFact() {
 function nextQuestion() {
   currentQuestionIndex++;
   if (currentQuestionIndex >= currentQuestions.length) {
-    alert(`Game Over! Your score: ${score}/${currentQuestions.length}`);
-    goHome();
+    
+function endGame() {
+  document.getElementById("trivia-screen").style.display = "none";
+  document.getElementById("end-screen").style.display = "block";
+
+  const scoreTitle = document.getElementById("score-title");
+  const endMessage = document.getElementById("end-message");
+  scoreTitle.innerText = `You scored ${score} out of ${currentQuestions.length}`;
+
+  if (score === currentQuestions.length) {
+    endMessage.innerHTML = "<p style='color:green; font-weight:bold;'>🎉 Perfect! You crushed it like a true trivia champ! 🧠</p>";
+  } else if (score >= currentQuestions.length / 2) {
+    endMessage.innerHTML = "<p style='color:orange;'>👏 Not bad! You remembered more than your grandkids think you can!</p>";
+  } else {
+    endMessage.innerHTML = "<p style='color:red;'>😅 Oof! Did you nap through the last century? Better luck next time!</p>";
+  }
+}
+
   } else {
     displayQuestion();
   }

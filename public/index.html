@@ -51,6 +51,11 @@
       color: #444;
       margin-bottom: 1rem;
     }
+    .screen {
+      display: none;
+      width: 100%;
+      max-width: 500px;
+    }
     #home-btn {
       position: absolute;
       top: 10px;
@@ -65,31 +70,57 @@
       width: 100%;
       margin-bottom: 2rem;
     }
-    .question-wrapper {
-      max-width: 500px;
-      width: 100%;
+    .category-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 1rem;
     }
-    label, input, select {
-      font-size: 1rem;
-      margin: 0.5rem 0;
+    .category-buttons .btn {
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
     }
-    #feedback {
-      font-size: 1.25rem;
+    #end-screen h2 {
+      font-size: 2rem;
+      margin-top: 2rem;
+      color: #004c99;
+      text-align: center;
+    }
+    #end-message {
+      font-size: 1.2rem;
+      text-align: center;
       margin-top: 1rem;
-      color: #333;
-    }
-    #fun-fact {
-      font-size: 1rem;
-      margin-top: 1rem;
-      color: #555;
     }
   </style>
 </head>
 <body>
-  <div id="home-screen" class="screen visible">
+  <div id="home-screen" class="screen" style="display:block;">
     <h1>Welcome to SarahCare Trivia</h1>
     <div class="input-panel">
       <input type="text" id="category-input" placeholder="Type a category" />
+      <div class="category-buttons">
+        <button class="btn" onclick="setCategory('Classic TV')">Classic TV</button>
+        <button class="btn" onclick="setCategory('60s Music')">60s Music</button>
+        <button class="btn" onclick="setCategory('Hollywood')">Hollywood</button>
+        <button class="btn" onclick="setCategory('Elvis Presley')">Elvis Presley</button>
+        <button class="btn" onclick="setCategory('Name That Tune')">Name That Tune</button>
+        <button class="btn" onclick="setCategory('Famous Landmarks')">Famous Landmarks</button>
+        <button class="btn" onclick="setCategory('Golden Age Movies')">Golden Age Movies</button>
+        <button class="btn" onclick="setCategory('Popular Sayings')">Popular Sayings</button>
+        <button class="btn" onclick="setCategory('U.S. History')">U.S. History</button>
+        <button class="btn" onclick="setCategory('Food & Drink')">Food & Drink</button>
+        <button class="btn" onclick="setCategory('The 1950s')">The 1950s</button>
+        <button class="btn" onclick="setCategory('The 1960s')">The 1960s</button>
+        <button class="btn" onclick="setCategory('TV Theme Songs')">TV Theme Songs</button>
+        <button class="btn" onclick="setCategory('Famous Quotes')">Famous Quotes</button>
+        <button class="btn" onclick="setCategory('Presidents')">Presidents</button>
+        <button class="btn" onclick="setCategory('Bible Trivia')">Bible Trivia</button>
+        <button class="btn" onclick="setCategory('Old Commercials')">Old Commercials</button>
+        <button class="btn" onclick="setCategory('Classic Cars')">Classic Cars</button>
+        <button class="btn" onclick="setCategory('Broadway Shows')">Broadway Shows</button>
+        <button class="btn" onclick="setCategory('General Knowledge')">General Knowledge</button>
+      </div>
+
       <div>
         <label>Number of Questions:</label>
         <label><input type="radio" name="qCount" value="5" checked /> 5</label>
@@ -103,7 +134,7 @@
     </div>
   </div>
 
-  <div id="trivia-screen" class="screen question-wrapper" style="display:none;">
+  <div id="trivia-screen" class="screen">
     <button class="btn" id="home-btn" onclick="goHome()">🏠 Home</button>
     <div id="question-text">Question will appear here</div>
     <div id="question-status"></div>
@@ -113,6 +144,12 @@
     <button class="btn" onclick="toggleFunFact()">🧠 Show Fun Fact</button>
     <button class="btn" onclick="nextQuestion()">➡️ Next</button>
     <div id="fun-fact" style="display:none;"></div>
+  </div>
+
+  <div id="end-screen" class="screen">
+    <h2 id="score-title"></h2>
+    <div id="end-message"></div>
+    <button class="btn" onclick="goHome()">Back to Home</button>
   </div>
 
   <script src="app.js"></script>
