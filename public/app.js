@@ -46,6 +46,9 @@ function displayQuestion() {
   document.getElementById("feedback").innerText = "";
   document.getElementById("fun-fact").innerText = q.fact;
   document.getElementById("fun-fact").style.display = "none";
+
+  const status = `Question ${currentQuestionIndex + 1} of ${currentQuestions.length} — ✅ ${score} correct | ❌ ${currentQuestionIndex - score} wrong`;
+  document.getElementById("question-status").innerText = status;
 }
 
 function selectAnswer(letter, button) {
