@@ -3,7 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { ChatOpenAI } = require('@langchain/openai');
 const { PromptTemplate } = require('@langchain/core/prompts');
-const duckduckgo = require('duckduckgo-images-api'); // ✅ Fixed import
+const duckduckgoImages = require('duckduckgo-images-api');
 require('dotenv').config();
 
 const app = express();
@@ -16,7 +16,7 @@ app.use(express.static('public'));
 // 🔍 Helper function to get an image
 async function getFirstImageUrl(query) {
   try {
-    const results = await duckduckgo.search({ query, moderate: true }); // ✅ Fixed usage
+    const results = await duckduckgoImages.search({ query, moderate: true });
     return results[0]?.image;
   } catch (err) {
     console.error("Image fetch error:", err);
@@ -53,11 +53,13 @@ Respond in JSON format:
     const chat = new ChatOpenAI({
       temperature: 0.7,
       modelName: 'gpt-4',
-      openAIApiKey: process.env.OPENAI_API_KEY
+      openAIApiKey: process.env.OPENAI_API_KEY,
     });
 
     const promptText = await prompt.format({ category, count });
-    const response = await chat.call({ role: 'user', content: promptText }); // ✅ Fixed call
+    const response = await chat.call([
+      { role: 'user', content: promptText }
+    ]);
 
     let questions = [];
     try {
@@ -66,6 +68,7 @@ Respond in JSON format:
       return res.status(500).json({ error: 'AI returned invalid JSON' });
     }
 
+    // Add image to each question
     const enriched = await Promise.all(
       questions.map(async (q) => {
         const image = await getFirstImageUrl(`${category} ${q.question}`);
@@ -76,7 +79,7 @@ Respond in JSON format:
 
     res.json({ questions: enriched });
   } catch (err) {
-    console.error("🔥 Trivia generation error:", err);
+    console.error('🔥 Trivia generation error:', err.message);
     res.status(500).json({ error: 'Failed to generate trivia' });
   }
 });
