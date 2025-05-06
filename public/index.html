@@ -20,6 +20,14 @@
       color: #004c99;
     }
     .btn {
+  transition: background-color 0.2s ease;
+}
+
+.static-btn {
+  background-color: #777 !important;
+  border: none;
+  color: white;
+}
       background-color: #0077cc;
       color: white;
       border: none;
@@ -83,6 +91,14 @@
       margin-bottom: 1rem;
     }
     .category-buttons .btn {
+  transition: background-color 0.2s ease;
+}
+
+.static-btn {
+  background-color: #777 !important;
+  border: none;
+  color: white;
+}
       font-size: 0.9rem;
       padding: 0.5rem 1rem;
     }
@@ -143,21 +159,21 @@
   </div>
 
   <div id="trivia-screen" class="screen">
-    <button class="btn" id="home-btn" onclick="goHome()">🏠 Home</button>
+    <button class="btn static-btn" id="home-btn" onclick="goHome()">🏠 Home</button>
     <div id="question-text">Loading Questions</div>
     <div id="question-status"></div>
     <div id="answers"></div>
     <div id="feedback"></div>
-    <button class="btn" onclick="showHint()">💡 Hint</button>
-    <button class="btn" onclick="toggleFunFact()">🧠 Show Fun Fact</button>
-    <button class="btn" onclick="nextQuestion()">➡️ Next</button>
+    <button class="btn static-btn" onclick="showHint()">💡 Hint</button>
+    <button class="btn static-btn" onclick="toggleFunFact()">🧠 Show Fun Fact</button>
+    <button class="btn static-btn" onclick="nextQuestion()">➡️ Next</button>
     <div id="fun-fact" style="display:none;"></div>
   </div>
 
   <div id="end-screen" class="screen">
     <h2 id="score-title"></h2>
     <div id="end-message"></div>
-    <button class="btn" onclick="goHome()">Back to Home</button>
+    <button class="btn static-btn" onclick="goHome()">Back to Home</button>
   </div>
 
   <script src="app.js"></script>

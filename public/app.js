@@ -125,10 +125,13 @@ function showHint() {
 }
 
 
+
 function applyThemeColor() {
   const color = document.getElementById("theme-color")?.value || "#0077cc";
-  document.querySelectorAll(".btn").forEach(btn => {
+  document.querySelectorAll(".btn, .answer-btn").forEach(btn => {
     btn.style.backgroundColor = color;
+    btn.style.borderColor = color;
   });
 }
 window.applyThemeColor = applyThemeColor;
+
