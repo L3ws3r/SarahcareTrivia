@@ -10,19 +10,13 @@
   <div class="container">
     <h1>SarahCare Trivia Game</h1>
 
-    <!-- Trivia interface goes here -->
+    <!-- Placeholder where trivia questions will display -->
     <div id="triviaContainer">
-      <!-- Your trivia game UI would be built here -->
+      <!-- Trivia UI will be rendered here dynamically -->
     </div>
 
-    <!-- 🔍 DuckDuckGo Image Search Test -->
-    <hr />
-    <h3>Test DuckDuckGo Image Search</h3>
-    <input id="testQuery" type="text" placeholder="Try 'Tom Hanks'" />
-    <button onclick="testDuckDuckGoImageSearch(document.getElementById('testQuery').value)">
-      Search Image
-    </button>
-    <div id="imageTestOutput" style="margin-top: 20px;"></div>
+    <!-- Button to load trivia questions -->
+    <button onclick="fetchTriviaQuestions()">Start Trivia</button>
   </div>
 
   <script src="script.js"></script>
