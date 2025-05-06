@@ -1,8 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const { ChatOpenAI } = require("@langchain/openai");
-const { PromptTemplate } = require("@langchain/core/prompts");
+const { ChatOpenAI } = require('@langchain/openai');
+const { PromptTemplate } = require('@langchain/core/prompts');
+const duckduckgo = require('duckduckgo-images-api'); // ✅ FIXED IMPORT
+
 require('dotenv').config();
 
 const app = express();
@@ -12,10 +14,15 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public')); // Serves your HTML, CSS, images
 
-// 🔍 Stub image fetcher to replace DuckDuckGoImages
+// 🔍 Helper function to get an image
 async function getFirstImageUrl(query) {
-  // Real image search is broken — use fallback for now
-  return 'https://upload.wikimedia.org/wikipedia/commons/6/65/Big_question_mark.svg';
+  try {
+    const results = await duckduckgo.image_search({ query, moderate: true });
+    return results[0]?.image;
+  } catch (err) {
+    console.error("Image fetch error:", err);
+    return null;
+  }
 }
 
 // 🧠 Trivia generation endpoint
@@ -51,23 +58,21 @@ Respond in JSON format:
     });
 
     const promptText = await prompt.format({ category, count });
-
-    // ✅ FIXED: use invoke instead of call
-    const response = await chat.invoke(promptText);
+    const response = await chat.invoke([{ role: 'user', content: promptText }]); // ✅ FIXED
 
     let questions = [];
     try {
       questions = JSON.parse(response.content);
-    } catch (err) {
-      console.error("❌ Failed to parse JSON from AI:", err);
+    } catch {
       return res.status(500).json({ error: 'AI returned invalid JSON' });
     }
 
-    // Add fallback image to each question
+    // Add image to each question
     const enriched = await Promise.all(
       questions.map(async (q) => {
         const image = await getFirstImageUrl(`${category} ${q.question}`);
-        return { ...q, image };
+        const fallback = 'https://upload.wikimedia.org/wikipedia/commons/6/65/Big_question_mark.svg';
+        return { ...q, image: image || fallback };
       })
     );
 
