@@ -27,7 +27,7 @@
       border: none;
       padding: 0.75rem 1.5rem;
       font-size: 1rem;
-      margin: 0.5rem;
+      margin: 0.25rem;
       border-radius: 12px;
       cursor: pointer;
       transition: background-color 0.2s ease;
@@ -40,7 +40,7 @@
     .answer-btn {
       display: block;
       margin: 0.5rem auto;
-      width: 80%;
+      width: 100%;
       font-size: 1.2rem;
       padding: 1rem;
     }
@@ -68,6 +68,11 @@
       margin-bottom: 2rem;
     }
 
+    .question-wrapper {
+      max-width: 500px;
+      width: 100%;
+    }
+
     label, input, select {
       font-size: 1rem;
       margin: 0.5rem 0;
@@ -91,6 +96,28 @@
       margin-top: 1rem;
       color: #555;
     }
+
+    .category-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .category-buttons .btn {
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+    }
+
+    .question-count-options {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .question-count-options label {
+      margin: 0.25rem 1rem;
+    }
   </style>
 </head>
 <body>
@@ -98,22 +125,45 @@
     <h1>Welcome to SarahCare Trivia</h1>
     <div class="input-panel">
       <input type="text" id="category-input" placeholder="Type a category" />
-      <div>
-        <button class="btn" onclick="setCategory('Classic TV')">📺 Classic TV</button>
-        <button class="btn" onclick="setCategory('60s Music')">🎶 60s Music</button>
-        <button class="btn" onclick="setCategory('Hollywood')">🎬 Hollywood</button>
+      <div class="category-buttons">
+        <button class="btn" onclick="setCategory('Classic TV')">Classic TV</button>
+        <button class="btn" onclick="setCategory('60s Music')">60s Music</button>
+        <button class="btn" onclick="setCategory('Hollywood')">Hollywood</button>
+        <button class="btn" onclick="setCategory('Elvis Presley')">Elvis Presley</button>
+        <button class="btn" onclick="setCategory('Name That Tune')">Name That Tune</button>
+        <button class="btn" onclick="setCategory('Famous Landmarks')">Famous Landmarks</button>
+        <button class="btn" onclick="setCategory('Golden Age Movies')">Golden Age Movies</button>
+        <button class="btn" onclick="setCategory('Popular Sayings')">Popular Sayings</button>
+        <button class="btn" onclick="setCategory('U.S. History')">U.S. History</button>
+        <button class="btn" onclick="setCategory('Food & Drink')">Food & Drink</button>
+        <button class="btn" onclick="setCategory('The 1950s')">The 1950s</button>
+        <button class="btn" onclick="setCategory('The 1960s')">The 1960s</button>
+        <button class="btn" onclick="setCategory('TV Theme Songs')">TV Theme Songs</button>
+        <button class="btn" onclick="setCategory('Famous Quotes')">Famous Quotes</button>
+        <button class="btn" onclick="setCategory('Presidents')">Presidents</button>
+        <button class="btn" onclick="setCategory('Bible Trivia')">Bible Trivia</button>
+        <button class="btn" onclick="setCategory('Old Commercials')">Old Commercials</button>
+        <button class="btn" onclick="setCategory('Classic Cars')">Classic Cars</button>
+        <button class="btn" onclick="setCategory('Broadway Shows')">Broadway Shows</button>
+        <button class="btn" onclick="setCategory('General Knowledge')">General Knowledge</button>
       </div>
+
       <div>
         <label>Number of Questions:</label>
-        <input type="number" id="question-count" value="5" />
-        <br />
+        <div class="question-count-options">
+          <label><input type="radio" name="qCount" value="5" checked /> 5</label>
+          <label><input type="radio" name="qCount" value="10" /> 10</label>
+          <label><input type="radio" name="qCount" value="15" /> 15</label>
+          <label><input type="radio" name="qCount" value="20" /> 20</label>
+          <label><input type="radio" name="qCount" value="30" /> 30</label>
+        </div>
         <label><input type="checkbox" id="five-answers" /> Use 5 Answers</label>
       </div>
       <button class="btn" onclick="startGame()">Start Game</button>
     </div>
   </div>
 
-  <div id="trivia-screen" class="screen" style="display:none;">
+  <div id="trivia-screen" class="screen question-wrapper" style="display:none;">
     <button class="btn" id="home-btn" onclick="goHome()">🏠 Home</button>
     <div id="question-text">Question will appear here</div>
     <div id="answers"></div>
