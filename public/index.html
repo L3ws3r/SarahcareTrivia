@@ -1,1 +1,26 @@
-<!DOCTYPE html><html><head><title>SarahCare Trivia</title></head><body><div id="app">Trivia App</div></body></html>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SarahCare Trivia</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    #question-text { font-size: 2rem; font-weight: bold; margin-bottom: 1rem; }
+    .btn { padding: 1rem; margin: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div id="trivia-screen" class="visible">
+    <div style="position:absolute; top:10px; left:10px;">
+      <button class="btn" onclick="goHome()">Home</button>
+    </div>
+    <div id="question-text">Loading question...</div>
+    <div id="answers"></div>
+    <div id="feedback"></div>
+    <button class="btn" onclick="toggleFunFact()">Show Fact</button>
+    <button class="btn" onclick="nextQuestion()">Next Question</button>
+    <div id="fun-fact" style="margin-top:1rem; display:none;"></div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
