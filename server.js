@@ -48,7 +48,13 @@ Return in JSON array format. Each object must contain keys: question, choices, c
       return res.status(500).json({ error: "Invalid response from OpenAI" });
     }
 
-    const rawText = data.choices[0].message.content;
+    let rawText = data.choices[0].message.content;
+
+    // Remove markdown code fences
+    rawText = rawText.trim();
+    if (rawText.startsWith("```json")) {
+      rawText = rawText.replace(/^```json\s*/, "").replace(/```\s*$/, "");
+    }
 
     try {
       const parsed = JSON.parse(rawText);
