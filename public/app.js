@@ -1,7 +1,4 @@
-// GPT-based Trivia Logic for SarahCare App
-
-const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"; // Replace or set in environment on Render
-const MODEL = "gpt-4";
+// GPT-based Trivia Logic for SarahCare App (Backend Version)
 
 let currentQuestionIndex = 0;
 let currentQuestions = [];
@@ -9,36 +6,20 @@ let score = 0;
 let selectedAnswer = null;
 
 async function fetchGPTQuestion(category, answerCount) {
-  const prompt = `Create a trivia question in the category "${category}". Provide:
-- One clear trivia question (suitable for a senior audience)
-- ${answerCount} multiple choice answers labeled A–${String.fromCharCode(64 + answerCount)}
-- Identify the correct answer letter (e.g., 'B')
-- Include a short fun fact explanation for the answer
-- If applicable, include a relevant real-world image URL
-
-Return in JSON format with keys: question, choices, correct, fact, image_url.`;
-
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+  const response = await fetch("/ask-gpt", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${OPENAI_API_KEY}`,
     },
-    body: JSON.stringify({
-      model: MODEL,
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.7,
-    }),
+    body: JSON.stringify({ category, answerCount })
   });
 
   const data = await response.json();
-  const rawText = data.choices[0].message.content;
-  try {
-    return JSON.parse(rawText);
-  } catch (e) {
-    console.error("Failed to parse GPT response:", rawText);
+  if (!data || !data.question) {
+    console.error("Invalid data from /ask-gpt:", data);
     return null;
   }
+  return data;
 }
 
 async function generateQuestions(category, count, answerCount) {
@@ -130,27 +111,23 @@ function startGame() {
 
 function showHint() {
   const question = currentQuestions[currentQuestionIndex].question;
-  fetch("https://api.openai.com/v1/chat/completions", {
+  fetch("/ask-gpt", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
-      model: MODEL,
-      messages: [{ role: "user", content: `Give a helpful, senior-friendly hint for this trivia question: \"${question}\"` }],
-      temperature: 0.7,
+      category: `Give a helpful, senior-friendly hint for this trivia question: "${question}"`,
+      answerCount: 0 // not needed for hint
     }),
   })
     .then((res) => res.json())
     .then((data) => {
-      const hint = data.choices[0].message.content;
-      alert("Hint: " + hint);
+      alert("Hint: " + (data.question || "No hint available."));
     })
     .catch((err) => console.error("Hint error:", err));
 }
 
-// Expose functions globally for onclick
 window.startGame = startGame;
 window.goHome = goHome;
 window.submitAnswer = submitAnswer;
