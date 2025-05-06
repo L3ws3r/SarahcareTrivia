@@ -1,4 +1,3 @@
-
 const express = require("express");
 const path = require("path");
 const fetch = require("node-fetch");
@@ -24,7 +23,7 @@ app.post("/ask-gpt", async (req, res) => {
 - ${answerCount} multiple choice answers labeled A–${String.fromCharCode(64 + answerCount)}
 - Identify the correct answer letter (e.g., 'B')
 - Include a short fun fact explanation for the answer
-- If applicable, include a relevant real-world image URL
+- Optionally, include a relevant real-world image URL that is hotlink-friendly (e.g., from Wikipedia, Wikimedia, or a public domain CDN)
 
 Return in JSON format with keys: question, choices, correct, fact, image_url.`;
 
@@ -43,13 +42,20 @@ Return in JSON format with keys: question, choices, correct, fact, image_url.`;
     });
 
     const data = await response.json();
+
     if (!data.choices || !data.choices[0]) {
       return res.status(500).json({ error: "Invalid response from OpenAI" });
     }
 
     const rawText = data.choices[0].message.content;
-    const parsed = JSON.parse(rawText);
-    res.json(parsed);
+
+    try {
+      const parsed = JSON.parse(rawText);
+      res.json(parsed);
+    } catch (err) {
+      console.error("Failed to parse GPT response:", err);
+      res.status(500).json({ error: "Failed to parse GPT output", raw: rawText });
+    }
   } catch (err) {
     console.error("GPT fetch error:", err);
     res.status(500).json({ error: "Error communicating with OpenAI" });
