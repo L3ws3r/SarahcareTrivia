@@ -9,7 +9,7 @@ function setCategory(name) {
 
 async function startGame() {
   const category = document.getElementById("category-input").value || "General";
-  const questionCount = parseInt(document.getElementById("question-count").value) || 5;
+  const questionCount = parseInt(document.querySelector('input[name="qCount"]:checked').value) || 5;
   const answerCount = document.getElementById("five-answers").checked ? 5 : 4;
 
   score = 0;
