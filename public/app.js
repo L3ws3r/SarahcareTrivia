@@ -38,6 +38,7 @@ function displayQuestion() {
   const img = document.getElementById("question-img");
   img.src = q.image_url || "";
   img.style.display = q.image_url ? "block" : "none";
+  img.onerror = () => (img.style.display = "none");
 
   const answersDiv = document.getElementById("answers");
   answersDiv.innerHTML = "";
@@ -106,7 +107,10 @@ function startGame() {
   document.getElementById("home-screen").classList.remove("visible");
   document.getElementById("trivia-screen").classList.add("visible");
 
-  generateQuestions(category, questionCount, fiveAnswers ? 5 : 4);
+  document.getElementById("loading").style.display = "block";
+  generateQuestions(category, questionCount, fiveAnswers ? 5 : 4).then(() => {
+    document.getElementById("loading").style.display = "none";
+  });
 }
 
 function showHint() {

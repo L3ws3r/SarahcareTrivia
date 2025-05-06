@@ -1,3 +1,4 @@
+
 const express = require("express");
 const path = require("path");
 const fetch = require("node-fetch");
@@ -42,20 +43,13 @@ Return in JSON format with keys: question, choices, correct, fact, image_url.`;
     });
 
     const data = await response.json();
-
     if (!data.choices || !data.choices[0]) {
       return res.status(500).json({ error: "Invalid response from OpenAI" });
     }
 
     const rawText = data.choices[0].message.content;
-
-    try {
-      const parsed = JSON.parse(rawText);
-      res.json(parsed);
-    } catch (err) {
-      console.error("Failed to parse GPT response:", err);
-      res.status(500).json({ error: "Failed to parse GPT output", raw: rawText });
-    }
+    const parsed = JSON.parse(rawText);
+    res.json(parsed);
   } catch (err) {
     console.error("GPT fetch error:", err);
     res.status(500).json({ error: "Error communicating with OpenAI" });
