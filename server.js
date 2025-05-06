@@ -1,7 +1,7 @@
+
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const axios = require('axios');
 const { ChatOpenAI } = require('@langchain/openai');
 const { PromptTemplate } = require('@langchain/core/prompts');
 
@@ -12,47 +12,21 @@ const port = process.env.PORT || 10000;
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static('public')); // Serves your HTML, CSS, images
+app.use(express.static('public')); // Serves HTML, CSS, images
 
-// DuckDuckGo backend image fetcher
-async function fetchDuckDuckGoImage(query) {
-  try {
-    const homepageRes = await axios.get('https://duckduckgo.com/', {
-      params: { q: query },
-      headers: { 'User-Agent': 'Mozilla/5.0' }
-    });
-
-    const vqdMatch = homepageRes.data.match(/vqd='([a-zA-Z0-9\\-]+)'/);
-    if (!vqdMatch) {
-      throw new Error('Failed to extract vqd token');
-    }
-
-    const vqd = vqdMatch[1];
-
-    const imageRes = await axios.get('https://duckduckgo.com/i.js', {
-      params: {
-        q: query,
-        vqd: vqd,
-        o: 'json'
-      },
-      headers: { 'User-Agent': 'Mozilla/5.0' }
-    });
-
-    return imageRes.data.results?.[0]?.image || null;
-  } catch (error) {
-    console.error("DuckDuckGo image fetch failed:", error.message);
-    return null;
-  }
+// Local fallback image fetcher (random or category-based)
+function getFallbackImage(query) {
+  const fallbackImages = [
+    '/images/fallback1.jpg',
+    '/images/fallback2.jpg',
+    '/images/fallback3.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/6/65/Big_question_mark.svg'
+  ];
+  // Rotate through them or randomize
+  return fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
 }
 
-// Direct image lookup endpoint
-app.get('/api/images', async (req, res) => {
-  const query = req.query.q;
-  const image = await fetchDuckDuckGoImage(query);
-  res.json({ image });
-});
-
-// Trivia generator
+// API: Trivia question generator
 app.post('/api/trivia', async (req, res) => {
   const category = req.body.category || 'General';
   const count = req.body.count || 10;
@@ -94,14 +68,11 @@ Respond in JSON format:
       return res.status(500).json({ error: 'AI returned invalid JSON' });
     }
 
-    // Add image to each question
-    const enriched = await Promise.all(
-      questions.map(async (q) => {
-        const image = await fetchDuckDuckGoImage(`${category} ${q.question}`);
-        const fallback = 'https://upload.wikimedia.org/wikipedia/commons/6/65/Big_question_mark.svg';
-        return { ...q, image: image || fallback };
-      })
-    );
+    // Add fallback image to each question
+    const enriched = questions.map((q) => {
+      const image = getFallbackImage(`${category} ${q.question}`);
+      return { ...q, image };
+    });
 
     res.json({ questions: enriched });
   } catch (err) {
