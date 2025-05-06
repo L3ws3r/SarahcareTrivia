@@ -1,24 +1,15 @@
-const form = document.getElementById('category-form');
-const categorySelect = document.getElementById('category');
-const customCategoryInput = document.getElementById('custom-category');
-const questionContainer = document.getElementById('question-container');
-const loadingIndicator = document.getElementById('loading');
+const generateBtn = document.getElementById('generateBtn');
+const categoryInput = document.getElementById('customCategory');
+const questionContainer = document.getElementById('trivia-container');
 
 let currentQuestionIndex = 0;
 let questions = [];
 
-// 🔄 Form submit triggers trivia generation
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const selectedCategory = categorySelect.value === 'custom'
-    ? customCategoryInput.value.trim()
-    : categorySelect.value;
-
+generateBtn.addEventListener('click', async () => {
+  const selectedCategory = categoryInput.value.trim();
   if (!selectedCategory) return;
 
-  loadingIndicator.style.display = 'block';
-  questionContainer.innerHTML = '';
+  questionContainer.innerHTML = '<p>Loading...</p>';
 
   try {
     const response = await fetch('/api/trivia', {
@@ -27,14 +18,7 @@ form.addEventListener('submit', async (e) => {
       body: JSON.stringify({ category: selectedCategory, count: 10 }),
     });
 
-    if (!response.ok) {
-      const text = await response.text();
-      console.error("🚨 Server error:", response.status, text);
-      throw new Error(`Server responded with status ${response.status}`);
-    }
-
     const data = await response.json();
-
     if (!data.questions || !Array.isArray(data.questions)) {
       throw new Error("Invalid trivia data");
     }
@@ -43,14 +27,10 @@ form.addEventListener('submit', async (e) => {
     currentQuestionIndex = 0;
     showQuestion();
   } catch (err) {
-    console.error("⚠️ Trivia fetch failed:", err.message);
     questionContainer.innerHTML = `<p class="text-danger">Trivia fetch failed: ${err.message}</p>`;
-  } finally {
-    loadingIndicator.style.display = 'none';
   }
 });
 
-// 🧠 Renders one question at a time
 function showQuestion() {
   const q = questions[currentQuestionIndex];
   if (!q) {
@@ -97,7 +77,6 @@ function showQuestion() {
   questionContainer.appendChild(card);
 }
 
-// 🔀 Utility to randomize answers
 function shuffleArray(arr) {
   return arr.sort(() => Math.random() - 0.5);
 }
