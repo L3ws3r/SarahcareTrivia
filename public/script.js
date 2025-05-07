@@ -149,7 +149,12 @@ function endGame() {
     ? "🎉 Congratulations!"
     : "😅 Better luck next time!";
   document.getElementById("finalMessage").textContent = message;
-  document.getElementById("finalScore").textContent = `You got ${correct} out of ${totalQuestions} correct.`;
+  
+  const quote = correct >= totalQuestions / 2
+    ? "Nice work, Einstein! 🧠"
+    : "Hey, at least you're good looking! 😄";
+  document.getElementById("funnyQuote").textContent = quote;
+  document.getElementById("finalScore").textContent = `You got ${correct} right and ${wrong} wrong.`;
 }
 
 document.getElementById("hintBtn").onclick = async () => {
@@ -170,16 +175,24 @@ Format the result as JSON with fields: question, choices[], correct, funFact.`;
   document.getElementById("extraInfo").textContent = data.questionData;
 };
 
+
 document.getElementById("playAgainBtn").onclick = () => {
-  homeScreen.classList.remove("hidden");
-  document.getElementById("homeBtn").classList.add("hidden");
+  current = 0;
+  correct = 0;
+  wrong = 0;
+  previousQuestions = [];
+  document.getElementById("correctCount").textContent = `✅ 0`;
+  document.getElementById("wrongCount").textContent = `❌ 0`;
+  document.getElementById("resultMsg").textContent = "";
   endScreen.classList.add("hidden");
+  homeScreen.classList.remove("hidden");
 };
+
 
 document.getElementById("homeBtn").onclick = () => {
   homeScreen.classList.remove("hidden");
-  document.getElementById("homeBtn").classList.add("hidden");
   gameScreen.classList.add("hidden");
   endScreen.classList.add("hidden");
   loadingScreen.classList.add("hidden");
+  document.getElementById("resultMsg").textContent = "";
 };
