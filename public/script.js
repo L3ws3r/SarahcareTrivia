@@ -176,6 +176,7 @@ Format the result as JSON with fields: question, choices[], correct, funFact.`;
 };
 
 
+
 document.getElementById("playAgainBtn").onclick = () => {
   current = 0;
   correct = 0;
@@ -184,15 +185,24 @@ document.getElementById("playAgainBtn").onclick = () => {
   document.getElementById("correctCount").textContent = `✅ 0`;
   document.getElementById("wrongCount").textContent = `❌ 0`;
   document.getElementById("resultMsg").textContent = "";
+  document.getElementById("funnyQuote").textContent = "";
   endScreen.classList.add("hidden");
   homeScreen.classList.remove("hidden");
 };
 
 
+
 document.getElementById("homeBtn").onclick = () => {
+  current = 0;
+  correct = 0;
+  wrong = 0;
+  previousQuestions = [];
+  document.getElementById("correctCount").textContent = `✅ 0`;
+  document.getElementById("wrongCount").textContent = `❌ 0`;
+  document.getElementById("resultMsg").textContent = "";
+  document.getElementById("funnyQuote").textContent = "";
   homeScreen.classList.remove("hidden");
   gameScreen.classList.add("hidden");
   endScreen.classList.add("hidden");
   loadingScreen.classList.add("hidden");
-  document.getElementById("resultMsg").textContent = "";
 };
