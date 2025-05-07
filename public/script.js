@@ -15,6 +15,13 @@ const homeScreen = document.getElementById("homeScreen");
 const gameScreen = document.getElementById("gameScreen");
 const endScreen = document.getElementById("endScreen");
 
+// Inject loading spinner
+const loadingScreen = document.createElement("div");
+loadingScreen.id = "loadingScreen";
+loadingScreen.classList.add("hidden");
+loadingScreen.innerHTML = `<h2>Generating your trivia questions...</h2><p>Please wait a moment 🧠</p>`;
+app.appendChild(loadingScreen);
+
 document.getElementById("presetCategories").innerHTML =
   presetCategories.map(cat => `<button class="categoryBtn">${cat}</button>`).join("");
 
@@ -32,6 +39,9 @@ document.getElementById("startBtn").addEventListener("click", async () => {
 
   document.body.className = theme;
 
+  homeScreen.classList.add("hidden");
+  loadingScreen.classList.remove("hidden");
+
   const prompt = `Generate ${count} multiple-choice trivia questions in the category "${category}". Each question should include one correct answer, ${answerCount - 1} plausible wrong answers, and a fun fact. Format as JSON with fields: question, choices[], correct, funFact.`;
 
   const res = await fetch("/ask-gpt", {
@@ -45,6 +55,8 @@ document.getElementById("startBtn").addEventListener("click", async () => {
     questions = JSON.parse(data.answer);
   } catch (e) {
     alert("Error loading questions. Try again.");
+    homeScreen.classList.remove("hidden");
+    loadingScreen.classList.add("hidden");
     return;
   }
 
@@ -52,8 +64,7 @@ document.getElementById("startBtn").addEventListener("click", async () => {
   document.getElementById("correctCount").textContent = `✅ 0`;
   document.getElementById("wrongCount").textContent = `❌ 0`;
 
-  homeScreen.classList.add("hidden");
-  endScreen.classList.add("hidden");
+  loadingScreen.classList.add("hidden");
   gameScreen.classList.remove("hidden");
   showQuestion();
 });
@@ -135,4 +146,5 @@ document.getElementById("homeBtn").onclick = () => {
   homeScreen.classList.remove("hidden");
   gameScreen.classList.add("hidden");
   endScreen.classList.add("hidden");
+  loadingScreen.classList.add("hidden");
 };
