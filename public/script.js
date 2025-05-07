@@ -6,14 +6,12 @@ const presetCategories = [
 ];
 
 let current = 0;
-let previousQuestions = [];
 let correct = 0;
 let wrong = 0;
 let answerCount = 4;
 let totalQuestions = 10;
 let answered = false;
 let category = "General";
-let seenQuestions = [];
 
 const app = document.getElementById("app");
 const homeScreen = document.getElementById("homeScreen");
@@ -45,7 +43,6 @@ document.getElementById("customCategory").addEventListener("keydown", async (e) 
 });
 
 function startGame() {
-  seenQuestions = [];
   current = correct = wrong = 0;
   answerCount = parseInt(document.querySelector('input[name="choices"]:checked').value);
   totalQuestions = parseInt(document.querySelector('input[name="count"]:checked').value);
@@ -69,20 +66,10 @@ async function fetchAndShowNextQuestion() {
   gameScreen.classList.add("hidden");
   document.getElementById("extraInfo").textContent = "";
 
-  const priorQs = seenQuestions.map((q, i) => `${i + 1}. ${q}`).join("
-");
-  const prompt = `Generate one trivia question in the category \"${category}\" with ${answerCount} choices. Do NOT repeat or closely resemble any of the following questions:
-${priorQs}`;
-  
-    const prompt = `Generate a new multiple-choice trivia question in the category "${category}" with ${answerCount} options. Do NOT repeat or closely resemble any of these:
-${previousQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
-Format the result as JSON with fields: question, choices[], correct, funFact.`;
-
-    const res = await fetch("/ask-gpt", {
-    
+  const res = await fetch("/ask-gpt", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt })
+    body: JSON.stringify({ category, answerCount })
   });
 
   const data = await res.json();
@@ -94,8 +81,6 @@ Format the result as JSON with fields: question, choices[], correct, funFact.`;
     return;
   }
 
-  seenQuestions.push(qData.question);
-  previousQuestions.push(qData.question);
   displayQuestion(qData);
 }
 
@@ -156,13 +141,7 @@ function endGame() {
 document.getElementById("hintBtn").onclick = async () => {
   const questionText = document.getElementById("questionText").textContent;
   const prompt = `Give me a hint for this trivia question: "${questionText}"`;
-  
-    const prompt = `Generate a new multiple-choice trivia question in the category "${category}" with ${answerCount} options. Do NOT repeat or closely resemble any of these:
-${previousQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
-Format the result as JSON with fields: question, choices[], correct, funFact.`;
-
-    const res = await fetch("/ask-gpt", {
-    
+  const res = await fetch("/ask-gpt", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ category, answerCount: 1, prompt })
