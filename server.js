@@ -1,3 +1,5 @@
+
+// server.js
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
@@ -11,32 +13,42 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// OpenAI Configuration for v4
+// OpenAI Configuration
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// API Route to fetch GPT-based responses
+// Route to get one question at a time
 app.post('/ask-gpt', async (req, res) => {
   try {
-    const { prompt } = req.body;
+    const { category, answerCount } = req.body;
+    const prompt = `Generate one multiple-choice trivia question in the category "${category}". Include one correct answer, ${
+      answerCount - 1
+    } wrong answers, and a fun fact. Format it as JSON like this:
+
+{
+  "question": "...",
+  "choices": ["...", "...", "...", "..."],
+  "correct": "...",
+  "funFact": "..."
+}`;
+
     const response = await openai.chat.completions.create({
-      model: 'gpt-4',
+      model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],
     });
-    res.json({ answer: response.choices[0].message.content });
+
+    res.json({ questionData: response.choices[0].message.content });
   } catch (error) {
     console.error('OpenAI API Error:', error.message);
-    res.status(500).json({ error: 'Error fetching data from OpenAI' });
+    res.status(500).json({ error: 'Failed to generate question' });
   }
 });
 
-// For health check on Render.com
-app.get('/health', (_req, res) => {
-  res.status(200).send('OK');
-});
+// Health check
+app.get('/health', (_req, res) => res.status(200).send('OK'));
 
-// Wildcard route to serve index.html
+// Serve frontend
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
