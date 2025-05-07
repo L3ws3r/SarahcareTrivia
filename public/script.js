@@ -113,7 +113,7 @@ function displayQuestion(q) {
         document.getElementById("wrongCount").textContent = `❌ ${wrong}`;
       }
       Array.from(answerDiv.children).forEach(b => b.disabled = true);
-      document.getElementById("extraInfo").textContent = q.funFact || "";
+      document.getElementById("extraInfo").innerHTML = `<strong>Fun Fact:</strong> ${q.funFact || "None provided."}`;
     };
     answerDiv.appendChild(btn);
   });
@@ -147,10 +147,6 @@ document.getElementById("hintBtn").onclick = async () => {
   });
   const data = await res.json();
   document.getElementById("extraInfo").textContent = data.questionData;
-};
-
-document.getElementById("factBtn").onclick = () => {
-  // Already shown after answering
 };
 
 document.getElementById("playAgainBtn").onclick = () => {
