@@ -1,2 +1,120 @@
-body { font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 1rem; }
-.hidden { display: none; }
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  background-color: #f8f8f8;
+  color: #222;
+}
+
+#app {
+  max-width: 500px;
+  width: 100%;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+#homeBtn {
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+button {
+  font-size: 1.25rem;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  background-color: #4caf50;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+button.correct {
+  background-color: #4caf50;
+}
+
+button.incorrect {
+  background-color: #f44336;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.hidden {
+  display: none;
+}
+
+#presetCategories button {
+  width: 45%;
+  display: inline-block;
+  margin: 0.25rem;
+  background-color: #1976d2;
+}
+
+#gameButtons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+#scoreInfo span {
+  margin: 0 0.5rem;
+  font-weight: bold;
+}
+
+#loadingScreen {
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 1.25rem;
+  color: #555;
+}
+
+h1, h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin: 0.5rem 0 0.25rem;
+  font-weight: bold;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+/* Theme Colors */
+body.pink {
+  background-color: #ffe4ec;
+}
+
+body.teal {
+  background-color: #e0f7f7;
+}
+
+body.lightyellow {
+  background-color: #fffde7;
+}
