@@ -66,6 +66,7 @@ async function fetchAndShowNextQuestion() {
   loadingScreen.classList.remove("hidden");
   gameScreen.classList.add("hidden");
   document.getElementById("extraInfo").textContent = "";
+  document.getElementById("resultMsg").textContent = "";
 
   
     const dedupePrompt = `Generate a new multiple-choice trivia question in the category "${category}" with ${answerCount} options. Do NOT repeat or closely resemble any of these:
@@ -100,6 +101,7 @@ function displayQuestion(q) {
   document.getElementById("questionText").textContent = q.question;
   document.getElementById("questionCounter").textContent = `Question ${current + 1} of ${totalQuestions}`;
   document.getElementById("extraInfo").textContent = "";
+  document.getElementById("resultMsg").textContent = "";
 
   const answerDiv = document.getElementById("answers");
   answerDiv.innerHTML = "";
@@ -116,10 +118,14 @@ function displayQuestion(q) {
         btn.classList.add("correct");
         correct++;
         document.getElementById("correctCount").textContent = `✅ ${correct}`;
+      document.getElementById("resultMsg").textContent = "CORRECT";
+      document.getElementById("resultMsg").style.color = "green";
       } else {
         btn.classList.add("incorrect");
         wrong++;
         document.getElementById("wrongCount").textContent = `❌ ${wrong}`;
+      document.getElementById("resultMsg").textContent = "WRONG";
+      document.getElementById("resultMsg").style.color = "red";
       }
       Array.from(answerDiv.children).forEach(b => b.disabled = true);
       document.getElementById("extraInfo").innerHTML = `<strong>Fun Fact:</strong> ${q.funFact || "None provided."}`;
