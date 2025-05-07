@@ -16,12 +16,16 @@
         <span id="wrongCount"></span>
       </div>
     </header>
+
     <main>
       <div id="homeScreen">
         <h1>SarahCare Senior Trivia</h1>
+
         <label>Choose a Category:</label>
         <input type="text" id="customCategory" placeholder="Or type your own..." />
+
         <div id="presetCategories"></div>
+
         <label>How many questions?</label>
         <div id="questionCountOptions">
           <label><input type="radio" name="count" value="5" checked />5</label>
@@ -30,19 +34,28 @@
           <label><input type="radio" name="count" value="20" />20</label>
           <label><input type="radio" name="count" value="30" />30</label>
         </div>
+
         <label>Number of choices:</label>
         <div id="optionToggle">
           <label><input type="radio" name="choices" value="4" checked />4</label>
           <label><input type="radio" name="choices" value="5" />5</label>
         </div>
+
         <label>Theme:</label>
         <select id="themePicker">
           <option value="pink">Pink</option>
           <option value="teal">Teal</option>
           <option value="lightyellow">Light Yellow</option>
         </select>
+
         <button id="startBtn">Start Game</button>
       </div>
+
+      <div id="loadingScreen" class="hidden">
+        <h2>Loading Trivia Questions...</h2>
+        <p>Please wait while we prepare your game 🧠</p>
+      </div>
+
       <div id="gameScreen" class="hidden">
         <h2 id="questionText"></h2>
         <div id="answers"></div>
@@ -53,6 +66,7 @@
         </div>
         <p id="extraInfo"></p>
       </div>
+
       <div id="endScreen" class="hidden">
         <h2 id="finalMessage"></h2>
         <p id="finalScore"></p>
@@ -60,6 +74,7 @@
       </div>
     </main>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
