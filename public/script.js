@@ -187,21 +187,7 @@ Format the result as JSON with fields: question, choices[], correct, funFact.`;
 
 
 
-window.onload = () => {
-  document.getElementById("playAgainBtn").onclick = () => {
-    current = 0;
-    correct = 0;
-    wrong = 0;
-    previousQuestions = [];
-    document.getElementById("correctCount").textContent = `✅ 0`;
-    document.getElementById("wrongCount").textContent = `❌ 0`;
-    document.getElementById("resultMsg").textContent = "";
-    document.getElementById("finalCorrect").textContent = "";
-    document.getElementById("finalWrong").textContent = "";
-    document.getElementById("funnyQuote").textContent = "";
-    endScreen.classList.add("hidden");
-    homeScreen.classList.remove("hidden");
-  };
+
 
   document.getElementById("homeBtn").onclick = () => {
     current = 0;
@@ -219,4 +205,44 @@ window.onload = () => {
     endScreen.classList.add("hidden");
     loadingScreen.classList.add("hidden");
   };
+};
+
+window.onload = () => {
+  const playAgainBtn = document.getElementById("playAgainBtn");
+  if (playAgainBtn) {
+    playAgainBtn.onclick = () => {
+      current = 0;
+      correct = 0;
+      wrong = 0;
+      previousQuestions = [];
+      document.getElementById("correctCount").textContent = `✅ 0`;
+      document.getElementById("wrongCount").textContent = `❌ 0`;
+      document.getElementById("resultMsg").textContent = "";
+      document.getElementById("finalCorrect").textContent = "";
+      document.getElementById("finalWrong").textContent = "";
+      document.getElementById("funnyQuote").textContent = "";
+      endScreen.classList.add("hidden");
+      homeScreen.classList.remove("hidden");
+    };
+  }
+
+  const homeBtn = document.getElementById("homeBtn");
+  if (homeBtn) {
+    homeBtn.onclick = () => {
+      current = 0;
+      correct = 0;
+      wrong = 0;
+      previousQuestions = [];
+      document.getElementById("correctCount").textContent = `✅ 0`;
+      document.getElementById("wrongCount").textContent = `❌ 0`;
+      document.getElementById("resultMsg").textContent = "";
+      document.getElementById("finalCorrect").textContent = "";
+      document.getElementById("finalWrong").textContent = "";
+      document.getElementById("funnyQuote").textContent = "";
+      homeScreen.classList.remove("hidden");
+      gameScreen.classList.add("hidden");
+      endScreen.classList.add("hidden");
+      loadingScreen.classList.add("hidden");
+    };
+  }
 };
