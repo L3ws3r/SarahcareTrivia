@@ -90,13 +90,7 @@ button:disabled {
 
 /* Radios inline */
 #questionCountOptions,
-#optionToggle {
-  justify-content: flex-start;
-  gap: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
+
 
 #questionCountOptions label,
 #optionToggle label {
@@ -156,4 +150,16 @@ body.lightyellow {
   font-size: 1.5rem;
   font-weight: bold;
   margin-top: 1rem;
+}
+
+#optionToggle {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+#optionToggle label {
+  margin-right: 1rem;
+  font-size: 1rem;
 }
