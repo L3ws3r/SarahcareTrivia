@@ -93,10 +93,7 @@ button:disabled {
 
 
 #questionCountOptions label,
-#optionToggle label {
-  flex: 1;
-  text-align: center;
-}
+
 
 /* Score info */
 #scoreInfo span {
@@ -152,14 +149,29 @@ body.lightyellow {
   margin-top: 1rem;
 }
 
+
+
+
+
+#questionCountOptions {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+#questionCountOptions label {
+  flex: 1;
+  text-align: center;
+}
+
 #optionToggle {
   display: flex;
   justify-content: flex-start;
-  gap: 0.5rem;
+  gap: 1rem;
   margin-bottom: 1rem;
 }
 
 #optionToggle label {
-  margin-right: 1rem;
   font-size: 1rem;
 }
