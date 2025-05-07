@@ -3,175 +3,85 @@
 <html>
 <head>
   <title>SarahCare Trivia</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Nunito', sans-serif;
-      background-color: #f0f4f8;
-      margin: 0;
+      background: #f0f0f0;
+      text-align: center;
       padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      color: #004c99;
-    }
-    .btn {
-  transition: background-color 0.2s ease;
-}
 
-.static-btn {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 12px;
-
-  background-color: #777 !important;
-  border: none;
-  color: white;
-}
-      background-color: #0077cc;
-      color: white;
+    .btn, .answer-btn, .category-buttons .btn, .static-btn {
       border: none;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      margin: 0.25rem;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
-    .btn:hover {
-      background-color: #005fa3;
-    }
-    .answer-btn {
-  font-weight: bold;
-  font-size: 2.5rem;
-
-      display: block;
-      margin: 0.5rem auto;
-      width: 100%;
-      font-size: 1.2rem;
-      padding: 1rem;
-    }
-    #question-text {
-  font-size: 2.5rem;
-  font-weight: 800;
-
-      font-size: 2rem;
+      border-radius: 999px;
+      font-size: 1.5rem;
       font-weight: bold;
-      color: #222;
-      margin: 1rem 0;
+      padding: 0.75rem 2rem;
+      color: black;
+      cursor: pointer;
+      margin: 0.3rem;
     }
-    #question-status {
-      font-size: 1rem;
-      color: #444;
-      margin-bottom: 1rem;
+
+    .answer-btn, .category-buttons .btn {
+      background-color: #f08078 !important;
     }
+
+    .static-btn {
+      background-color: #f7596c !important;
+    }
+
+    #question-text {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin: 1rem;
+    }
+
+    #question-status, #feedback, #fun-fact {
+      font-size: 1.25rem;
+      margin-top: 1rem;
+    }
+
     .screen {
       display: none;
-      width: 100%;
       max-width: 500px;
+      margin: auto;
     }
-    #home-btn {
-      position: absolute;
-      top: 10px;
-      left: 10px;
+
+    #home-screen {
+      display: block;
     }
-    .input-panel {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      max-width: 600px;
-      width: 100%;
-      margin-bottom: 2rem;
-    }
+
     .category-buttons {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      margin-bottom: 1rem;
-    }
-    .category-buttons .btn {
-  font-size: 1.1rem;
-  padding: 0.75rem 1.25rem;
-  margin: 0.35rem;
-
-  transition: background-color 0.2s ease;
-}
-
-.static-btn {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 12px;
-
-  background-color: #777 !important;
-  border: none;
-  color: white;
-}
-      font-size: 0.9rem;
-      padding: 0.5rem 1rem;
-    }
-    #end-screen h2 {
-      font-size: 2rem;
-      margin-top: 2rem;
-      color: #004c99;
-      text-align: center;
-    }
-    #end-message {
-      font-size: 1.2rem;
-      text-align: center;
       margin-top: 1rem;
     }
   </style>
 </head>
 <body>
-  <div id="home-screen" class="screen" style="display:block;">
+  <div id="home-screen" class="screen">
     <h1>Welcome to SarahCare Trivia</h1>
-    <div class="input-panel">
-      <input type="text" id="category-input" placeholder="Type a category" />
-      <div class="category-buttons">
-        <button class="btn" onclick="setCategory('Classic TV')">Classic TV</button>
-        <button class="btn" onclick="setCategory('60s Music')">60s Music</button>
-        <button class="btn" onclick="setCategory('Hollywood')">Hollywood</button>
-        <button class="btn" onclick="setCategory('Elvis Presley')">Elvis Presley</button>
-        <button class="btn" onclick="setCategory('Name That Tune')">Name That Tune</button>
-        <button class="btn" onclick="setCategory('Famous Landmarks')">Famous Landmarks</button>
-        <button class="btn" onclick="setCategory('Golden Age Movies')">Golden Age Movies</button>
-        <button class="btn" onclick="setCategory('Popular Sayings')">Popular Sayings</button>
-        <button class="btn" onclick="setCategory('U.S. History')">U.S. History</button>
-        <button class="btn" onclick="setCategory('Food & Drink')">Food & Drink</button>
-        <button class="btn" onclick="setCategory('The 1950s')">The 1950s</button>
-        <button class="btn" onclick="setCategory('The 1960s')">The 1960s</button>
-        <button class="btn" onclick="setCategory('TV Theme Songs')">TV Theme Songs</button>
-        <button class="btn" onclick="setCategory('Famous Quotes')">Famous Quotes</button>
-        <button class="btn" onclick="setCategory('Presidents')">Presidents</button>
-        <button class="btn" onclick="setCategory('Bible Trivia')">Bible Trivia</button>
-        <button class="btn" onclick="setCategory('Old Commercials')">Old Commercials</button>
-        <button class="btn" onclick="setCategory('Classic Cars')">Classic Cars</button>
-        <button class="btn" onclick="setCategory('Broadway Shows')">Broadway Shows</button>
-        <button class="btn" onclick="setCategory('General Knowledge')">General Knowledge</button>
-      </div>
-
-      <div>
-        <label>Number of Questions:</label>
-        <label><input type="radio" name="qCount" value="5" checked /> 5</label>
-        <label><input type="radio" name="qCount" value="10" /> 10</label>
-        <label><input type="radio" name="qCount" value="15" /> 15</label>
-        <label><input type="radio" name="qCount" value="20" /> 20</label>
-        <label><input type="radio" name="qCount" value="30" /> 30</label>
-        <label><input type="checkbox" id="five-answers" /> Use 5 Answers</label>
-      <br /><br />
-      <label>Choose Theme Color: <input type="color" id="theme-color" value="#0077cc" onchange="applyThemeColor()" /></label>
-      </div>
-      <button class="btn" onclick="startGame()">Start Game</button>
-    </div>
+    <input type="text" id="category-input" placeholder="Type a category" /><br><br>
+    <div class="category-buttons">
+      <button class="btn" onclick="setCategory('Classic TV')">Classic TV</button>
+      <button class="btn" onclick="setCategory('Golden Age Movies')">Golden Age Movies</button>
+      <button class="btn" onclick="setCategory('Presidents')">Presidents</button>
+      <button class="btn" onclick="setCategory('U.S. History')">U.S. History</button>
+    </div><br>
+    <div>
+      <label><input type="radio" name="qCount" value="5" checked /> 5</label>
+      <label><input type="radio" name="qCount" value="10" /> 10</label>
+      <label><input type="radio" name="qCount" value="15" /> 15</label>
+      <label><input type="radio" name="qCount" value="20" /> 20</label>
+      <label><input type="radio" name="qCount" value="30" /> 30</label>
+      <label><input type="checkbox" id="five-answers" /> Use 5 Answers</label>
+    </div><br>
+    <button class="btn static-btn" onclick="startGame()">Start Game</button>
   </div>
 
   <div id="trivia-screen" class="screen">
-    <button class="btn static-btn" id="home-btn" onclick="goHome()">🏠 Home</button>
+    <button class="btn static-btn" onclick="goHome()">🏠 Home</button>
     <div id="question-text">Loading Questions</div>
     <div id="question-status"></div>
     <div id="answers"></div>
