@@ -1,70 +1,59 @@
+
 const express = require("express");
-const path = require("path");
-const fetch = require("node-fetch");
-require("dotenv").config();
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const { Configuration, OpenAIApi } = require("openai");
 
 const app = express();
 const PORT = process.env.PORT || 10000;
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const MODEL = "gpt-3.5-turbo";
 
-app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json());
+app.use(cors());
+app.use(bodyParser.json());
+app.use(express.static("public"));
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
 });
+const openai = new OpenAIApi(configuration);
 
 app.post("/ask-gpt", async (req, res) => {
-  const { category, answerCount, questionCount } = req.body;
+  const { category, answerCount } = req.body;
+  const numAnswers = answerCount || 4;
 
-  const prompt = `Create ${questionCount} trivia questions in the category "${category}". For each, provide:
-- One clear trivia question (suitable for a senior audience)
-- ${answerCount} multiple choice answers labeled A–${String.fromCharCode(64 + answerCount)}
-- Identify the correct answer letter (e.g., 'B')
-- Include a short fun fact explanation for the answer
-- Omit image URLs for now
+  console.log("POST /ask-gpt =>", category, numAnswers);
 
-Return in JSON array format. Each object must contain keys: question, choices, correct, fact.`;
+  const prompt = `Create one trivia question in the category "${category}" with ${numAnswers} multiple choice answers.
+Respond with a JSON object in this format:
+{
+  "question": "Question goes here",
+  "choices": {
+    "A": "First option",
+    "B": "Second option",
+    "C": "Third option",
+    "D": "Fourth option",
+    "E": "Fifth option (optional)"
+  },
+  "correct": "C",
+  "fact": "One-sentence fun fact related to the question"
+}`;
 
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.7,
-      }),
+    const completion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.7,
     });
 
-    const data = await response.json();
+    const content = completion.data.choices[0].message.content;
+    console.log("GPT Response:", content);
 
-    if (!data.choices || !data.choices[0]) {
-      return res.status(500).json({ error: "Invalid response from OpenAI" });
-    }
+    const cleanContent = content.replace(/```json|```/g, "").trim();
+    const data = JSON.parse(cleanContent);
 
-    let rawText = data.choices[0].message.content;
-
-    // Remove markdown code fences
-    rawText = rawText.trim();
-    if (rawText.startsWith("```json")) {
-      rawText = rawText.replace(/^```json\s*/, "").replace(/```\s*$/, "");
-    }
-
-    try {
-      const parsed = JSON.parse(rawText);
-      res.json(parsed);
-    } catch (err) {
-      console.error("Failed to parse GPT response:", err);
-      res.status(500).json({ error: "Failed to parse GPT output", raw: rawText });
-    }
+    res.json(data);
   } catch (err) {
-    console.error("GPT fetch error:", err);
-    res.status(500).json({ error: "Error communicating with OpenAI" });
+    console.error("GPT Error:", err);
+    res.status(500).json({ error: "Failed to get trivia question." });
   }
 });
 
