@@ -87,6 +87,7 @@ async function fetchAndShowNextQuestion() {
 function displayQuestion(q) {
   loadingScreen.classList.add("hidden");
   gameScreen.classList.remove("hidden");
+  document.getElementById("homeBtn").classList.remove("hidden");
 
   document.getElementById("questionText").textContent = q.question;
   document.getElementById("questionCounter").textContent = `Question ${current + 1} of ${totalQuestions}`;
@@ -151,11 +152,13 @@ document.getElementById("hintBtn").onclick = async () => {
 
 document.getElementById("playAgainBtn").onclick = () => {
   homeScreen.classList.remove("hidden");
+  document.getElementById("homeBtn").classList.add("hidden");
   endScreen.classList.add("hidden");
 };
 
 document.getElementById("homeBtn").onclick = () => {
   homeScreen.classList.remove("hidden");
+  document.getElementById("homeBtn").classList.add("hidden");
   gameScreen.classList.add("hidden");
   endScreen.classList.add("hidden");
   loadingScreen.classList.add("hidden");
