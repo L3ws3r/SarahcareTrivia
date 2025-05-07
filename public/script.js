@@ -10,6 +10,7 @@ let current = 0;
 let correct = 0;
 let wrong = 0;
 let answerCount = 4;
+let answered = false;
 
 const app = document.getElementById("app");
 const homeScreen = document.getElementById("homeScreen");
@@ -25,7 +26,6 @@ app.appendChild(loadingScreen);
 document.getElementById("presetCategories").innerHTML =
   presetCategories.map(cat => `<button class="categoryBtn">${cat}</button>`).join("");
 
-// Start game from preset category
 document.getElementById("presetCategories").addEventListener("click", async (e) => {
   if (e.target.classList.contains("categoryBtn")) {
     const category = e.target.textContent;
@@ -34,7 +34,6 @@ document.getElementById("presetCategories").addEventListener("click", async (e) 
   }
 });
 
-// Start game from custom text category via Enter key
 document.getElementById("customCategory").addEventListener("keydown", async (e) => {
   if (e.key === "Enter") {
     const category = e.target.value.trim();
@@ -82,6 +81,7 @@ async function startGame(category) {
 }
 
 function showQuestion() {
+  answered = false;
   const q = questions[current];
   document.getElementById("questionText").textContent = q.question;
   document.getElementById("questionCounter").textContent = `Question ${current + 1} of ${questions.length}`;
@@ -96,6 +96,8 @@ function showQuestion() {
     btn.textContent = choice;
     btn.classList.add("answer-button");
     btn.onclick = () => {
+      if (answered) return;
+      answered = true;
       if (choice === q.correct) {
         btn.classList.add("correct");
         correct++;
@@ -106,11 +108,6 @@ function showQuestion() {
         document.getElementById("wrongCount").textContent = `❌ ${wrong}`;
       }
       Array.from(answerDiv.children).forEach(b => b.disabled = true);
-      setTimeout(() => {
-        current++;
-        if (current >= questions.length) endGame();
-        else showQuestion();
-      }, 1500);
     };
     answerDiv.appendChild(btn);
   });
@@ -145,6 +142,7 @@ document.getElementById("factBtn").onclick = () => {
 };
 
 document.getElementById("nextBtn").onclick = () => {
+  if (!answered) return;
   current++;
   if (current >= questions.length) endGame();
   else showQuestion();
