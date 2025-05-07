@@ -154,7 +154,9 @@ function endGame() {
     ? "Nice work, Einstein! 🧠"
     : "Hey, at least you're good looking! 😄";
   document.getElementById("funnyQuote").textContent = quote;
-  document.getElementById("finalScore").textContent = `You got ${correct} right and ${wrong} wrong.`;
+  
+  document.getElementById("finalCorrect").textContent = `CORRECT: ${correct}`;
+  document.getElementById("finalWrong").textContent = `WRONG: ${wrong}`;
 }
 
 document.getElementById("hintBtn").onclick = async () => {
