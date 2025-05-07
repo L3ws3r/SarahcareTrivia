@@ -1,3 +1,4 @@
+
 const presetCategories = [
   "Movies", "Classic TV", "Music", "Presidents", "History", "Science",
   "Sports", "Animals", "Food", "Geography", "Famous People", "Cars",
@@ -15,7 +16,6 @@ const homeScreen = document.getElementById("homeScreen");
 const gameScreen = document.getElementById("gameScreen");
 const endScreen = document.getElementById("endScreen");
 
-// Inject loading spinner
 const loadingScreen = document.createElement("div");
 loadingScreen.id = "loadingScreen";
 loadingScreen.classList.add("hidden");
@@ -25,14 +25,24 @@ app.appendChild(loadingScreen);
 document.getElementById("presetCategories").innerHTML =
   presetCategories.map(cat => `<button class="categoryBtn">${cat}</button>`).join("");
 
-document.querySelectorAll(".categoryBtn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.getElementById("customCategory").value = btn.textContent;
-  });
+// Start game from preset category
+document.getElementById("presetCategories").addEventListener("click", async (e) => {
+  if (e.target.classList.contains("categoryBtn")) {
+    const category = e.target.textContent;
+    document.getElementById("customCategory").value = category;
+    await startGame(category);
+  }
 });
 
-document.getElementById("startBtn").addEventListener("click", async () => {
-  const category = document.getElementById("customCategory").value || "General";
+// Start game from custom text category via Enter key
+document.getElementById("customCategory").addEventListener("keydown", async (e) => {
+  if (e.key === "Enter") {
+    const category = e.target.value.trim();
+    if (category) await startGame(category);
+  }
+});
+
+async function startGame(category) {
   const count = document.querySelector('input[name="count"]:checked').value;
   answerCount = parseInt(document.querySelector('input[name="choices"]:checked').value);
   const theme = document.getElementById("themePicker").value;
@@ -40,6 +50,8 @@ document.getElementById("startBtn").addEventListener("click", async () => {
   document.body.className = theme;
 
   homeScreen.classList.add("hidden");
+  endScreen.classList.add("hidden");
+  gameScreen.classList.add("hidden");
   loadingScreen.classList.remove("hidden");
 
   const prompt = `Generate ${count} multiple-choice trivia questions in the category "${category}". Each question should include one correct answer, ${answerCount - 1} plausible wrong answers, and a fun fact. Format as JSON with fields: question, choices[], correct, funFact.`;
@@ -67,7 +79,7 @@ document.getElementById("startBtn").addEventListener("click", async () => {
   loadingScreen.classList.add("hidden");
   gameScreen.classList.remove("hidden");
   showQuestion();
-});
+}
 
 function showQuestion() {
   const q = questions[current];
@@ -82,6 +94,7 @@ function showQuestion() {
   shuffled.forEach(choice => {
     const btn = document.createElement("button");
     btn.textContent = choice;
+    btn.classList.add("answer-button");
     btn.onclick = () => {
       if (choice === q.correct) {
         btn.classList.add("correct");

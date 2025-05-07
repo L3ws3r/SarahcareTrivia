@@ -1,3 +1,4 @@
+
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
@@ -71,13 +72,33 @@ button:disabled {
   color: white;
 }
 
-/* Preset category buttons */
+/* Category grid layout */
+#presetCategories {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
 #presetCategories button {
-  width: 48%;
-  display: inline-block;
-  margin: 0.25rem 1%;
+  font-size: 0.9rem;
+  padding: 0.75rem;
   background-color: #1976d2;
   color: white;
+}
+
+/* Radios inline */
+#questionCountOptions,
+#optionToggle {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+#questionCountOptions label,
+#optionToggle label {
+  flex: 1;
+  text-align: center;
 }
 
 /* Score info */
@@ -117,11 +138,9 @@ input[type="text"] {
 body.pink {
   background-color: #ffe4ec;
 }
-
 body.teal {
   background-color: #e0f7f7;
 }
-
 body.lightyellow {
   background-color: #fffde7;
 }
