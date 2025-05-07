@@ -91,6 +91,8 @@ button:disabled {
 /* Radios inline */
 #questionCountOptions,
 #optionToggle {
+  justify-content: flex-start;
+  gap: 0.5rem;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
