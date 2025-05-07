@@ -1,0 +1,63 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+  color: #222;
+}
+#app {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+#homeBtn {
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+button {
+  font-size: 20px;
+  padding: 15px 20px;
+  margin: 5px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+}
+button.correct {
+  background-color: #4CAF50;
+  color: white;
+}
+button.incorrect {
+  background-color: #f44336;
+  color: white;
+}
+button:disabled {
+  opacity: 0.7;
+}
+.hidden {
+  display: none;
+}
+#presetCategories button {
+  font-size: 18px;
+  width: 45%;
+  margin: 5px;
+  display: inline-block;
+}
+#gameButtons {
+  margin-top: 20px;
+}
+#scoreInfo span {
+  margin: 0 10px;
+}
+h1, h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}

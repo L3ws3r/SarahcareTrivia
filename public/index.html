@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SarahCare Senior Trivia</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <header>
+      <button id="homeBtn">🏠</button>
+      <div id="scoreInfo">
+        <span id="questionCounter"></span>
+        <span id="correctCount"></span>
+        <span id="wrongCount"></span>
+      </div>
+    </header>
+    <main>
+      <div id="homeScreen">
+        <h1>SarahCare Senior Trivia</h1>
+        <label>Choose a Category:</label>
+        <input type="text" id="customCategory" placeholder="Or type your own..." />
+        <div id="presetCategories"></div>
+        <label>How many questions?</label>
+        <div id="questionCountOptions">
+          <label><input type="radio" name="count" value="5" checked />5</label>
+          <label><input type="radio" name="count" value="10" />10</label>
+          <label><input type="radio" name="count" value="15" />15</label>
+          <label><input type="radio" name="count" value="20" />20</label>
+          <label><input type="radio" name="count" value="30" />30</label>
+        </div>
+        <label>Number of choices:</label>
+        <div id="optionToggle">
+          <label><input type="radio" name="choices" value="4" checked />4</label>
+          <label><input type="radio" name="choices" value="5" />5</label>
+        </div>
+        <label>Theme:</label>
+        <select id="themePicker">
+          <option value="pink">Pink</option>
+          <option value="teal">Teal</option>
+          <option value="lightyellow">Light Yellow</option>
+        </select>
+        <button id="startBtn">Start Game</button>
+      </div>
+      <div id="gameScreen" class="hidden">
+        <h2 id="questionText"></h2>
+        <div id="answers"></div>
+        <div id="gameButtons">
+          <button id="hintBtn">💡 Hint</button>
+          <button id="factBtn">🎉 Fun Fact</button>
+          <button id="nextBtn">➡️ Next</button>
+        </div>
+        <p id="extraInfo"></p>
+      </div>
+      <div id="endScreen" class="hidden">
+        <h2 id="finalMessage"></h2>
+        <p id="finalScore"></p>
+        <button id="playAgainBtn">🔁 Play Again</button>
+      </div>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
