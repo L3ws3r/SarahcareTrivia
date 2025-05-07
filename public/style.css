@@ -175,3 +175,19 @@ body.lightyellow {
 #optionToggle label {
   font-size: 1rem;
 }
+
+#logoBlock {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+#logoImg {
+  width: 300px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto 0.5rem;
+}
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+}
