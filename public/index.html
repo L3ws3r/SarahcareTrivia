@@ -1,10 +1,9 @@
 
 <!DOCTYPE html>
-
 <html>
 <head>
-<title>SarahCare Trivia</title>
-<style>
+  <title>SarahCare Trivia</title>
+  <style>
     body {
       font-family: 'Nunito', sans-serif;
       background: #f0f0f0;
@@ -59,7 +58,8 @@
       margin-top: 1rem;
     }
   </style>
-<style>
+
+  <style>
     #home-button {
       position: absolute;
       top: 10px;
@@ -105,42 +105,46 @@
     }
   </style>
 </head>
+
 <body>
-<div class="screen" id="home-screen"><div class="category-buttons"><button onclick="setCategory('60s Music')">60s Music</button><button onclick="setCategory('Hollywood')">Hollywood</button><button onclick="setCategory('Famous Landmarks')">Famous Landmarks</button><button onclick="setCategory('Old Cartoons')">Old Cartoons</button><button onclick="setCategory('Musicals')">Musicals</button><button onclick="setCategory('Elvis')">Elvis</button><button onclick="setCategory('1950s')">1950s</button><button onclick="setCategory('60s Slang')">60s Slang</button><button onclick="setCategory('Classic Cars')">Classic Cars</button><button onclick="setCategory('Old Commercials')">Old Commercials</button><button onclick="setCategory('Movie Stars')">Movie Stars</button><button onclick="setCategory('WWII')">WWII</button><button onclick="setCategory('Jazz')">Jazz</button><button onclick="setCategory('Comedians')">Comedians</button><button onclick="setCategory('Board Games')">Board Games</button><button onclick="setCategory('Soap Operas')">Soap Operas</button><button onclick="setCategory('Golden Age Radio')">Golden Age Radio</button><button onclick="setCategory('Famous Inventions')">Famous Inventions</button></div>
-<h1>Welcome to SarahCare Trivia</h1>
-<input id="category-input" placeholder="Type a category" type="text"/><br/><br/>
-<div class="category-buttons">
-<button class="btn" onclick="setCategory('Classic TV')">Classic TV</button>
-<button class="btn" onclick="setCategory('Golden Age Movies')">Golden Age Movies</button>
-<button class="btn" onclick="setCategory('Presidents')">Presidents</button>
-<button class="btn" onclick="setCategory('U.S. History')">U.S. History</button>
-</div><br/>
-<div>
-<label><input checked="" name="qCount" type="radio" value="5"/> 5</label>
-<label><input name="qCount" type="radio" value="10"/> 10</label>
-<label><input name="qCount" type="radio" value="15"/> 15</label>
-<label><input name="qCount" type="radio" value="20"/> 20</label>
-<label><input name="qCount" type="radio" value="30"/> 30</label>
-<label><input id="five-answers" type="checkbox"/> Use 5 Answers</label>
-</div><br/>
-<button class="btn static-btn" onclick="startGame()">Start Game</button>
-</div>
-<div class="screen" id="trivia-screen">
-<button class="btn static-btn" onclick="goHome()">🏠 Home</button>
-<div id="question-text">Loading Questions</div>
-<div id="question-status"></div>
-<div id="answers"></div>
-<div id="feedback"></div>
-<button class="btn static-btn" onclick="showHint()">💡 Hint</button>
-<button class="btn static-btn" onclick="toggleFunFact()">🧠 Show Fun Fact</button>
-<button class="btn static-btn" onclick="nextQuestion()">➡️ Next</button>
-<div id="fun-fact" style="display:none;"></div>
-</div>
-<div class="screen" id="end-screen">
-<h2 id="score-title"></h2>
-<div id="end-message"></div>
-<button class="btn static-btn" onclick="goHome()">Back to Home</button>
-</div>
-<script src="app.js"></script>
+  <div id="home-screen" class="screen">
+    <h1>Welcome to SarahCare Trivia</h1>
+    <input type="text" id="category-input" placeholder="Type a category" /><br><br>
+    <div class="category-buttons">
+      <button class="btn" onclick="setCategory('Classic TV')">Classic TV</button>
+      <button class="btn" onclick="setCategory('Golden Age Movies')">Golden Age Movies</button>
+      <button class="btn" onclick="setCategory('Presidents')">Presidents</button>
+      <button class="btn" onclick="setCategory('U.S. History')">U.S. History</button>
+    </div><br>
+    <div>
+      <label><input type="radio" name="qCount" value="5" checked /> 5</label>
+      <label><input type="radio" name="qCount" value="10" /> 10</label>
+      <label><input type="radio" name="qCount" value="15" /> 15</label>
+      <label><input type="radio" name="qCount" value="20" /> 20</label>
+      <label><input type="radio" name="qCount" value="30" /> 30</label>
+      <label><input type="checkbox" id="five-answers" /> Use 5 Answers</label>
+    </div><br>
+    <button class="btn static-btn" onclick="startGame()">Start Game</button>
+  </div>
+
+  <div id="trivia-screen" class="screen">
+    <button class="btn static-btn" onclick="goHome()">🏠 Home</button>
+    <div id="question-text">Loading Questions</div>
+    <div id="question-status"></div>
+    <div id="answers"></div>
+    <div id="feedback"></div>
+    <button class="btn static-btn" onclick="showHint()">💡 Hint</button>
+    <button class="btn static-btn" onclick="toggleFunFact()">🧠 Show Fun Fact</button>
+    <button class="btn static-btn" onclick="nextQuestion()">➡️ Next</button>
+    <div id="fun-fact" style="display:none;"></div>
+  </div>
+
+  <div id="end-screen" class="screen">
+    <h2 id="score-title"></h2>
+    <div id="end-message"></div>
+    <button class="btn static-btn" onclick="goHome()">Back to Home</button>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
