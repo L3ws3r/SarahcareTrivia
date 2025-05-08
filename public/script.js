@@ -68,10 +68,8 @@ async function fetchAndShowNextQuestion() {
 
     
 
-  const data = await res.json();
   let qData;
   try {
-    qData = JSON.parse(data.questionData);
   } catch (err) {
     alert("Could not load question.");
     return;
@@ -139,8 +137,6 @@ function endGame() {
   
 
     
-  const data = await res.json();
-  document.getElementById("extraInfo").textContent = data.questionData;
 };
 
 document.getElementById("playAgainBtn").onclick = () => {
