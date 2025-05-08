@@ -67,7 +67,6 @@ async function fetchAndShowNextQuestion() {
   document.getElementById("extraInfo").textContent = "";
 
   
-Format the result as JSON with fields: question, choices[], correct, funFact.`;
 
     
     method: "POST",
@@ -143,7 +142,6 @@ function endGame() {
 
   const questionText = document.getElementById("questionText").textContent;
   
-Format the result as JSON with fields: question, choices[], correct, funFact.`;
 
     
     method: "POST",
