@@ -113,6 +113,7 @@ function displayQuestion(q) {
       document.getElementById("extraInfo").innerHTML = `<strong>Fun Fact:</strong> ${q.funFact || "None provided."}`;
     };
     answerDiv.appendChild(btn);
+  });
 }
 
 document.getElementById("nextBtn").onclick = () => {
