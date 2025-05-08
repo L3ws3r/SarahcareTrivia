@@ -47,6 +47,7 @@ function startGame() {
   current = correct = wrong = 0;
   answerCount = parseInt(document.querySelector('input[name="choices"]:checked').value);
   totalQuestions = parseInt(document.querySelector('input[name="count"]:checked').value);
+  const theme = document.getElementById("themePicker").value;
   document.body.className = theme;
 
   homeScreen.classList.add("hidden");
@@ -176,3 +177,19 @@ document.getElementById("homeBtn").onclick = () => {
   endScreen.classList.add("hidden");
   loadingScreen.classList.add("hidden");
 };
+
+
+
+const themePicker = document.getElementById('themePicker');
+if (themePicker) {
+  function applyTheme(theme) {
+    document.body.className = '';
+    document.body.classList.add(`${theme}-theme`);
+  }
+
+  applyTheme(themePicker.value);
+
+  themePicker.addEventListener('change', (e) => {
+    applyTheme(e.target.value);
+  });
+}
