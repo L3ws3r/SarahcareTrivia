@@ -6,6 +6,7 @@ const presetCategories = [
 ];
 
 let current = 0;
+let previousQuestions = [];
 let correct = 0;
 let wrong = 0;
 let answerCount = 4;
@@ -67,7 +68,11 @@ async function fetchAndShowNextQuestion() {
   document.getElementById("extraInfo").textContent = "";
 
   
+    const dedupePrompt = `Generate a new multiple-choice trivia question in the category "${category}" with ${answerCount} options. Do NOT repeat or closely resemble any of these:
+${previousQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
+Format the result as JSON with fields: question, choices[], correct, funFact.`;
 
+    const res = await fetch("/ask-gpt", {
     
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -83,6 +88,7 @@ async function fetchAndShowNextQuestion() {
     return;
   }
 
+  previousQuestions.push(qData.question);
   displayQuestion(qData);
 }
 
@@ -140,9 +146,15 @@ function endGame() {
   document.getElementById("finalScore").innerHTML = `\n    <div class="score-result">\n      <div><span class="label-correct">CORRECT:</span> <span class="score-correct">${correct}</span></div>\n      <div><span class="label-wrong">WRONG:</span> <span class="score-wrong">${wrong}</span></div>\n      <div class="funny-quote">${correct >= wrong ? "“Nice job, Trivia Titan!”" : "“Well... you tried!”"}</div>\n    </div>`;
 }
 
+document.getElementById("hintBtn").onclick = async () => {
   const questionText = document.getElementById("questionText").textContent;
+  const prompt = `Give me a hint for this trivia question: "${questionText}"`;
   
+    const dedupePrompt = `Generate a new multiple-choice trivia question in the category "${category}" with ${answerCount} options. Do NOT repeat or closely resemble any of these:
+${previousQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
+Format the result as JSON with fields: question, choices[], correct, funFact.`;
 
+    const res = await fetch("/ask-gpt", {
     
     method: "POST",
     headers: { "Content-Type": "application/json" },
