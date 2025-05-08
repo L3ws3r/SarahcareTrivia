@@ -67,11 +67,6 @@ async function fetchAndShowNextQuestion() {
   gameScreen.classList.add("hidden");
   document.getElementById("extraInfo").textContent = "";
 
-  
-    const dedupePrompt = `Generate a new multiple-choice trivia question in the category "${category}" with ${answerCount} options. Do NOT repeat or closely resemble any of these:
-${previousQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
-Format the result as JSON with fields: question, choices[], correct, funFact.`;
-
     const res = await fetch("/ask-gpt", {
     
     method: "POST",
@@ -139,20 +134,24 @@ function endGame() {
   gameScreen.classList.add("hidden");
   endScreen.classList.remove("hidden");
 
-  const message = correct >= totalQuestions / 2
-    ? "🎉 Congratulations!"
-    : "😅 Better luck next time!";
-  document.getElementById("finalMessage").textContent = message;
-  document.getElementById("finalScore").textContent = `You got ${correct} out of ${totalQuestions} correct.`;
+  // Populate score breakdown
+  document.getElementById("correctTotal").textContent = correct;
+  document.getElementById("wrongTotal").textContent = wrong;
+
+  // Funny quotes pool
+  const quotes = [
+    "Brain cells rejoice, you've done well!",
+    "Not bad! You could host Jeopardy next.",
+    "Well... at least you tried!",
+    "Trivia titan or lucky guesser? You decide.",
+    "Einstein would be proud... probably."
+  ];
+  document.getElementById("quote").textContent =
+    quotes[Math.floor(Math.random() * quotes.length)];
+} out of ${totalQuestions} correct.`;
 }
 
-document.getElementById("hintBtn").onclick = async () => {
-  const questionText = document.getElementById("questionText").textContent;
   const prompt = `Give me a hint for this trivia question: "${questionText}"`;
-  
-    const dedupePrompt = `Generate a new multiple-choice trivia question in the category "${category}" with ${answerCount} options. Do NOT repeat or closely resemble any of these:
-${previousQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
-Format the result as JSON with fields: question, choices[], correct, funFact.`;
 
     const res = await fetch("/ask-gpt", {
     

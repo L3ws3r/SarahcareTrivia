@@ -46,6 +46,7 @@
 
         <label>Theme:</label>
         <select id="themePicker">
+          <option value="white" selected>White</option>
           <option value="pink">Pink</option>
           <option value="teal">Teal</option>
           <option value="lightyellow">Light Yellow</option>
@@ -60,19 +61,19 @@
       <div id="gameScreen" class="hidden">
         <h2 id="questionText"></h2>
         <div id="answers"></div>
-        <div id="gameButtons">
-          <button id="hintBtn">💡 Hint</button>
-          
-          <button id="nextBtn">➡️ Next</button>
+        <div id="gameButtons"><button id="nextBtn">➡️ Next</button>
         </div>
         <p id="extraInfo"></p>
       </div>
 
       <div id="endScreen" class="hidden">
-        <h2 id="finalMessage"></h2>
-        <p id="finalScore"></p>
-        <button id="playAgainBtn">🔁 Play Again</button>
-      </div>
+  <div id="scoreBreakdown">
+    <p class="big"><span class="label correct">CORRECT</span> <span id="correctTotal" class="number"></span></p>
+    <p class="big"><span class="label wrong">WRONG</span> <span id="wrongTotal" class="number"></span></p>
+    <p id="quote" class="quote big"></p>
+  </div>
+  <button id="playAgainBtn">🔁 Play Again</button>
+</div>
     </main>
   </div>
 
