@@ -1,3 +1,5 @@
+document.body.classList.add('white-theme');
+
 
 const presetCategories = [
   "Movies", "Classic TV", "Music", "Presidents", "History", "Science",
@@ -177,3 +179,52 @@ document.getElementById("homeBtn").onclick = () => {
   endScreen.classList.add("hidden");
   loadingScreen.classList.add("hidden");
 };
+
+
+
+
+// Apply and persist selected theme
+const themePicker = document.getElementById('themePicker');
+if (themePicker) {
+  function applyTheme(theme) {
+    document.body.className = '';
+    document.body.classList.add(`${theme}-theme`);
+    localStorage.setItem('selectedTheme', theme);
+  }
+
+  // Load saved theme or fallback to default
+  const savedTheme = localStorage.getItem('selectedTheme') || themePicker.value;
+  themePicker.value = savedTheme;
+  applyTheme(savedTheme);
+
+  themePicker.addEventListener('change', (e) => {
+    applyTheme(e.target.value);
+  });
+}
+
+
+
+// Custom theme button picker
+const themeButtons = document.querySelectorAll('.theme-option');
+if (themeButtons.length) {
+  function applyTheme(theme) {
+    document.body.className = '';
+    document.body.classList.add(`${theme}-theme`);
+    localStorage.setItem('selectedTheme', theme);
+  }
+
+  // Load saved theme or use default
+  const savedTheme = localStorage.getItem('selectedTheme') || 'white';
+  applyTheme(savedTheme);
+
+  themeButtons.forEach(btn => {
+    if (btn.dataset.theme === savedTheme) {
+      btn.classList.add('active-theme');
+    }
+    btn.addEventListener('click', () => {
+      themeButtons.forEach(b => b.classList.remove('active-theme'));
+      btn.classList.add('active-theme');
+      applyTheme(btn.dataset.theme);
+    });
+  });
+}
