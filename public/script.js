@@ -146,7 +146,6 @@ function endGame() {
   document.getElementById("finalScore").innerHTML = `\n    <div class="score-result">\n      <div><span class="label-correct">CORRECT:</span> <span class="score-correct">${correct}</span></div>\n      <div><span class="label-wrong">WRONG:</span> <span class="score-wrong">${wrong}</span></div>\n      <div class="funny-quote">${correct >= wrong ? "“Nice job, Trivia Titan!”" : "“Well... you tried!”"}</div>\n    </div>`;
 }
 
-document.getElementById("hintBtn").onclick = async () => {
   const questionText = document.getElementById("questionText").textContent;
   const prompt = `Give me a hint for this trivia question: "${questionText}"`;
   
