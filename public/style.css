@@ -191,29 +191,3 @@ body.lightyellow {
   font-size: 2rem;
   font-weight: bold;
 }
-
-
-body.white {
-  background-color: #ffffff;
-  color: #000000;
-}
-
-.label.correct {
-  color: green;
-  font-weight: bold;
-}
-
-.label.wrong {
-  color: red;
-  font-weight: bold;
-}
-
-.big {
-  font-size: 2rem;
-  text-align: center;
-  margin: 0.5em 0;
-}
-
-#quote {
-  font-style: italic;
-}
