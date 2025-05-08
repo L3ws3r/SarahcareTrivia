@@ -133,7 +133,6 @@ function endGame() {
 }
 
   const questionText = document.getElementById("questionText").textContent;
-  const prompt = `Give me a hint for this trivia question: "${questionText}"`;
   
 
     
