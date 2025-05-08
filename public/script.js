@@ -1,5 +1,3 @@
-document.body.classList.add('white-theme');
-
 
 const presetCategories = [
   "Movies", "Classic TV", "Music", "Presidents", "History", "Science",
@@ -48,8 +46,7 @@ document.getElementById("customCategory").addEventListener("keydown", async (e) 
 function startGame() {
   current = correct = wrong = 0;
   answerCount = parseInt(document.querySelector('input[name="choices"]:checked').value);
-  const theme = localStorage.getItem("selectedTheme") || "white";
-  const theme = document.getElementById("themePicker").value;
+  totalQuestions = parseInt(document.querySelector('input[name="count"]:checked').value);
   document.body.className = theme;
 
   homeScreen.classList.add("hidden");
@@ -179,47 +176,3 @@ document.getElementById("homeBtn").onclick = () => {
   endScreen.classList.add("hidden");
   loadingScreen.classList.add("hidden");
 };
-
-
-
-
-// Apply and persist selected theme
-  function applyTheme(theme) {
-    document.body.className = '';
-    document.body.classList.add(`${theme}-theme`);
-    localStorage.setItem('selectedTheme', theme);
-  }
-
-  // Load saved theme or fallback to default
-  applyTheme(savedTheme);
-
-    applyTheme(e.target.value);
-  });
-}
-
-
-
-// Custom theme button picker
-const themeButtons = document.querySelectorAll('.theme-option');
-if (themeButtons.length) {
-  function applyTheme(theme) {
-    document.body.className = '';
-    document.body.classList.add(`${theme}-theme`);
-    localStorage.setItem('selectedTheme', theme);
-  }
-
-  // Load saved theme or use default
-  const savedTheme = localStorage.getItem('selectedTheme') || 'white';
-  applyTheme(savedTheme);
-
-  themeButtons.forEach(btn => {
-    if (btn.dataset.theme === savedTheme) {
-      btn.classList.add('active-theme');
-    }
-    btn.addEventListener('click', () => {
-      themeButtons.forEach(b => b.classList.remove('active-theme'));
-      btn.classList.add('active-theme');
-      applyTheme(btn.dataset.theme);
-    });
-  });
-}
