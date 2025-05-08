@@ -33,14 +33,12 @@ document.getElementById("presetCategories").addEventListener("click", async (e) 
     document.getElementById("customCategory").value = category;
     startGame();
   }
-});
 
 document.getElementById("customCategory").addEventListener("keydown", async (e) => {
   if (e.key === "Enter") {
     category = e.target.value.trim() || "General";
     startGame();
   }
-});
 
 function startGame() {
   current = correct = wrong = 0;
@@ -69,10 +67,6 @@ async function fetchAndShowNextQuestion() {
   
 
     
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ category, answerCount })
-  });
 
   const data = await res.json();
   let qData;
@@ -119,7 +113,6 @@ function displayQuestion(q) {
       document.getElementById("extraInfo").innerHTML = `<strong>Fun Fact:</strong> ${q.funFact || "None provided."}`;
     };
     answerDiv.appendChild(btn);
-  });
 }
 
 document.getElementById("nextBtn").onclick = () => {
@@ -145,9 +138,6 @@ function endGame() {
   
 
     
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-  });
   const data = await res.json();
   document.getElementById("extraInfo").textContent = data.questionData;
 };
