@@ -48,7 +48,7 @@ document.getElementById("customCategory").addEventListener("keydown", async (e) 
 function startGame() {
   current = correct = wrong = 0;
   answerCount = parseInt(document.querySelector('input[name="choices"]:checked').value);
-  totalQuestions = parseInt(document.querySelector('input[name="count"]:checked').value);
+  const theme = localStorage.getItem("selectedTheme") || "white";
   const theme = document.getElementById("themePicker").value;
   document.body.className = theme;
 
