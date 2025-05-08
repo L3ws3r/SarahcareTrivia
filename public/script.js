@@ -143,7 +143,7 @@ function endGame() {
     ? "🎉 Congratulations!"
     : "😅 Better luck next time!";
   document.getElementById("finalMessage").textContent = message;
-  document.getElementById("finalScore").textContent = `You got ${correct} out of ${totalQuestions} correct.`;
+  document.getElementById("finalScore").innerHTML = `\n    <div class="score-result">\n      <div><span class="label-correct">CORRECT:</span> <span class="score-correct">${correct}</span></div>\n      <div><span class="label-wrong">WRONG:</span> <span class="score-wrong">${wrong}</span></div>\n      <div class="funny-quote">${correct >= wrong ? "“Nice job, Trivia Titan!”" : "“Well... you tried!”"}</div>\n    </div>`;
 }
 
 document.getElementById("hintBtn").onclick = async () => {
@@ -177,19 +177,3 @@ document.getElementById("homeBtn").onclick = () => {
   endScreen.classList.add("hidden");
   loadingScreen.classList.add("hidden");
 };
-
-
-
-const themePicker = document.getElementById('themePicker');
-if (themePicker) {
-  function applyTheme(theme) {
-    document.body.className = '';
-    document.body.classList.add(`${theme}-theme`);
-  }
-
-  applyTheme(themePicker.value);
-
-  themePicker.addEventListener('change', (e) => {
-    applyTheme(e.target.value);
-  });
-}
