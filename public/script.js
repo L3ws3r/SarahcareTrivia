@@ -67,7 +67,6 @@ async function fetchAndShowNextQuestion() {
   document.getElementById("extraInfo").textContent = "";
 
   
-Format the result as JSON with fields: question, choices[], correct, funFact.`;
 
     
     method: "POST",
@@ -144,7 +143,6 @@ function endGame() {
   const questionText = document.getElementById("questionText").textContent;
   const prompt = `Give me a hint for this trivia question: "${questionText}"`;
   
-Format the result as JSON with fields: question, choices[], correct, funFact.`;
 
     
     method: "POST",
