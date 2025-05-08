@@ -184,8 +184,6 @@ document.getElementById("homeBtn").onclick = () => {
 
 
 // Apply and persist selected theme
-const themePicker = document.getElementById('themePicker');
-if (themePicker) {
   function applyTheme(theme) {
     document.body.className = '';
     document.body.classList.add(`${theme}-theme`);
@@ -193,11 +191,8 @@ if (themePicker) {
   }
 
   // Load saved theme or fallback to default
-  const savedTheme = localStorage.getItem('selectedTheme') || themePicker.value;
-  themePicker.value = savedTheme;
   applyTheme(savedTheme);
 
-  themePicker.addEventListener('change', (e) => {
     applyTheme(e.target.value);
   });
 }
