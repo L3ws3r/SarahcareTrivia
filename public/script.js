@@ -128,14 +128,7 @@ function endGame() {
   const message = correct >= totalQuestions / 2
     ? "🎉 Congratulations!"
     : "😅 Better luck next time!";
-  document.getElementById("finalMessage").textContent = message;
   document.getElementById("finalScore").innerHTML = `\n    <div class="score-result">\n      <div><span class="label-correct">CORRECT:</span> <span class="score-correct">${correct}</span></div>\n      <div><span class="label-wrong">WRONG:</span> <span class="score-wrong">${wrong}</span></div>\n      <div class="funny-quote">${correct >= wrong ? "“Nice job, Trivia Titan!”" : "“Well... you tried!”"}</div>\n    </div>`;
-}
-
-  const questionText = document.getElementById("questionText").textContent;
-  
-
-    
 };
 
 document.getElementById("playAgainBtn").onclick = () => {
