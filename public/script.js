@@ -146,23 +146,6 @@ function endGame() {
   document.getElementById("finalScore").textContent = `You got ${correct} out of ${totalQuestions} correct.`;
 }
 
-document.getElementById("hintBtn").onclick = async () => {
-  const questionText = document.getElementById("questionText").textContent;
-  const prompt = `Give me a hint for this trivia question: "${questionText}"`;
-  
-    const dedupePrompt = `Generate a new multiple-choice trivia question in the category "${category}" with ${answerCount} options. Do NOT repeat or closely resemble any of these:
-${previousQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
-Format the result as JSON with fields: question, choices[], correct, funFact.`;
-
-    const res = await fetch("/ask-gpt", {
-    
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ category, answerCount: 1, prompt })
-  });
-  const data = await res.json();
-  document.getElementById("extraInfo").textContent = data.questionData;
-};
 
 document.getElementById("playAgainBtn").onclick = () => {
   homeScreen.classList.remove("hidden");
