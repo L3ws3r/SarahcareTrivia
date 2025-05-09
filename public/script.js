@@ -163,4 +163,8 @@ document.getElementById("homeBtn").onclick = () => {
   gameScreen.classList.add("hidden");
   endScreen.classList.add("hidden");
   loadingScreen.classList.add("hidden");
-};
+}    case 'white':
+      document.body.style.backgroundColor = 'white';
+      document.body.style.color = 'black';
+      break;
+;
