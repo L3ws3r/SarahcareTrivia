@@ -98,6 +98,7 @@ function displayQuestion(q) {
   document.getElementById("homeBtn").classList.remove("hidden");
 
   document.getElementById("questionText").textContent = q.question;
+  document.getElementById("answerFeedback").textContent = "";
   document.getElementById("questionCounter").textContent = `Question ${current + 1} of ${totalQuestions}`;
   document.getElementById("extraInfo").textContent = "";
 
@@ -115,6 +116,9 @@ function displayQuestion(q) {
       if (choice === q.correct) {
         btn.classList.add("correct");
         correct++;
+      document.getElementById('answerFeedback').textContent = 'CORRECT';
+      document.getElementById('answerFeedback').style.color = 'green';
+      document.getElementById('answerFeedback').style.fontSize = '2em';
         document.getElementById('answerFeedback').textContent = 'CORRECT';
         document.getElementById('answerFeedback').style.color = 'green';
         document.getElementById('answerFeedback').style.fontSize = '2em';
@@ -122,6 +126,9 @@ function displayQuestion(q) {
       } else {
         btn.classList.add("incorrect");
         wrong++;
+      document.getElementById('answerFeedback').textContent = 'WRONG';
+      document.getElementById('answerFeedback').style.color = 'red';
+      document.getElementById('answerFeedback').style.fontSize = '2em';
         document.getElementById('answerFeedback').textContent = 'WRONG';
         document.getElementById('answerFeedback').style.color = 'red';
         document.getElementById('answerFeedback').style.fontSize = '2em';
