@@ -144,6 +144,9 @@ function displayQuestion(q) {
 document.getElementById("nextBtn").onclick = () => {
   if (!answered) return;
   current++;
+  document.getElementById('answerFeedback').textContent = '';
+  document.getElementById('answerFeedback').style.color = '';
+  document.getElementById('answerFeedback').style.fontSize = '';
   if (current >= totalQuestions) endGame();
   else fetchAndShowNextQuestion();
 };
