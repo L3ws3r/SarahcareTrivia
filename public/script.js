@@ -164,3 +164,4 @@ document.getElementById("homeBtn").onclick = () => {
   endScreen.classList.add("hidden");
   loadingScreen.classList.add("hidden");
 ;
+}
