@@ -115,10 +115,16 @@ function displayQuestion(q) {
       if (choice === q.correct) {
         btn.classList.add("correct");
         correct++;
+        document.getElementById('answerFeedback').textContent = 'CORRECT';
+        document.getElementById('answerFeedback').style.color = 'green';
+        document.getElementById('answerFeedback').style.fontSize = '2em';
         document.getElementById("correctCount").textContent = `✅ ${correct}`;
       } else {
         btn.classList.add("incorrect");
         wrong++;
+        document.getElementById('answerFeedback').textContent = 'WRONG';
+        document.getElementById('answerFeedback').style.color = 'red';
+        document.getElementById('answerFeedback').style.fontSize = '2em';
         document.getElementById("wrongCount").textContent = `❌ ${wrong}`;
       }
       Array.from(answerDiv.children).forEach(b => b.disabled = true);
