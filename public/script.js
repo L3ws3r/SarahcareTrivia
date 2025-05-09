@@ -143,7 +143,7 @@ function endGame() {
     ? "🎉 Congratulations!"
     : "😅 Better luck next time!";
   document.getElementById("finalMessage").textContent = message;
-  document.getElementById("finalScore").textContent = `You got ${correct} out of ${totalQuestions} correct.`;
+  document.getElementById("finalScore").innerHTML = `<div style="font-size: 2em; color: green;">CORRECT ANSWERS: ${correct}</div>` + `<div style="font-size: 2em; color: red;">WRONG ANSWERS: ${totalQuestions - correct}</div>`;
 }
 
 
