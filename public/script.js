@@ -189,6 +189,7 @@ document.getElementById("homeBtn").onclick = () => {
   loadingScreen.classList.add("hidden");
 ;
 }
+window.onload = () => {
 
 // Settings page navigation
 document.getElementById("settingsBtn").onclick = () => {
@@ -205,4 +206,6 @@ document.getElementById("backToHomeBtn").onclick = () => {
 document.getElementById("clearHistoryBtn").onclick = () => {
   localStorage.removeItem("seenQuestions");
   alert("Question history cleared!");
+};
+
 };
