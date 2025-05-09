@@ -143,11 +143,11 @@ function endGame() {
     ? "🎉 Congratulations!"
     : "😅 Better luck next time!";
   document.getElementById("finalMessage").textContent = message;
-  let message = correct >= totalQuestions / 2 ? `<div style="font-size: 2em; margin-top: 1em;">🎉 Not bad, trivia champ! 🎉</div>` : `<div style="font-size: 2em; margin-top: 1em;">🤔 Yikes! Better luck next time. 🤪</div>`;
+  let finalMessage = correct >= totalQuestions / 2 ? `<div style="font-size: 2em; margin-top: 1em;">🎉 Not bad, trivia champ! 🎉</div>` : `<div style="font-size: 2em; margin-top: 1em;">🤔 Yikes! Better luck next time. 🤪</div>`;
   document.getElementById("finalScore").innerHTML = `<div style="text-align: center;">` +
 `<div style="font-size: 2em; color: green;">CORRECT ANSWERS: ${correct}</div>` +
 `<div style="font-size: 2em; color: red;">WRONG ANSWERS: ${totalQuestions - correct}</div>` +
-message + `</div>`;
+finalMessage + `</div>`;
 }
 
 
