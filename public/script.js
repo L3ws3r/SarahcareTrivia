@@ -7,6 +7,7 @@ const presetCategories = [
 
 let current = 0;
 let previousQuestions = [];
+let seenQuestions = new Set(JSON.parse(localStorage.getItem('seenQuestions') || '[]'));
 let correct = 0;
 let wrong = 0;
 let answerCount = 4;
@@ -88,6 +89,13 @@ Format the result as JSON with fields: question, choices[], correct, funFact.`;
     return;
   }
 
+  const questionText = qData.question.toLowerCase().trim();
+  if (seenQuestions.has(questionText)) {
+    console.log('Duplicate question detected. Getting another...');
+    return fetchAndShowNextQuestion();
+  }
+  seenQuestions.add(questionText);
+  localStorage.setItem('seenQuestions', JSON.stringify(Array.from(seenQuestions)));
   previousQuestions.push(qData.question);
   displayQuestion(qData);
 }
@@ -181,3 +189,20 @@ document.getElementById("homeBtn").onclick = () => {
   loadingScreen.classList.add("hidden");
 ;
 }
+
+// Settings page navigation
+document.getElementById("settingsBtn").onclick = () => {
+  document.getElementById("homeScreen").classList.add("hidden");
+  document.getElementById("settingsScreen").classList.remove("hidden");
+};
+
+document.getElementById("backToHomeBtn").onclick = () => {
+  document.getElementById("settingsScreen").classList.add("hidden");
+  document.getElementById("homeScreen").classList.remove("hidden");
+};
+
+// Clear question history
+document.getElementById("clearHistoryBtn").onclick = () => {
+  localStorage.removeItem("seenQuestions");
+  alert("Question history cleared!");
+};
