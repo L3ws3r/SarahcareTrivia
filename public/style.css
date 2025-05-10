@@ -200,8 +200,8 @@ body.lightyellow {
 }
 
 
-/* Center Settings Screen */
-#settingsScreen {
+/* Center Settings Screen only when visible */
+#settingsScreen:not(.hidden) {
   display: flex;
   flex-direction: column;
   align-items: center;
