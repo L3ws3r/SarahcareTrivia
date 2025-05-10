@@ -1,4 +1,3 @@
-
 const presetCategories = [
   "Movies", "Classic TV", "Music", "Presidents", "History", "Science",
   "Sports", "Animals", "Food", "Geography", "Famous People", "Cars",
@@ -221,7 +220,10 @@ window.onload = () => {
   if (clearBtn) clearBtn.onclick = () => {
     localStorage.removeItem("seenQuestions");
     alert("Question history cleared!");
+  };
   const themeSelect = document.getElementById("themePicker");
   if (themeSelect) themeSelect.onchange = (e) => {
     const theme = e.target.value;
     document.body.className = theme;
+  };
+};
