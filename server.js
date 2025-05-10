@@ -48,8 +48,8 @@ app.post('/ask-gpt', async (req, res) => {
 // Health check
 app.get('/health', (_req, res) => res.status(200).send('OK'));
 
-// Serve frontend
-app.get('*', (req, res) => {
+// Only serve index.html for the root path
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
