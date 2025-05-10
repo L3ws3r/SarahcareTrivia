@@ -77,8 +77,7 @@ Format the result as JSON with fields: question, choices[], correct, funFact.`;
     
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ category, answerCount })
-  });
+      body: JSON.stringify({ category, previousQuestions, numChoices }),  });
 
   const data = await res.json();
   let qData;
