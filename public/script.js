@@ -94,9 +94,7 @@ Format the result as JSON with fields: question, choices[], correct, funFact.`;
   const questionText = qData.question.toLowerCase().trim();
 
     // Avoid repeats based on identical answer sets
-    const allAnswers = [qData.correct_answer, ...qData.incorrect_answers];
-    allAnswers.sort();
-    const answerKey = allAnswers.join('|');
+    const answerKey = [...qData.choices].sort().join('|');
     if (previousAnswerSets.includes(answerKey)) {
       console.log('Duplicate answer set detected. Fetching another question...');
       return fetchAndShowNextQuestion();
