@@ -91,9 +91,7 @@ async function fetchAndShowNextQuestion() {
 ${previousQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
 Format the result as JSON with fields: question, choices[], correct, funFact.`;
 
-  const numChoices = localStorage.getItem("choiceCount") || "4";
     const res = await fetch("/ask-gpt", {
-        numChoices: parseInt(numChoices),
     
     method: "POST",
     headers: { "Content-Type": "application/json" },
