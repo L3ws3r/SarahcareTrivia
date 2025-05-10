@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Settings</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <img src="images/logo.png" alt="SarahCare" class="logo" />
+    <nav class="top-nav">
+      <a href="index.html" title="Home" class="icon-btn">🏠</a>
+      <a href="settings.html" title="Settings" class="icon-btn">⚙️</a>
+    </nav>
+  </header>
+
+  <main class="settings-screen">
+    <h1>Settings</h1>
+
+    <section class="theme-section">
+      <h2>Theme Background:</h2>
+      <div class="swatches bg-swatches">
+        <button data-bg="#ffffff" style="background:#fff;"></button>
+        <button data-bg="#f3f3f3" style="background:#f3f3f3;"></button>
+        <button data-bg="#333333" style="background:#333;"></button>
+        <button data-bg="#007bff" style="background:#007bff;"></button>
+        <button data-bg="#28a745" style="background:#28a745;"></button>
+        <button data-bg="#ffc107" style="background:#ffc107;"></button>
+      </div>
+    </section>
+
+    <section class="theme-section">
+      <h2>Theme Button Colors:</h2>
+      <div class="swatches btn-swatches">
+        <button data-btn="#007bff" style="background:#007bff;"></button>
+        <button data-btn="#6c757d" style="background:#6c757d;"></button>
+        <button data-btn="#28a745" style="background:#28a745;"></button>
+        <button data-btn="#dc3545" style="background:#dc3545;"></button>
+        <button data-btn="#ffc107" style="background:#ffc107;"></button>
+        <button data-btn="#17a2b8" style="background:#17a2b8;"></button>
+      </div>
+    </section>
+
+    <button id="clear-history" class="primary-btn">🗑️ Clear Question History</button>
+    <button id="back-btn" class="primary-btn">↩️ Back</button>
+  </main>
+
+  <script>
+    document.querySelectorAll('.bg-swatches button').forEach(btn=>{
+      btn.addEventListener('click', () => {
+        document.body.style.background = btn.dataset.bg;
+        localStorage.setItem('trivia-bg', btn.dataset.bg);
+      });
+    });
+    document.querySelectorAll('.btn-swatches button').forEach(btn=>{
+      btn.addEventListener('click', () => {
+        document.documentElement.style.setProperty('--primary-color', btn.dataset.btn);
+        localStorage.setItem('trivia-btn', btn.dataset.btn);
+      });
+    });
+    window.addEventListener('DOMContentLoaded', ()=>{
+      const bg = localStorage.getItem('trivia-bg');
+      if (bg) document.body.style.background = bg;
+      const btn = localStorage.getItem('trivia-btn');
+      if (btn) document.documentElement.style.setProperty('--primary-color', btn);
+    });
+    document.getElementById('clear-history').onclick = () => {
+      localStorage.removeItem('previousQuestions');
+      alert('Question history cleared.');
+    };
+    document.getElementById('back-btn').onclick = () => {
+      location.href = 'index.html';
+    };
+  </script>
+</body>
+</html>

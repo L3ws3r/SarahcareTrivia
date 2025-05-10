@@ -1,48 +1,73 @@
+:root {
+  --primary-color: #007bff;
+}
+* { box-sizing: border-box; margin:0; padding:0; }
 body {
   font-family: sans-serif;
-  margin: 0;
-  padding: 0;
-}
-#settingsScreen {
-  max-width: 600px;
-  margin: 50px auto;
-  padding: 20px;
   background: #fff;
-  border-radius: 8px;
-  text-align: center;
+  color: #222;
+  min-height: 100vh;
 }
-.theme-section {
-  margin: 20px 0;
-}
-.theme-section label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 10px;
-}
-.swatches {
+header {
   display: flex;
-  justify-content: center;
-  gap: 10px;
+  align-items: center;
+  padding: 1rem;
 }
-.swatch {
-  width: 40px;
-  height: 40px;
-  border: 2px solid transparent;
-  cursor: pointer;
-  border-radius: 4px;
-  box-sizing: border-box;
+.logo {
+  height: 3rem;
 }
-.swatch.selected {
-  border-color: #000;
+.top-nav {
+  margin-left: auto;
 }
-button {
-  --btn: #007bff;
-  background: var(--btn);
+.icon-btn {
+  font-size: 1.5rem;
+  margin-left: 1rem;
+  text-decoration: none;
+}
+.primary-btn {
+  display: inline-block;
+  background: var(--primary-color);
   color: #fff;
   border: none;
-  padding: 10px 20px;
-  margin: 10px;
-  border-radius: 4px;
-  font-size: 16px;
+  padding: .75rem 1.25rem;
+  margin: .5rem 0;
+  border-radius: .25rem;
   cursor: pointer;
+  font-size: 1rem;
+}
+
+.home-screen, .settings-screen {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  background: #fff;
+  border-radius: .5rem;
+}
+
+h1, h2 { margin-bottom: .5rem; }
+.theme-section { margin-bottom: 1.5rem; }
+.swatches {
+  display: flex;
+  gap: .5rem;
+  margin-bottom: 1rem;
+}
+.swatches button {
+  width: 2rem; height: 2rem;
+  border: 2px solid #000;
+  cursor: pointer;
+}
+
+fieldset {
+  border: none;
+  margin: 1rem 0;
+}
+legend {
+  font-weight: bold;
+  margin-bottom: .5rem;
+}
+label + label { margin-left: 1rem; }
+input[type="text"] {
+  width: 100%;
+  padding: .5rem;
+  margin-top: .25rem;
 }

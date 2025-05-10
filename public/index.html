@@ -1,24 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Settings</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>SarahCare Senior Trivia</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="settingsScreen">
-    <h1>Settings</h1>
-    <div class="theme-section">
-      <label>Theme Background:</label>
-      <div id="backgroundSwatches" class="swatches"></div>
-    </div>
-    <div class="theme-section">
-      <label>Theme Button Colors:</label>
-      <div id="buttonSwatches" class="swatches"></div>
-    </div>
-    <button id="clearHistoryBtn">🗑️ Clear Question History</button>
-    <button id="backBtn">⬅️ Back</button>
-  </div>
+  <header>
+    <img src="images/logo.png" alt="SarahCare" class="logo" />
+    <nav class="top-nav">
+      <a href="index.html" title="Home" class="icon-btn">
+        🏠
+      </a>
+      <a href="settings.html" title="Settings" class="icon-btn">
+        ⚙️
+      </a>
+    </nav>
+  </header>
+
+  <main class="home-screen">
+    <h1>Senior Trivia</h1>
+    <form id="start-form">
+      <label>
+        Choose a Category:
+        <input id="category-input" type="text" placeholder="Or type your own and press Enter…" />
+      </label>
+      <fieldset>
+        <legend>How many questions?</legend>
+        <label><input type="radio" name="qty" value="5" checked /> 5</label>
+        <label><input type="radio" name="qty" value="10" /> 10</label>
+        <label><input type="radio" name="qty" value="15" /> 15</label>
+        <label><input type="radio" name="qty" value="20" /> 20</label>
+        <label><input type="radio" name="qty" value="30" /> 30</label>
+      </fieldset>
+      <fieldset>
+        <legend>Number of choices:</legend>
+        <label><input type="radio" name="choices" value="4" checked /> 4</label>
+        <label><input type="radio" name="choices" value="5" /> 5</label>
+      </fieldset>
+      <button type="submit" class="primary-btn">
+        ▶️ Start Trivia
+      </button>
+    </form>
+  </main>
+
   <script src="script.js"></script>
 </body>
 </html>
