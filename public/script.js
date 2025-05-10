@@ -202,7 +202,7 @@ document.getElementById("homeBtn").onclick = () => {
   loadingScreen.classList.add("hidden");
 ;
 }
-window.onload = () => {
+document.addEventListener("DOMContentLoaded", () => {
 
 // Settings page navigation
 document.getElementById("settingsBtn").onclick = () => {
@@ -224,7 +224,7 @@ document.getElementById("clearHistoryBtn").onclick = () => {
 };
 
 // Settings logic wrapped safely in window.onload
-window.onload = () => {
+document.addEventListener("DOMContentLoaded", () => {
   const settingsBtn = document.getElementById("settingsBtn");
   const backBtn = document.getElementById("backToHomeBtn");
   const clearBtn = document.getElementById("clearHistoryBtn");
