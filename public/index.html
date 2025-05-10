@@ -7,6 +7,22 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+<a href="settings.html" style="position: absolute; top: 20px; left: 20px; z-index: 10;">
+  <img src="images/gear.png" alt="Settings" width="40" height="40" />
+</a>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const bg = localStorage.getItem('bgColor');
+    const btn = localStorage.getItem('buttonColor');
+    if (bg) document.body.style.backgroundColor = bg;
+    if (btn) {
+      document.querySelectorAll('button').forEach(btnEl => {
+        btnEl.style.backgroundColor = btn;
+      });
+    }
+  });
+</script>
+
   <div id="app">
     <header><button id="homeBtn" class="hidden">🏠</button><div id="scoreInfo" style="margin-left: auto;">
         <span id="questionCounter"></span>
