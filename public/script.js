@@ -239,5 +239,4 @@ window.onload = () => {
     alert("Question history cleared!");
   };
 
-  }
 };
