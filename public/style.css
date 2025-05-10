@@ -223,3 +223,8 @@ body.lightyellow {
   margin: 0 auto;
   text-align: center;
 }
+
+/* Flush Settings header to top */
+#settingsScreen:not(.hidden) h1 {
+  margin-top: 0;
+}
