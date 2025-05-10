@@ -187,24 +187,6 @@ document.getElementById("homeBtn").onclick = () => {
   endScreen.classList.add("hidden");
   loadingScreen.classList.add("hidden");
 ;
-}
-window.onload = () => {
-
-// Settings page navigation
-  document.getElementById("homeScreen").classList.add("hidden");
-  document.getElementById("settingsScreen").classList.remove("hidden");
-};
-
-  document.getElementById("settingsScreen").classList.add("hidden");
-  document.getElementById("homeScreen").classList.remove("hidden");
-};
-
-// Clear question history
-  localStorage.removeItem("seenQuestions");
-  alert("Question history cleared!");
-};
-
-};
 window.onload = () => {
   const settingsBtn = document.getElementById("settingsBtn");
   if (settingsBtn) settingsBtn.onclick = () => {
@@ -226,4 +208,3 @@ window.onload = () => {
     const theme = e.target.value;
     document.body.className = theme;
   };
-};
