@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="style.css"/>
+  <title>Settings</title>
+  <style>
+    .settings-container {
+      padding: 20px;
+      text-align: center;
+    }
+    .setting-section {
+      margin-bottom: 20px;
+    }
+    .color-options {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .color-option {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+    }
+    .color-option:hover {
+      border-color: #000;
+    }
+    .back-home {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="settings-container">
+    <h1>Settings</h1>
+    <div class="setting-section">
+      <h2>Background Color</h2>
+      <div class="color-options" id="bg-options">
+        <div class="color-option" data-color="#ffffff" style="background-color: #ffffff;"></div>
+        <div class="color-option" data-color="#f0f0f0" style="background-color: #f0f0f0;"></div>
+        <div class="color-option" data-color="#cceeff" style="background-color: #cceeff;"></div>
+        <div class="color-option" data-color="#ffcccc" style="background-color: #ffcccc;"></div>
+        <div class="color-option" data-color="#ccffcc" style="background-color: #ccffcc;"></div>
+        <div class="color-option" data-color="#e0e0ff" style="background-color: #e0e0ff;"></div>
+      </div>
+    </div>
+    <div class="setting-section">
+      <h2>Button Color</h2>
+      <div class="color-options" id="button-options">
+        <div class="color-option" data-color="#007bff" style="background-color: #007bff;"></div>
+        <div class="color-option" data-color="#28a745" style="background-color: #28a745;"></div>
+        <div class="color-option" data-color="#dc3545" style="background-color: #dc3545;"></div>
+        <div class="color-option" data-color="#ffc107" style="background-color: #ffc107;"></div>
+        <div class="color-option" data-color="#17a2b8" style="background-color: #17a2b8;"></div>
+        <div class="color-option" data-color="#6c757d" style="background-color: #6c757d;"></div>
+      </div>
+    </div>
+    <a href="index.html" class="back-home">Back to Home</a>
+  </div>
+  <script src="settings.js"></script>
+</body>
+</html>
