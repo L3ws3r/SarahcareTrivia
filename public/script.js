@@ -62,6 +62,8 @@ function startGame() {
   fetchAndShowNextQuestion();
 }
 
+// Track previous answer sets to avoid semantic duplicates
+const previousAnswerSets = [];
 async function fetchAndShowNextQuestion() {
   answered = false;
   loadingScreen.classList.remove("hidden");
@@ -90,6 +92,23 @@ Format the result as JSON with fields: question, choices[], correct, funFact.`;
   }
 
   const questionText = qData.question.toLowerCase().trim();
+
+    // Avoid repeats based on identical answer sets
+    const allAnswers = [qData.correct_answer, ...qData.incorrect_answers];
+    allAnswers.sort();
+    const answerKey = allAnswers.join('|');
+    if (previousAnswerSets.includes(answerKey)) {
+      console.log('Duplicate answer set detected. Fetching another question...');
+      return fetchAndShowNextQuestion();
+    }
+    previousAnswerSets.push(answerKey);
+
+    // Avoid exact repeats in current session
+    if (previousQuestions.includes(qData.question)) {
+      console.log('Duplicate question (exact match) detected. Fetching another...');
+      return fetchAndShowNextQuestion();
+    }
+
   if (seenQuestions.has(questionText)) {
     console.log('Duplicate question detected. Getting another...');
     return fetchAndShowNextQuestion();
