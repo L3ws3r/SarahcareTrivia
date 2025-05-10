@@ -35,7 +35,6 @@ header {
   cursor: pointer;
   font-size: 1rem;
 }
-
 .home-screen, .settings-screen {
   max-width: 600px;
   margin: 2rem auto;
@@ -43,7 +42,6 @@ header {
   background: #fff;
   border-radius: .5rem;
 }
-
 h1, h2 { margin-bottom: .5rem; }
 .theme-section { margin-bottom: 1.5rem; }
 .swatches {
@@ -56,7 +54,6 @@ h1, h2 { margin-bottom: .5rem; }
   border: 2px solid #000;
   cursor: pointer;
 }
-
 fieldset {
   border: none;
   margin: 1rem 0;

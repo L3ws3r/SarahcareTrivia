@@ -14,10 +14,8 @@
       <a href="settings.html" title="Settings" class="icon-btn">⚙️</a>
     </nav>
   </header>
-
   <main class="settings-screen">
     <h1>Settings</h1>
-
     <section class="theme-section">
       <h2>Theme Background:</h2>
       <div class="swatches bg-swatches">
@@ -29,7 +27,6 @@
         <button data-bg="#ffc107" style="background:#ffc107;"></button>
       </div>
     </section>
-
     <section class="theme-section">
       <h2>Theme Button Colors:</h2>
       <div class="swatches btn-swatches">
@@ -41,37 +38,9 @@
         <button data-btn="#17a2b8" style="background:#17a2b8;"></button>
       </div>
     </section>
-
     <button id="clear-history" class="primary-btn">🗑️ Clear Question History</button>
     <button id="back-btn" class="primary-btn">↩️ Back</button>
   </main>
-
-  <script>
-    document.querySelectorAll('.bg-swatches button').forEach(btn=>{
-      btn.addEventListener('click', () => {
-        document.body.style.background = btn.dataset.bg;
-        localStorage.setItem('trivia-bg', btn.dataset.bg);
-      });
-    });
-    document.querySelectorAll('.btn-swatches button').forEach(btn=>{
-      btn.addEventListener('click', () => {
-        document.documentElement.style.setProperty('--primary-color', btn.dataset.btn);
-        localStorage.setItem('trivia-btn', btn.dataset.btn);
-      });
-    });
-    window.addEventListener('DOMContentLoaded', ()=>{
-      const bg = localStorage.getItem('trivia-bg');
-      if (bg) document.body.style.background = bg;
-      const btn = localStorage.getItem('trivia-btn');
-      if (btn) document.documentElement.style.setProperty('--primary-color', btn);
-    });
-    document.getElementById('clear-history').onclick = () => {
-      localStorage.removeItem('previousQuestions');
-      alert('Question history cleared.');
-    };
-    document.getElementById('back-btn').onclick = () => {
-      location.href = 'index.html';
-    };
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
