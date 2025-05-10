@@ -34,24 +34,6 @@ document.getElementById("presetCategories").addEventListener("click", async (e) 
     category = e.target.textContent;
     document.getElementById("customCategory").value = category;
     startGame();
-  // Restore saved quiz settings
-  const questionRadios = document.querySelectorAll("input[name='questionCount']");
-  const savedCount = localStorage.getItem("questionCount");
-  if (savedCount) {
-    questionRadios.forEach(r => { if (r.value === savedCount) r.checked = true; });
-  }
-  questionRadios.forEach(r => r.addEventListener("change", () => {
-    localStorage.setItem("questionCount", r.value);
-  }));
-
-  const choiceRadios = document.querySelectorAll("input[name='choiceCount']");
-  const savedChoices = localStorage.getItem("choiceCount");
-  if (savedChoices) {
-    choiceRadios.forEach(r => { if (r.value === savedChoices) r.checked = true; });
-  }
-  choiceRadios.forEach(r => r.addEventListener("change", () => {
-    localStorage.setItem("choiceCount", r.value);
-  }));
   }
 });
 
@@ -263,39 +245,3 @@ window.onload = () => {
     };
   }
 };
-
-// Theme persistence and settings handler
-document.addEventListener("DOMContentLoaded", () => {
-  const themeSelect = document.getElementById("themePicker");
-  if (themeSelect) {
-    const savedTheme = localStorage.getItem("selectedTheme");
-    if (savedTheme) {
-      themeSelect.value = savedTheme;
-      document.body.className = savedTheme;
-    }
-    themeSelect.onchange = (e) => {
-      const theme = e.target.value;
-      localStorage.setItem("selectedTheme", theme);
-      document.body.className = theme;
-    };
-  }
-
-  const settingsBtn = document.getElementById("settingsBtn");
-  const backBtn = document.getElementById("backToHomeBtn");
-  const clearBtn = document.getElementById("clearHistoryBtn");
-
-  if (settingsBtn) settingsBtn.onclick = () => {
-    document.getElementById("homeScreen").classList.add("hidden");
-    document.getElementById("settingsScreen").classList.remove("hidden");
-  };
-
-  if (backBtn) backBtn.onclick = () => {
-    document.getElementById("settingsScreen").classList.add("hidden");
-    document.getElementById("homeScreen").classList.remove("hidden");
-  };
-
-  if (clearBtn) clearBtn.onclick = () => {
-    localStorage.removeItem("seenQuestions");
-    alert("Question history cleared!");
-  };
-});
