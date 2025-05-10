@@ -223,9 +223,3 @@ body.lightyellow {
   margin: 0 auto;
   text-align: center;
 }
-
-
-/* Align Settings Screen to top when visible */
-#settingsScreen:not(.hidden) {
-  justify-content: flex-start;
-}
