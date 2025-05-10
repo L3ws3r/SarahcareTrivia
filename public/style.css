@@ -191,10 +191,3 @@ body.lightyellow {
   font-size: 2rem;
   font-weight: bold;
 }
-
-
-/* White Theme */
-.white {
-  background-color: white;
-  color: black;
-}
