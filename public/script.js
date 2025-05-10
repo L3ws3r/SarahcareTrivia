@@ -156,7 +156,6 @@ function displayQuestion(q) {
       localStorage.setItem("selectedTheme", theme);
       document.body.className = theme;
   }
-    };
     answerDiv.appendChild(btn);
   });
 }
