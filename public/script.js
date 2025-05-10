@@ -192,18 +192,30 @@ document.getElementById("homeBtn").onclick = () => {
 window.onload = () => {
 
 // Settings page navigation
-document.getElementById("settingsBtn").onclick = () => {
+  const settingsBtn = document.getElementById("settingsBtn");
+  if (settingsBtn) settingsBtn.onclick = () => {
+    document.getElementById("homeScreen").classList.add("hidden");
+    document.getElementById("settingsScreen").classList.remove("hidden");
+  };
   document.getElementById("homeScreen").classList.add("hidden");
   document.getElementById("settingsScreen").classList.remove("hidden");
 };
 
-document.getElementById("backToHomeBtn").onclick = () => {
+  const backBtn = document.getElementById("backToHomeBtn");
+  if (backBtn) backBtn.onclick = () => {
+    document.getElementById("settingsScreen").classList.add("hidden");
+    document.getElementById("homeScreen").classList.remove("hidden");
+  };
   document.getElementById("settingsScreen").classList.add("hidden");
   document.getElementById("homeScreen").classList.remove("hidden");
 };
 
 // Clear question history
-document.getElementById("clearHistoryBtn").onclick = () => {
+  const clearBtn = document.getElementById("clearHistoryBtn");
+  if (clearBtn) clearBtn.onclick = () => {
+    localStorage.removeItem("seenQuestions");
+    alert("Question history cleared!");
+  };
   localStorage.removeItem("seenQuestions");
   alert("Question history cleared!");
 };
