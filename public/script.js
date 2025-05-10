@@ -192,32 +192,39 @@ document.getElementById("homeBtn").onclick = () => {
 window.onload = () => {
 
 // Settings page navigation
-  const settingsBtn = document.getElementById("settingsBtn");
-  if (settingsBtn) settingsBtn.onclick = () => {
-    document.getElementById("homeScreen").classList.add("hidden");
-    document.getElementById("settingsScreen").classList.remove("hidden");
-  };
   document.getElementById("homeScreen").classList.add("hidden");
   document.getElementById("settingsScreen").classList.remove("hidden");
 };
 
-  const backBtn = document.getElementById("backToHomeBtn");
-  if (backBtn) backBtn.onclick = () => {
-    document.getElementById("settingsScreen").classList.add("hidden");
-    document.getElementById("homeScreen").classList.remove("hidden");
-  };
   document.getElementById("settingsScreen").classList.add("hidden");
   document.getElementById("homeScreen").classList.remove("hidden");
 };
 
 // Clear question history
+  localStorage.removeItem("seenQuestions");
+  alert("Question history cleared!");
+};
+
+};
+window.onload = () => {
+  const settingsBtn = document.getElementById("settingsBtn");
+  if (settingsBtn) settingsBtn.onclick = () => {
+    document.getElementById("homeScreen").classList.add("hidden");
+    document.getElementById("settingsScreen").classList.remove("hidden");
+  };
+  const backBtn = document.getElementById("backToHomeBtn");
+  if (backBtn) backBtn.onclick = () => {
+    document.getElementById("settingsScreen").classList.add("hidden");
+    document.getElementById("homeScreen").classList.remove("hidden");
+  };
   const clearBtn = document.getElementById("clearHistoryBtn");
   if (clearBtn) clearBtn.onclick = () => {
     localStorage.removeItem("seenQuestions");
     alert("Question history cleared!");
   };
-  localStorage.removeItem("seenQuestions");
-  alert("Question history cleared!");
-};
-
+  const themeSelect = document.getElementById("themePicker");
+  if (themeSelect) themeSelect.onchange = (e) => {
+    const theme = e.target.value;
+    document.body.className = theme;
+  };
 };
