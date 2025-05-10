@@ -1,38 +1,65 @@
-/* reset & basic */
-body, html { margin:0; padding:0; font-family:sans-serif; }
-.hidden { display:none; }
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background: var(--bg-color, #fff);
+  color: #333;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Logo and layout */
+.logo {
+  display: block;
+  margin: 20px auto;
+  max-width: 300px;
+}
+
+#homeScreen, #settingsScreen {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Buttons */
+.btn {
+  background: var(--btn-color, #007bff);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  margin: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
 .icon-btn {
-  position: fixed; top: 10px; width:40px; height:40px; border:none; background:none;
-}
-#homeBtn { left:10px; }
-#settingsBtn { left:60px; }
-
-/* containers */
-#mainScreen, #settingsScreen {
-  max-width:600px; margin: 60px auto 0; padding:20px; text-align:center;
-  background:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);
+  font-size: 24px;
 }
 
-/* forms */
-.big-btn {
-  display:block; margin:20px auto; padding:12px 24px;
-  border:none; border-radius:6px; background:#007BFF; color:#fff;
-  font-size:1rem; cursor:pointer;
+/* Settings swatches */
+.setting-group {
+  margin: 20px 0;
 }
-.big-btn:hover { opacity:0.9; }
 
-/* swatch groups */
-.swatch-group { margin:20px 0; }
 .swatches {
-  display:flex; justify-content:center; gap:12px; margin-top:8px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
 }
+
 .swatch {
-  width:36px; height:36px; border:2px solid #333; cursor:pointer;
-  background:#fff; border-radius:4px;
+  width: 36px;
+  height: 36px;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-/* highlight selected */
-.swatch.selected { box-shadow:0 0 0 3px #000 inset; }
-
-/* logo */
-#logo { max-width:100%; height:auto; margin-bottom:16px; }
+.swatch.selected {
+  border-color: #000;
+}
