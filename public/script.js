@@ -155,7 +155,6 @@ function displayQuestion(q) {
       const theme = e.target.value;
       localStorage.setItem("selectedTheme", theme);
       document.body.className = theme;
-    };
   }
     };
     answerDiv.appendChild(btn);
@@ -202,7 +201,7 @@ document.getElementById("homeBtn").onclick = () => {
   loadingScreen.classList.add("hidden");
 ;
 }
-document.addEventListener("DOMContentLoaded", () => {
+window.onload = () => {
 
 // Settings page navigation
 document.getElementById("settingsBtn").onclick = () => {
@@ -224,7 +223,7 @@ document.getElementById("clearHistoryBtn").onclick = () => {
 };
 
 // Settings logic wrapped safely in window.onload
-document.addEventListener("DOMContentLoaded", () => {
+window.onload = () => {
   const settingsBtn = document.getElementById("settingsBtn");
   const backBtn = document.getElementById("backToHomeBtn");
   const clearBtn = document.getElementById("clearHistoryBtn");
