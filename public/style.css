@@ -210,5 +210,16 @@ body.lightyellow {
   width: 100%;
   margin: auto;
   text-align: center;
+}
+
+/* Center Settings Screen when visible */
+#settingsScreen:not(.hidden) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   height: 100vh;
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
 }
