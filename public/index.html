@@ -1,75 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>SarahCare Senior Trivia</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Home button -->
-  <button id="homeBtn" class="icon-btn">
-    <img src="images/home.svg" alt="Home" />  
-  </button>
-  <!-- Settings button -->
-  <button id="settingsBtn" class="icon-btn">
-    <img src="images/settings.svg" alt="Settings" />
-  </button>
-
-  <!-- Main / Home screen -->
-  <div id="mainScreen">
-    <img src="images/logo.png" alt="SarahCare" id="logo" />
+  <div id="homeScreen">
+    <img src="images/SarahCare.png" alt="SarahCare" class="logo">
     <h1>Senior Trivia</h1>
-    <form id="startForm">
-      <label>Choose a Category:</label>
-      <input type="text" id="categoryInput" placeholder="Or type your own and press Enter…" />
-      <fieldset>
-        <legend>How many questions?</legend>
-        <label><input type="radio" name="numQ" value="5" checked /> 5</label>
-        <label><input type="radio" name="numQ" value="10" /> 10</label>
-        <label><input type="radio" name="numQ" value="15" /> 15</label>
-        <label><input type="radio" name="numQ" value="20" /> 20</label>
-        <label><input type="radio" name="numQ" value="30" /> 30</label>
-      </fieldset>
-      <fieldset>
-        <legend>Number of choices:</legend>
-        <label><input type="radio" name="numC" value="4" checked /> 4</label>
-        <label><input type="radio" name="numC" value="5" /> 5</label>
-      </fieldset>
-      <button type="submit" class="big-btn">▶ Start Trivia</button>
-    </form>
+    <!-- rest of your home screen markup… -->
+    <button id="settingsBtn" class="btn icon-btn">⚙️</button>
   </div>
 
-  <!-- Settings screen -->
   <div id="settingsScreen" class="hidden">
+    <button id="homeBtn" class="btn icon-btn">🏠</button>
     <h1>Settings</h1>
 
-    <section class="swatch-group">
-      <h2>Theme Background:</h2>
-      <div class="swatches bg-swatches">
-        <button data-bg="#FFFFFF" class="swatch"></button>
-        <button data-bg="#F5F5F5" class="swatch"></button>
-        <button data-bg="#333333" class="swatch"></button>
-        <button data-bg="#007BFF" class="swatch"></button>
-        <button data-bg="#28A745" class="swatch"></button>
-        <button data-bg="#FFC107" class="swatch"></button>
-      </div>
-    </section>
+    <div class="setting-group">
+      <label>Theme Background:</label>
+      <div id="bgSwatches" class="swatches"></div>
+    </div>
 
-    <section class="swatch-group">
-      <h2>Theme Button Colors:</h2>
-      <div class="swatches btn-swatches">
-        <button data-btn="#007BFF" class="swatch"></button>
-        <button data-btn="#6C757D" class="swatch"></button>
-        <button data-btn="#28A745" class="swatch"></button>
-        <button data-btn="#DC3545" class="swatch"></button>
-        <button data-btn="#FFC107" class="swatch"></button>
-        <button data-btn="#17A2B8" class="swatch"></button>
-      </div>
-    </section>
+    <div class="setting-group">
+      <label>Theme Button Colors:</label>
+      <div id="btnSwatches" class="swatches"></div>
+    </div>
 
-    <button id="clearHistory" class="big-btn">🗑️ Clear Question History</button>
-    <button id="backBtn" class="big-btn">← Back</button>
+    <button id="clearHistory" class="btn">🗑️ Clear Question History</button>
+    <button id="backFromSettings" class="btn">⬅️ Back</button>
   </div>
 
   <script src="script.js"></script>
