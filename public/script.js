@@ -1,50 +1,42 @@
-// shortcuts
-const $ = sel => document.querySelector(sel);
-const $$ = sel => [...document.querySelectorAll(sel)];
+// grab DOM
+const homeScreen = document.getElementById('homeScreen');
+const settingsScreen = document.getElementById('settingsScreen');
+const settingsBtn = document.getElementById('settingsBtn');
+const backBtn = document.getElementById('backFromSettings');
+const homeBtn = document.getElementById('homeBtn');
+const bgContainer = document.getElementById('bgSwatches');
+const btnContainer = document.getElementById('btnSwatches');
 
-// screen toggles
-const mainS = $('#mainScreen');
-const settingsS = $('#settingsScreen');
-$('#settingsBtn').onclick = () => {
-  mainS.classList.add('hidden');
-  settingsS.classList.remove('hidden');
+// color sets
+const bgColors = ['#ffffff','#f8f9fa','#343a40','#007bff','#28a745','#ffc107'];
+const btnColors = ['#007bff','#6c757d','#28a745','#dc3545','#ffc107','#17a2b8'];
+
+// switch screen helpers
+settingsBtn.onclick = () => {
+  homeScreen.classList.add('hidden');
+  settingsScreen.classList.remove('hidden');
 };
-$('#backBtn').onclick = () => {
-  settingsS.classList.add('hidden');
-  mainS.classList.remove('hidden');
-};
-
-// swatch handling
-$$('.bg-swatches .swatch').forEach(btn => {
-  btn.onclick = () => {
-    $$('.bg-swatches .swatch').forEach(s=>s.classList.remove('selected'));
-    btn.classList.add('selected');
-    document.body.style.background = btn.dataset.bg;
-  };
-});
-$$('.btn-swatches .swatch').forEach(btn => {
-  btn.onclick = () => {
-    $$('.btn-swatches .swatch').forEach(s=>s.classList.remove('selected'));
-    btn.classList.add('selected');
-    document.documentElement.style.setProperty('--btn-bg', btn.dataset.btn);
-  };
-});
-
-// apply button CSS var
-const style = document.createElement('style');
-style.textContent = `
-  .big-btn { background: var(--btn-bg, #007BFF) !important; }
-`;
-document.head.append(style);
-
-// clear history stub
-$('#clearHistory').onclick = () => {
-  localStorage.removeItem('usedQuestions');
-  alert('Question history cleared!');
+backBtn.onclick = homeBtn.onclick = () => {
+  settingsScreen.classList.add('hidden');
+  homeScreen.classList.remove('hidden');
 };
 
-// start form stub
-$('#startForm').onsubmit = e => {
-  e.preventDefault();
-  alert('Starting trivia…');
-};
+// build swatches
+function buildSwatches(colors, container, cssVar) {
+  colors.forEach(col => {
+    const sw = document.createElement('div');
+    sw.className = 'swatch';
+    sw.style.backgroundColor = col;
+    sw.addEventListener('click', () => {
+      document.documentElement.style.setProperty(cssVar, col);
+      // mark selected
+      container.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
+      sw.classList.add('selected');
+    });
+    container.appendChild(sw);
+  });
+}
+
+// init on load
+buildSwatches(bgColors, bgContainer, '--bg-color');
+buildSwatches(btnColors, btnContainer, '--btn-color');
