@@ -1,70 +1,38 @@
-:root {
-  --primary-color: #007bff;
-}
-* { box-sizing: border-box; margin:0; padding:0; }
-body {
-  font-family: sans-serif;
-  background: #fff;
-  color: #222;
-  min-height: 100vh;
-}
-header {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-}
-.logo {
-  height: 3rem;
-}
-.top-nav {
-  margin-left: auto;
-}
+/* reset & basic */
+body, html { margin:0; padding:0; font-family:sans-serif; }
+.hidden { display:none; }
 .icon-btn {
-  font-size: 1.5rem;
-  margin-left: 1rem;
-  text-decoration: none;
+  position: fixed; top: 10px; width:40px; height:40px; border:none; background:none;
 }
-.primary-btn {
-  display: inline-block;
-  background: var(--primary-color);
-  color: #fff;
-  border: none;
-  padding: .75rem 1.25rem;
-  margin: .5rem 0;
-  border-radius: .25rem;
-  cursor: pointer;
-  font-size: 1rem;
+#homeBtn { left:10px; }
+#settingsBtn { left:60px; }
+
+/* containers */
+#mainScreen, #settingsScreen {
+  max-width:600px; margin: 60px auto 0; padding:20px; text-align:center;
+  background:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);
 }
-.home-screen, .settings-screen {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  background: #fff;
-  border-radius: .5rem;
+
+/* forms */
+.big-btn {
+  display:block; margin:20px auto; padding:12px 24px;
+  border:none; border-radius:6px; background:#007BFF; color:#fff;
+  font-size:1rem; cursor:pointer;
 }
-h1, h2 { margin-bottom: .5rem; }
-.theme-section { margin-bottom: 1.5rem; }
+.big-btn:hover { opacity:0.9; }
+
+/* swatch groups */
+.swatch-group { margin:20px 0; }
 .swatches {
-  display: flex;
-  gap: .5rem;
-  margin-bottom: 1rem;
+  display:flex; justify-content:center; gap:12px; margin-top:8px;
 }
-.swatches button {
-  width: 2rem; height: 2rem;
-  border: 2px solid #000;
-  cursor: pointer;
+.swatch {
+  width:36px; height:36px; border:2px solid #333; cursor:pointer;
+  background:#fff; border-radius:4px;
 }
-fieldset {
-  border: none;
-  margin: 1rem 0;
-}
-legend {
-  font-weight: bold;
-  margin-bottom: .5rem;
-}
-label + label { margin-left: 1rem; }
-input[type="text"] {
-  width: 100%;
-  padding: .5rem;
-  margin-top: .25rem;
-}
+
+/* highlight selected */
+.swatch.selected { box-shadow:0 0 0 3px #000 inset; }
+
+/* logo */
+#logo { max-width:100%; height:auto; margin-bottom:16px; }

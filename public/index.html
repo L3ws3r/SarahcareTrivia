@@ -2,41 +2,76 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SarahCare Senior Trivia</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <img src="images/logo.png" alt="SarahCare" class="logo" />
-    <nav class="top-nav">
-      <a href="index.html" title="Home" class="icon-btn">🏠</a>
-      <a href="settings.html" title="Settings" class="icon-btn">⚙️</a>
-    </nav>
-  </header>
-  <main class="home-screen">
+  <!-- Home button -->
+  <button id="homeBtn" class="icon-btn">
+    <img src="images/home.svg" alt="Home" />  
+  </button>
+  <!-- Settings button -->
+  <button id="settingsBtn" class="icon-btn">
+    <img src="images/settings.svg" alt="Settings" />
+  </button>
+
+  <!-- Main / Home screen -->
+  <div id="mainScreen">
+    <img src="images/logo.png" alt="SarahCare" id="logo" />
     <h1>Senior Trivia</h1>
-    <form id="start-form">
-      <label>
-        Choose a Category:
-        <input id="category-input" type="text" placeholder="Or type your own and press Enter…" />
-      </label>
+    <form id="startForm">
+      <label>Choose a Category:</label>
+      <input type="text" id="categoryInput" placeholder="Or type your own and press Enter…" />
       <fieldset>
         <legend>How many questions?</legend>
-        <label><input type="radio" name="qty" value="5" checked /> 5</label>
-        <label><input type="radio" name="qty" value="10" /> 10</label>
-        <label><input type="radio" name="qty" value="15" /> 15</label>
-        <label><input type="radio" name="qty" value="20" /> 20</label>
-        <label><input type="radio" name="qty" value="30" /> 30</label>
+        <label><input type="radio" name="numQ" value="5" checked /> 5</label>
+        <label><input type="radio" name="numQ" value="10" /> 10</label>
+        <label><input type="radio" name="numQ" value="15" /> 15</label>
+        <label><input type="radio" name="numQ" value="20" /> 20</label>
+        <label><input type="radio" name="numQ" value="30" /> 30</label>
       </fieldset>
       <fieldset>
         <legend>Number of choices:</legend>
-        <label><input type="radio" name="choices" value="4" checked /> 4</label>
-        <label><input type="radio" name="choices" value="5" /> 5</label>
+        <label><input type="radio" name="numC" value="4" checked /> 4</label>
+        <label><input type="radio" name="numC" value="5" /> 5</label>
       </fieldset>
-      <button type="submit" class="primary-btn">▶️ Start Trivia</button>
+      <button type="submit" class="big-btn">▶ Start Trivia</button>
     </form>
-  </main>
+  </div>
+
+  <!-- Settings screen -->
+  <div id="settingsScreen" class="hidden">
+    <h1>Settings</h1>
+
+    <section class="swatch-group">
+      <h2>Theme Background:</h2>
+      <div class="swatches bg-swatches">
+        <button data-bg="#FFFFFF" class="swatch"></button>
+        <button data-bg="#F5F5F5" class="swatch"></button>
+        <button data-bg="#333333" class="swatch"></button>
+        <button data-bg="#007BFF" class="swatch"></button>
+        <button data-bg="#28A745" class="swatch"></button>
+        <button data-bg="#FFC107" class="swatch"></button>
+      </div>
+    </section>
+
+    <section class="swatch-group">
+      <h2>Theme Button Colors:</h2>
+      <div class="swatches btn-swatches">
+        <button data-btn="#007BFF" class="swatch"></button>
+        <button data-btn="#6C757D" class="swatch"></button>
+        <button data-btn="#28A745" class="swatch"></button>
+        <button data-btn="#DC3545" class="swatch"></button>
+        <button data-btn="#FFC107" class="swatch"></button>
+        <button data-btn="#17A2B8" class="swatch"></button>
+      </div>
+    </section>
+
+    <button id="clearHistory" class="big-btn">🗑️ Clear Question History</button>
+    <button id="backBtn" class="big-btn">← Back</button>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
