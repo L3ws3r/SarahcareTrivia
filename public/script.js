@@ -34,6 +34,24 @@ document.getElementById("presetCategories").addEventListener("click", async (e) 
     category = e.target.textContent;
     document.getElementById("customCategory").value = category;
     startGame();
+  // Restore saved quiz settings
+  const questionRadios = document.querySelectorAll("input[name='questionCount']");
+  const savedCount = localStorage.getItem("questionCount");
+  if (savedCount) {
+    questionRadios.forEach(r => { if (r.value === savedCount) r.checked = true; });
+  }
+  questionRadios.forEach(r => r.addEventListener("change", () => {
+    localStorage.setItem("questionCount", r.value);
+  }));
+
+  const choiceRadios = document.querySelectorAll("input[name='choiceCount']");
+  const savedChoices = localStorage.getItem("choiceCount");
+  if (savedChoices) {
+    choiceRadios.forEach(r => { if (r.value === savedChoices) r.checked = true; });
+  }
+  choiceRadios.forEach(r => r.addEventListener("change", () => {
+    localStorage.setItem("choiceCount", r.value);
+  }));
   }
 });
 
