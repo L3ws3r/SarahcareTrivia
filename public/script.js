@@ -154,15 +154,7 @@ document.getElementById("hintBtn").onclick = async () => {
 ${previousQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
 Format the result as JSON with fields: question, choices[], correct, funFact.`;
 
-    const res = await fetch("/ask-gpt", {
     
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ category, answerCount: 1, prompt })
-  });
-  const data = await res.json();
-  document.getElementById("extraInfo").textContent = data.questionData;
-};
 
 document.getElementById("playAgainBtn").onclick = () => {
   homeScreen.classList.remove("hidden");
