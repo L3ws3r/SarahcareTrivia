@@ -7,29 +7,9 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div style="max-width: 500px; margin: 0 auto; position: relative;">
-<div style="max-width: 500px; margin: 0 auto; position: relative;">
-<div style="max-width: 500px; margin: 0 auto; position: relative;">
-<div style="max-width: 500px; margin: 0 auto; position: relative;">
-<div style="max-width: 500px; margin: 0 auto; position: relative;">
-
-
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const bg = localStorage.getItem('bgColor');
-    const btn = localStorage.getItem('buttonColor');
-    if (bg) document.body.style.backgroundColor = bg;
-    if (btn) {
-      document.querySelectorAll('button').forEach(btnEl => {
-        btnEl.style.backgroundColor = btn;
-      });
-    }
-  });
-</script>
-
   <div id="app">
-    <header><button id="homeBtn" class="hidden">🏠</button><div id="scoreInfo" style="margin-left: auto;">
+    <header><button id="settingsBtn" class="nav-button"><i class="fas fa-cog"></i></button>
+        <button id="homeBtn" class="hidden">🏠</button><div id="scoreInfo" style="margin-left: auto;">
         <span id="questionCounter"></span>
         <span id="correctCount"></span>
         <span id="wrongCount"></span>
@@ -38,12 +18,7 @@
 
     <main>
       <div id="homeScreen">
-        <div class="button-row" style="margin-bottom: 10px;">
-            <a href="settings.html" id="settingsBtn" class="nav-button">
-                <img src="images/gear.png" alt="Settings" style="width: 24px; height: 24px;">
-            </a>
-        </div>
-    
+    <button id="settingsBtn" title="Settings" style="font-size: 1.5em; padding: 0.2em 0.4em;">⚙️</button>
         
         <div id="logoBlock">
           <img src="images/sarahcare-logo.png" alt="SarahCare Logo" id="logoImg" />
@@ -112,10 +87,5 @@
   <script src="script.js"></script>
 
         
-</div>
-</div>
-</div>
-</div>
-</div>
 </body>
 </html>

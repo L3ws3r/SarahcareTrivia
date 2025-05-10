@@ -223,16 +223,3 @@ body.lightyellow {
   margin: 0 auto;
   text-align: center;
 }
-
-.nav-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ccc;
-    border: none;
-    border-radius: 8px;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    cursor: pointer;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-}
