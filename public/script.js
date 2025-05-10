@@ -7,6 +7,7 @@ const presetCategories = [
 
 let current = 0;
 let previousQuestions = [];
+let seenQuestions = new Set(JSON.parse(localStorage.getItem('seenQuestions') || '[]'));
 let correct = 0;
 let wrong = 0;
 let answerCount = 4;
@@ -88,6 +89,13 @@ Format the result as JSON with fields: question, choices[], correct, funFact.`;
     return;
   }
 
+  const questionText = qData.question.toLowerCase().trim();
+  if (seenQuestions.has(questionText)) {
+    console.log('Duplicate question detected. Getting another...');
+    return fetchAndShowNextQuestion();
+  }
+  seenQuestions.add(questionText);
+  localStorage.setItem('seenQuestions', JSON.stringify(Array.from(seenQuestions)));
   previousQuestions.push(qData.question);
   displayQuestion(qData);
 }
@@ -98,6 +106,7 @@ function displayQuestion(q) {
   document.getElementById("homeBtn").classList.remove("hidden");
 
   document.getElementById("questionText").textContent = q.question;
+  document.getElementById("answerFeedback").textContent = "";
   document.getElementById("questionCounter").textContent = `Question ${current + 1} of ${totalQuestions}`;
   document.getElementById("extraInfo").textContent = "";
 
@@ -115,10 +124,22 @@ function displayQuestion(q) {
       if (choice === q.correct) {
         btn.classList.add("correct");
         correct++;
+      document.getElementById('answerFeedback').textContent = 'CORRECT';
+      document.getElementById('answerFeedback').style.color = 'green';
+      document.getElementById('answerFeedback').style.fontSize = '2em';
+        document.getElementById('answerFeedback').textContent = 'CORRECT';
+        document.getElementById('answerFeedback').style.color = 'green';
+        document.getElementById('answerFeedback').style.fontSize = '2em';
         document.getElementById("correctCount").textContent = `✅ ${correct}`;
       } else {
         btn.classList.add("incorrect");
         wrong++;
+      document.getElementById('answerFeedback').textContent = 'WRONG';
+      document.getElementById('answerFeedback').style.color = 'red';
+      document.getElementById('answerFeedback').style.fontSize = '2em';
+        document.getElementById('answerFeedback').textContent = 'WRONG';
+        document.getElementById('answerFeedback').style.color = 'red';
+        document.getElementById('answerFeedback').style.fontSize = '2em';
         document.getElementById("wrongCount").textContent = `❌ ${wrong}`;
       }
       Array.from(answerDiv.children).forEach(b => b.disabled = true);
@@ -131,6 +152,9 @@ function displayQuestion(q) {
 document.getElementById("nextBtn").onclick = () => {
   if (!answered) return;
   current++;
+  document.getElementById('answerFeedback').textContent = '';
+  document.getElementById('answerFeedback').style.color = '';
+  document.getElementById('answerFeedback').style.fontSize = '';
   if (current >= totalQuestions) endGame();
   else fetchAndShowNextQuestion();
 };
@@ -143,29 +167,82 @@ function endGame() {
     ? "🎉 Congratulations!"
     : "😅 Better luck next time!";
   document.getElementById("finalMessage").textContent = message;
-  document.getElementById("finalScore").textContent = `You got ${correct} out of ${totalQuestions} correct.`;
+  const finalMessage = correct >= totalQuestions / 2
+    ? `<div style="font-size: 2em; margin-top: 1em;">🎉 Not bad, trivia champ! 🎉</div>`
+    : `<div style="font-size: 2em; margin-top: 1em;">🤔 Yikes! Better luck next time. 🤪</div>`;
+  document.getElementById("finalScore").innerHTML = `<div style="text-align: center;">` +
+`<div style="font-size: 2em; color: green;">CORRECT ANSWERS: ${correct}</div>` +
+`<div style="font-size: 2em; color: red;">WRONG ANSWERS: ${totalQuestions - correct}</div>` +
+finalMessage + `</div>`;
 }
 
-document.getElementById("hintBtn").onclick = async () => {
-  const questionText = document.getElementById("questionText").textContent;
-  const prompt = `Give me a hint for this trivia question: "${questionText}"`;
-  
-    const dedupePrompt = `Generate a new multiple-choice trivia question in the category "${category}" with ${answerCount} options. Do NOT repeat or closely resemble any of these:
-${previousQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n")}
-Format the result as JSON with fields: question, choices[], correct, funFact.`;
-
-    
 
 document.getElementById("playAgainBtn").onclick = () => {
   homeScreen.classList.remove("hidden");
   document.getElementById("homeBtn").classList.add("hidden");
   endScreen.classList.add("hidden");
-};
-
 document.getElementById("homeBtn").onclick = () => {
   homeScreen.classList.remove("hidden");
   document.getElementById("homeBtn").classList.add("hidden");
   gameScreen.classList.add("hidden");
   endScreen.classList.add("hidden");
   loadingScreen.classList.add("hidden");
+};
+;
+}
+window.onload = () => {
+
+// Settings page navigation
+document.getElementById("settingsBtn").onclick = () => {
+  document.getElementById("homeScreen").classList.add("hidden");
+  document.getElementById("settingsScreen").classList.remove("hidden");
+};
+
+document.getElementById("backToHomeBtn").onclick = () => {
+  document.getElementById("settingsScreen").classList.add("hidden");
+  document.getElementById("homeScreen").classList.remove("hidden");
+};
+
+// Clear question history
+document.getElementById("clearHistoryBtn").onclick = () => {
+  localStorage.removeItem("seenQuestions");
+  alert("Question history cleared!");
+};
+
+};
+
+// Settings logic wrapped safely in window.onload
+window.onload = () => {
+  const settingsBtn = document.getElementById("settingsBtn");
+  const backBtn = document.getElementById("backToHomeBtn");
+  const clearBtn = document.getElementById("clearHistoryBtn");
+  const themeSelect = document.getElementById("themePicker");
+
+  if (settingsBtn) settingsBtn.onclick = () => {
+    document.getElementById("homeScreen").classList.add("hidden");
+    document.getElementById("settingsScreen").classList.remove("hidden");
+  };
+
+  if (backBtn) backBtn.onclick = () => {
+    document.getElementById("settingsScreen").classList.add("hidden");
+    document.getElementById("homeScreen").classList.remove("hidden");
+  };
+
+  if (clearBtn) clearBtn.onclick = () => {
+    localStorage.removeItem("seenQuestions");
+    alert("Question history cleared!");
+  };
+
+  if (themeSelect) {
+    const savedTheme = localStorage.getItem("selectedTheme");
+    if (savedTheme) {
+      themeSelect.value = savedTheme;
+      document.body.className = savedTheme;
+    }
+    themeSelect.onchange = (e) => {
+      const theme = e.target.value;
+      localStorage.setItem("selectedTheme", theme);
+      document.body.className = theme;
+    };
+  }
 };

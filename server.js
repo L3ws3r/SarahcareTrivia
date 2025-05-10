@@ -22,14 +22,13 @@ const openai = new OpenAI({
 app.post('/ask-gpt', async (req, res) => {
   try {
     const { category, answerCount } = req.body;
-        const exampleChoices = Array.from({ length: answerCount }, () => '"..."').join(", ");
-    const prompt = `Generate one multiple-choice trivia question in the category "${category}". Include one correct answer and ${answerCount - 1} wrong answers (for a total of ${answerCount} choices). Make sure **there are exactly ${answerCount} items in the "choices" array**.
-
-Format it as JSON like this:
+    const prompt = `Generate one multiple-choice trivia question in the category "${category}". Include one correct answer, ${
+      answerCount - 1
+    } wrong answers, and a fun fact. Format it as JSON like this:
 
 {
   "question": "...",
-  "choices": [${exampleChoices}],
+  "choices": ["...", "...", "...", "..."],
   "correct": "...",
   "funFact": "..."
 }`;
