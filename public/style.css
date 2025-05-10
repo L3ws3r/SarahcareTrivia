@@ -198,3 +198,16 @@ body.lightyellow {
   background-color: white;
   color: black;
 }
+
+
+/* Center Settings Screen */
+#settingsScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 500px;
+  width: 100%;
+  margin: auto;
+  text-align: center;
+}
