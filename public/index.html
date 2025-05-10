@@ -1,56 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>SarahCare Senior Trivia</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Settings</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app">
-    <header>
-      <img src="images/logo.png" alt="SarahCare" class="logo" />
-      <div class="icon-bar">
-        <button id="homeBtn" title="Home">🏠</button>
-        <button id="settingsBtn" title="Settings">⚙️</button>
-      </div>
-    </header>
-
-    <main id="mainScreen">
-      <!-- original main content -->
-    </main>
-
-    <section id="settingsScreen" class="hidden">
-      <h1>Settings</h1>
-
-      <div class="theme-section">
-        <label>Theme Background:</label>
-        <div class="swatches" id="bgSwatches">
-          <button data-color="#FFFFFF" title="White"></button>
-          <button data-color="#F5F5F5" title="Off‑White"></button>
-          <button data-color="#333333" title="Dark Gray"></button>
-          <button data-color="#0066FF" title="Blue"></button>
-          <button data-color="#28A745" title="Green"></button>
-          <button data-color="#FFC107" title="Amber"></button>
-        </div>
-      </div>
-
-      <div class="theme-section">
-        <label>Theme Button Colors:</label>
-        <div class="swatches" id="btnSwatches">
-          <button data-color="#0066FF" title="Blue"></button>
-          <button data-color="#6C757D" title="Gray"></button>
-          <button data-color="#28A745" title="Green"></button>
-          <button data-color="#DC3545" title="Red"></button>
-          <button data-color="#FFC107" title="Amber"></button>
-          <button data-color="#17A2B8" title="Teal"></button>
-        </div>
-      </div>
-
-      <button id="clearHistoryBtn" class="big">🗑️ Clear Question History</button>
-      <button id="backBtn" class="big">⬅️ Back</button>
-    </section>
+  <div id="settingsScreen">
+    <h1>Settings</h1>
+    <div class="theme-section">
+      <label>Theme Background:</label>
+      <div id="backgroundSwatches" class="swatches"></div>
+    </div>
+    <div class="theme-section">
+      <label>Theme Button Colors:</label>
+      <div id="buttonSwatches" class="swatches"></div>
+    </div>
+    <button id="clearHistoryBtn">🗑️ Clear Question History</button>
+    <button id="backBtn">⬅️ Back</button>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>

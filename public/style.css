@@ -1,88 +1,48 @@
-/* root variables for live theming */
-:root {
-  --bg-color: #FFFFFF;
-  --btn-color: #0066FF;
-}
-
-/* global resets */
-* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: sans-serif;
-  background: var(--bg-color);
-  transition: background 0.3s ease;
+  margin: 0;
+  padding: 0;
 }
-button {
-  font: inherit;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-/* header */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-}
-.logo { height: 50px; }
-.icon-bar button {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  margin-left: .5rem;
-}
-
-/* main vs settings screens */
-.hidden { display: none; }
-main, section#settingsScreen {
+#settingsScreen {
   max-width: 600px;
-  margin: 2rem auto;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
   text-align: center;
 }
-
-/* theme swatch grid */
 .theme-section {
-  margin: 1.5rem 0;
+  margin: 20px 0;
 }
 .theme-section label {
-  display: block;
   font-weight: bold;
-  margin-bottom: .5rem;
+  display: block;
+  margin-bottom: 10px;
 }
 .swatches {
   display: flex;
   justify-content: center;
-  gap: .75rem;
+  gap: 10px;
 }
-.swatches button {
-  width: 2rem;
-  height: 2rem;
-  border: 2px solid #333;
-  background: transparent;
+.swatch {
+  width: 40px;
+  height: 40px;
+  border: 2px solid transparent;
+  cursor: pointer;
   border-radius: 4px;
-  padding: 0;
+  box-sizing: border-box;
 }
-.swatches button[data-color] {
-  background: var(--dummy);
+.swatch.selected {
+  border-color: #000;
 }
-.swatches button[data-color]:hover {
-  transform: scale(1.1);
-}
-.swatches button.selected {
-  outline: 3px solid #000;
-}
-
-/* big action buttons */
-.big {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: .75rem 1.5rem;
-  background: var(--btn-color);
+button {
+  --btn: #007bff;
+  background: var(--btn);
   color: #fff;
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-}
-.big:hover {
-  opacity: .9;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
 }
