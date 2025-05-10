@@ -1,4 +1,3 @@
-
 // server.js
 require('dotenv').config();
 const express = require('express');
@@ -15,31 +14,50 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // OpenAI Configuration
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY
 });
 
-// Route to get one question at a time
+// Generate one question at a time (Option 2)
 app.post('/ask-gpt', async (req, res) => {
   try {
     const { category, answerCount } = req.body;
-    const prompt = `Generate one multiple-choice trivia question in the category "${category}". Include one correct answer and ${parseInt(numChoices) - 1} incorrect answers, and a fun fact. Format the output as JSON.`;      answerCount - 1
-    } wrong answers, and a fun fact. Format it as JSON like this:
 
+    const prompt = `
+Generate exactly one multiple‑choice trivia question in the category "${category}".
+- Provide one correct answer and ${answerCount - 1} plausible but clearly incorrect answers (total of ${answerCount}).
+- Randomise the position of the correct answer within the list you return.
+- Provide an interesting short fun fact related to the question or correct answer.
+Return ONLY valid JSON with the following structure (no additional keys, no commentary outside the JSON):
 {
-  "question": "...",
-  "choices": ["...", "...", "...", "..."],
-  "correct": "...",
-  "funFact": "..."
+  "question": "string",
+  "choices": [${Array.from({ length: answerCount }, () => '"string"').join(', ')}],
+  "correct": "string",
+  "funFact": "string"
 }`;
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
       messages: [{ role: 'user', content: prompt }],
+      temperature: 0.8
     });
 
-    res.json({ questionData: response.choices[0].message.content });
-  } catch (error) {
-    console.error('OpenAI API Error:', error.message);
+    const raw = completion.choices[0].message.content.trim();
+
+    // Extract JSON block and parse
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      return res.status(500).json({ error: 'Invalid response format from OpenAI' });
+    }
+
+    const data = JSON.parse(jsonMatch[0]);
+
+    if (!data.choices || data.choices.length !== answerCount) {
+      return res.status(500).json({ error: 'Incorrect number of choices returned by OpenAI' });
+    }
+
+    res.json(data);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to generate question' });
   }
 });
@@ -48,7 +66,7 @@ app.post('/ask-gpt', async (req, res) => {
 app.get('/health', (_req, res) => res.status(200).send('OK'));
 
 // Serve frontend
-app.get('*', (req, res) => {
+app.get('*', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
