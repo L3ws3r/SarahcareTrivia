@@ -22,35 +22,19 @@ const openai = new OpenAI({
 app.post('/ask-gpt', async (req, res) => {
   try {
     const { category, answerCount } = req.body;
-    const { category, previousQuestions, numChoices } = req.body;
+    const prompt = `Generate one multiple-choice trivia question in the category "${category}". Include one correct answer, ${
+      answerCount - 1
+    } wrong answers, and a fun fact. Format it as JSON like this:
 
-    const prompt = `Generate one multiple-choice trivia question in the category "${category}".
-Include one correct answer and ${numChoices - 1} incorrect answers. Format as JSON with:
-{ "question": "...", "correct": "...", "incorrect": ["...", "..."] }`;
+{
+  "question": "...",
+  "choices": ["...", "...", "...", "..."],
+  "correct": "...",
+  "funFact": "..."
+}`;
 
-// server.js
-require('dotenv').config();
-const express = require('express');
-const path = require('path');
-const OpenAI = require('openai');
-const bodyParser = require('body-parser');
-
-const app = express();
-const port = process.env.PORT || 3000;
-
-// Middleware
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
-
-// OpenAI Configuration
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-// Route to get one question at a time
-app.post('/ask-gpt', async (req, res) => {
-  try {
-    const { category, answerCount } = req.body;
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],
     });
 
