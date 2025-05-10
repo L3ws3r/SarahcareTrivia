@@ -18,6 +18,7 @@
     <main>
       <div id="homeScreen">
     <button id="settingsBtn" title="Settings" style="font-size: 1.5em; padding: 0.2em 0.4em;">⚙️</button>
+    <button id="settingsBtn" title="Settings" style="font-size: 1.5em; padding: 0.2em 0.4em;">⚙️</button>
         
         <div id="logoBlock">
           <img src="images/sarahcare-logo.png" alt="SarahCare Logo" id="logoImg" />
@@ -44,6 +45,15 @@
           <label><input type="radio" name="choices" value="4" checked />4</label>
           <label><input type="radio" name="choices" value="5" />5</label>
         </div>
+
+        <label>Theme:</label>
+        <select id="themePicker">
+          <option value="pink">Pink</option>
+          <option value="teal">Teal</option>
+          <option value="lightyellow">Light Yellow</option>
+            <option value="white" selected>White</option>
+        </select>
+      </div>
 
       <div id="loadingScreen" class="hidden">
         <h2>Loading Trivia Questions...</h2>
@@ -72,5 +82,24 @@
 
   <div id="settingsScreen" class="hidden">
     <h2>Settings</h2>
+    <button id="clearHistoryBtn">🗑️ Clear Question History</button>
+    <br><br>
+    <button id="backToHomeBtn">⬅️ Back</button>
+  </div>
+        
+
+  <div id="settingsScreen" class="hidden">
+    <h2>Settings</h2>
+    <label for="themePicker"><strong>Theme:</strong></label>
+    <select id="themePicker">
+      <option value="white" selected>White</option>
+      <option value="pink">Pink</option>
+      <option value="teal">Teal</option>
+      <option value="lightyellow">Light Yellow</option>
+    </select><br><br>
+    <button id="clearHistoryBtn">🗑️ Clear Question History</button><br><br>
+    <button id="backToHomeBtn">⬅️ Back</button>
+  </div>
+
 </body>
 </html>
