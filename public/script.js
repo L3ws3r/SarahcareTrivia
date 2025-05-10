@@ -176,42 +176,22 @@ function endGame() {
 finalMessage + `</div>`;
 }
 
+// --- Navigation Helpers ---
+const homeBtn = document.getElementById("homeBtn");
+const playAgainBtn = document.getElementById("playAgainBtn");
 
-document.getElementById("playAgainBtn").onclick = () => {
+function resetToHome() {
   homeScreen.classList.remove("hidden");
-  document.getElementById("homeBtn").classList.add("hidden");
-  endScreen.classList.add("hidden");
-document.getElementById("homeBtn").onclick = () => {
-  homeScreen.classList.remove("hidden");
-  document.getElementById("homeBtn").classList.add("hidden");
   gameScreen.classList.add("hidden");
-  endScreen.classList.add("hidden");
   loadingScreen.classList.add("hidden");
-};
-;
+  endScreen.classList.add("hidden");
+  if (homeBtn) homeBtn.classList.add("hidden");
 }
-window.onload = () => {
 
-// Settings page navigation
-document.getElementById("settingsBtn").onclick = () => {
-  document.getElementById("homeScreen").classList.add("hidden");
-  document.getElementById("settingsScreen").classList.remove("hidden");
-};
+if (homeBtn) homeBtn.onclick = resetToHome;
+if (playAgainBtn) playAgainBtn.onclick = resetToHome;
 
-document.getElementById("backToHomeBtn").onclick = () => {
-  document.getElementById("settingsScreen").classList.add("hidden");
-  document.getElementById("homeScreen").classList.remove("hidden");
-};
-
-// Clear question history
-document.getElementById("clearHistoryBtn").onclick = () => {
-  localStorage.removeItem("seenQuestions");
-  alert("Question history cleared!");
-};
-
-};
-
-// Settings logic wrapped safely in window.onload
+// --- Settings / Theme handling ---
 window.onload = () => {
   const settingsBtn = document.getElementById("settingsBtn");
   const backBtn = document.getElementById("backToHomeBtn");
