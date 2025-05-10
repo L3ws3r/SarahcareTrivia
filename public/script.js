@@ -144,6 +144,19 @@ function displayQuestion(q) {
       }
       Array.from(answerDiv.children).forEach(b => b.disabled = true);
       document.getElementById("extraInfo").innerHTML = `<strong>Fun Fact:</strong> ${q.funFact || "None provided."}`;
+  const themeSelect = document.getElementById("themePicker");
+  if (themeSelect) {
+    const savedTheme = localStorage.getItem("selectedTheme");
+    if (savedTheme) {
+      themeSelect.value = savedTheme;
+      document.body.className = savedTheme;
+    }
+    themeSelect.onchange = (e) => {
+      const theme = e.target.value;
+      localStorage.setItem("selectedTheme", theme);
+      document.body.className = theme;
+    };
+  }
     };
     answerDiv.appendChild(btn);
   });
@@ -215,12 +228,6 @@ window.onload = () => {
   const settingsBtn = document.getElementById("settingsBtn");
   const backBtn = document.getElementById("backToHomeBtn");
   const clearBtn = document.getElementById("clearHistoryBtn");
-  const themeSelect = document.getElementById("themePicker");
-
-  if (settingsBtn) settingsBtn.onclick = () => {
-    document.getElementById("homeScreen").classList.add("hidden");
-    document.getElementById("settingsScreen").classList.remove("hidden");
-  };
 
   if (backBtn) backBtn.onclick = () => {
     document.getElementById("settingsScreen").classList.add("hidden");
@@ -232,16 +239,5 @@ window.onload = () => {
     alert("Question history cleared!");
   };
 
-  if (themeSelect) {
-    const savedTheme = localStorage.getItem("selectedTheme");
-    if (savedTheme) {
-      themeSelect.value = savedTheme;
-      document.body.className = savedTheme;
-    }
-    themeSelect.onchange = (e) => {
-      const theme = e.target.value;
-      localStorage.setItem("selectedTheme", theme);
-      document.body.className = theme;
-    };
   }
 };
