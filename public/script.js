@@ -226,3 +226,4 @@ window.onload = () => {
     const theme = e.target.value;
     document.body.className = theme;
   };
+};
