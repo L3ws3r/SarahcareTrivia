@@ -1,36 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SarahCare Senior Trivia</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="homeScreen">
-    <img src="images/SarahCare.png" alt="SarahCare" class="logo">
-    <h1>Senior Trivia</h1>
-    <!-- rest of your home screen markup… -->
-    <button id="settingsBtn" class="btn icon-btn">⚙️</button>
-  </div>
+  <div id="app">
+    <header><button id="homeBtn" class="hidden">🏠</button><div id="scoreInfo" style="margin-left: auto;">
+        <span id="questionCounter"></span>
+        <span id="correctCount"></span>
+        <span id="wrongCount"></span>
+      </div>
+    </header>
+
+    <main>
+      <div id="homeScreen">
+    <button id="settingsBtn" title="Settings" style="font-size: 1.5em; padding: 0.2em 0.4em;">⚙️</button>
+        
+        <div id="logoBlock">
+          <img src="images/sarahcare-logo.png" alt="SarahCare Logo" id="logoImg" />
+          <h1 class="title">Senior Trivia</h1>
+        </div>
+
+
+        <label>Choose a Category:</label>
+        <input type="text" id="customCategory" placeholder="Or type your own and press Enter..." />
+
+        <div id="presetCategories"></div>
+
+        <label>How many questions?</label>
+        <div id="questionCountOptions">
+          <label><input type="radio" name="count" value="5" checked />5</label>
+          <label><input type="radio" name="count" value="10" />10</label>
+          <label><input type="radio" name="count" value="15" />15</label>
+          <label><input type="radio" name="count" value="20" />20</label>
+          <label><input type="radio" name="count" value="30" />30</label>
+        </div>
+
+        <label>Number of choices:</label>
+        <div id="optionToggle">
+          <label><input type="radio" name="choices" value="4" checked />4</label>
+          <label><input type="radio" name="choices" value="5" />5</label>
+        </div>
+
+      </div>
+      <div id="loadingScreen" class="hidden">
+        <h2>Loading Trivia Questions...</h2>
+        <p>Please wait while we prepare your game 🧠</p>
+      </div>
+
+      <div id="gameScreen" class="hidden">
+        <h2 id="questionText"></h2>
+        <div id="answers"></div>
+        <div id="gameButtons">
+          
+          <div style="display: flex; align-items: center; gap: 1em;"><button id="nextBtn" style="flex: 0 0 50%;">➡️ Next</button><span id="answerFeedback" style="font-size: 1.5em; font-weight: bold;"></span></div>
+        </div>
+        <p id="extraInfo"></p>
+      </div>
+
+      <div id="endScreen" class="hidden">
+        <h2 id="finalMessage"></h2>
+        <p id="finalScore"></p>
+        <button id="playAgainBtn">🔁 Play Again</button>
+      </div>
 
   <div id="settingsScreen" class="hidden">
-    <button id="homeBtn" class="btn icon-btn">🏠</button>
-    <h1>Settings</h1>
-
-    <div class="setting-group">
-      <label>Theme Background:</label>
-      <div id="bgSwatches" class="swatches"></div>
-    </div>
-
-    <div class="setting-group">
-      <label>Theme Button Colors:</label>
-      <div id="btnSwatches" class="swatches"></div>
-    </div>
-
-    <button id="clearHistory" class="btn">🗑️ Clear Question History</button>
-    <button id="backFromSettings" class="btn">⬅️ Back</button>
+    <h2>Settings</h2>
+    <label for="themePicker"><strong>Theme:</strong></label>
+    <select id="themePicker">
+      <option value="white" selected>White</option>
+      <option value="pink">Pink</option>
+      <option value="teal">Teal</option>
+      <option value="lightyellow">Light Yellow</option>
+    </select><br><br>
+    <button id="clearHistoryBtn">🗑️ Clear Question History</button>
+    <br><br>
+    <button id="backToHomeBtn">⬅️ Back</button>
+  </div>
+    </main>
   </div>
 
   <script src="script.js"></script>
+
+        
 </body>
 </html>
