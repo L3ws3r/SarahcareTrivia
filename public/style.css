@@ -43,21 +43,11 @@ button:disabled {
 }
 
 /* Answer buttons */
-.answer-button {
-  font-size: 2rem;
-  width: 100%;
-  margin: 0.5rem 0;
-  background-color: #1976d2;
-  color: white;
-}
 
-.answer-button.correct {
-  background-color: #4caf50;
-}
 
-.answer-button.incorrect {
-  background-color: #f44336;
-}
+
+
+
 
 /* Control buttons below question (Hint, Fun Fact, Next) */
 #gameButtons {
@@ -222,4 +212,24 @@ body.lightyellow {
   max-width: 500px;
   margin: 0 auto;
   text-align: center;
+}
+
+
+/* Updated Answer Button Styling */
+
+.answer-button {
+  background-color: #dc3545;
+  color: white;
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  width: 300px;
+  margin: 10px auto;
+  display: block;
+}
+
+.answer-button:hover {
+  opacity: 0.85;
 }
