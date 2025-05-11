@@ -234,3 +234,36 @@ body.lightyellow {
 .answer-button:hover {
   opacity: 0.85 !important;
 }
+
+
+/* Theme-based styling for theme-button */
+
+body.red .theme-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+body.blue .theme-button {
+  background-color: #007bff;
+  color: white;
+}
+
+body.green .theme-button {
+  background-color: #28a745;
+  color: white;
+}
+
+body.orange .theme-button {
+  background-color: #fd7e14;
+  color: white;
+}
+
+body.purple .theme-button {
+  background-color: #6f42c1;
+  color: white;
+}
+
+body.teal .theme-button {
+  background-color: #20c997;
+  color: white;
+}
