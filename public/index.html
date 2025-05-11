@@ -1,91 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SarahCare Senior Trivia</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SarahCare Senior Trivia</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
 </head>
-<body>
-  <div id="app">
-    <header>
-        <button id="homeBtn" class="hidden">🏠</button><div id="scoreInfo" style="margin-left: auto;">
-        <span id="questionCounter"></span>
-        <span id="correctCount"></span>
-        <span id="wrongCount"></span>
-      </div>
-    </header>
-
-    <main>
-      <div id="homeScreen">
-    
-        
-        <div id="logoBlock">
-          <img src="images/sarahcare-logo.png" alt="SarahCare Logo" id="logoImg" />
-          <h1 class="title">Senior Trivia</h1>
-        </div>
-
-
-        <label>Choose a Category:</label>
-        <input type="text" id="customCategory" placeholder="Or type your own and press Enter..." />
-
-        <div id="presetCategories"></div>
-
-        <label>How many questions?</label>
-        <div id="questionCountOptions">
-          <label><input type="radio" name="count" value="5" checked />5</label>
-          <label><input type="radio" name="count" value="10" />10</label>
-          <label><input type="radio" name="count" value="15" />15</label>
-          <label><input type="radio" name="count" value="20" />20</label>
-          <label><input type="radio" name="count" value="30" />30</label>
-        </div>
-
-        <label>Number of choices:</label>
-        <div id="optionToggle">
-          <label><input type="radio" name="choices" value="4" checked />4</label>
-          <label><input type="radio" name="choices" value="5" />5</label>
-        </div>
-
-      </div>
-      <div id="loadingScreen" class="hidden">
-        <h2>Loading Trivia Questions...</h2>
-        <p>Please wait while we prepare your game 🧠</p>
-      </div>
-
-      <div id="gameScreen" class="hidden">
-        <h2 id="questionText"></h2>
-        <div id="answers"></div>
-        <div id="gameButtons">
-          
-          <div style="display: flex; align-items: center; gap: 1em;"><button id="nextBtn" style="flex: 0 0 50%;">➡️ Next</button><span id="answerFeedback" style="font-size: 1.5em; font-weight: bold;"></span></div>
-        </div>
-        <p id="extraInfo"></p>
-      </div>
-
-      <div id="endScreen" class="hidden">
-        <h2 id="finalMessage"></h2>
-        <p id="finalScore"></p>
-        <button id="playAgainBtn">🔁 Play Again</button>
-      </div>
-
-  <div id="settingsScreen" class="hidden">
-    <h2>Settings</h2>
-    <label for="themePicker"><strong>Theme:</strong></label>
-    <select id="themePicker">
-      <option value="white" selected>White</option>
-      <option value="pink">Pink</option>
-      <option value="teal">Teal</option>
-      <option value="lightyellow">Light Yellow</option>
-    </select><br><br>
-    <button id="clearHistoryBtn">🗑️ Clear Question History</button>
-    <br><br>
-    <button id="backToHomeBtn">⬅️ Back</button>
-  </div>
-    </main>
-  </div>
-
-  <script src="script.js"></script>
-
-        
+<body class="white">
+    <div id="app">
+        <header>
+            <button id="settingsBtn" class="nav-button">
+                <img src="assets/gear.png" alt="Settings" style="width: 30px;" />
+            </button>
+            <button id="homeBtn" class="hidden nav-button">
+                <img src="assets/home.png" alt="Home" style="width: 30px;" />
+            </button>
+            <div id="scoreInfo" style="margin-left: auto;"></div>
+        </header>
+        <main id="homeScreen">
+            <div id="logoBlock"><img src="assets/sarahcare-logo.png" alt="SarahCare Logo" /></div>
+            <label>Choose a Category:</label>
+            <input type="text" id="customCategory" placeholder="Or type your own and press Enter..." />
+            <div id="presetCategories"></div>
+            <label>How many questions?</label>
+            <div id="questionCountOptions"></div>
+            <label>Number of choices:</label>
+            <div id="optionToggle"></div>
+        </main>
+        <main id="gameScreen" class="hidden"></main>
+        <main id="settingsScreen" class="hidden">
+            <h2>Settings</h2>
+            <p>Settings page works!</p>
+        </main>
+    </div>
 </body>
 </html>
