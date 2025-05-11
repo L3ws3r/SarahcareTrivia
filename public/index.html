@@ -1,63 +1,45 @@
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>SarahCare Senior Trivia</title>
-<link href="style.css" rel="stylesheet"/>
+    <meta charset="UTF-8">
+    <title>SarahCare Senior Trivia</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body class="white">
-<div id="app">
-<header class="flex"><a class="nav-button" href="settings.html" id="settingsBtn">⚙️</a>
-
-<button class="hidden" id="homeBtn">🏠</button>
-<div id="scoreInfo" style="margin-left: auto;"></div>
-</header>
-<main id="homeScreen">
-<div id="logoBlock">
-<img alt="SarahCare logo" src="sarahcare-logo.png"/>
-<h1>Senior Trivia</h1>
-</div>
-<label>Choose a Category:</label>
-<input id="customCategory" placeholder="Or type your own and press Enter..." type="text"/>
-<div id="presetCategories">
-<button>Movies</button>
-<button>Classic TV</button>
-<button>Music</button>
-<button>Presidents</button>
-<button>History</button>
-<button>Science</button>
-<button>Sports</button>
-<button>Animals</button>
-<button>Food</button>
-<button>Geography</button>
-<button>Famous People</button>
-<button>Cars</button>
-<button>Holidays</button>
-<button>Cartoons</button>
-<button>80s</button>
-<button>90s</button>
-<button>Disney</button>
-<button>Broadway</button>
-<button>Landmarks</button>
-<button>Inventions</button>
-</div>
-<label>How many questions?</label>
-<div id="questionCountOptions">
-<label><input checked="" name="questionCount" type="radio" value="5"/> 5</label>
-<label><input name="questionCount" type="radio" value="10"/> 10</label>
-<label><input name="questionCount" type="radio" value="15"/> 15</label>
-<label><input name="questionCount" type="radio" value="20"/> 20</label>
-<label><input name="questionCount" type="radio" value="30"/> 30</label>
-</div>
-<label>Number of choices:</label>
-<div id="optionToggle">
-<label><input checked="" name="optionCount" type="radio" value="4"/> 4</label>
-<label><input name="optionCount" type="radio" value="5"/> 5</label>
-</div>
-</main>
-</div>
-<script src="script.js"></script>
+    <div id="app">
+        <header>
+            <a href="settings.html">
+                <img src="assets/gear.png" alt="Settings" style="width:40px;height:40px;margin-right:10px;" />
+            </a>
+            <img src="assets/sarahcare-logo.png" alt="SarahCare logo" style="height:60px;">
+        </header>
+        <main>
+            <h1>Senior Trivia</h1>
+            <label>Choose a Category:</label>
+            <input type="text" id="customCategory" placeholder="Or type your own and press Enter...">
+            <div id="presetCategories">
+                <button>Movies</button><button>Classic TV</button><button>Music</button><button>Presidents</button>
+                <button>History</button><button>Science</button><button>Sports</button><button>Animals</button>
+                <button>Food</button><button>Geography</button><button>Famous People</button><button>Cars</button>
+                <button>Holidays</button><button>Cartoons</button><button>80s</button><button>90s</button>
+                <button>Disney</button><button>Broadway</button><button>Landmarks</button><button>Inventions</button>
+            </div>
+            <div>
+                <label>How many questions?</label>
+                <input type="radio" name="questionCount" value="5" checked> 5
+                <input type="radio" name="questionCount" value="10"> 10
+                <input type="radio" name="questionCount" value="15"> 15
+                <input type="radio" name="questionCount" value="20"> 20
+                <input type="radio" name="questionCount" value="30"> 30
+            </div>
+            <div>
+                <label>Number of choices:</label>
+                <input type="radio" name="choiceCount" value="4" checked> 4
+                <input type="radio" name="choiceCount" value="5"> 5
+            </div>
+        </main>
+    </div>
 </body>
 </html>
