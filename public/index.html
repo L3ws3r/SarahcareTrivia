@@ -8,10 +8,12 @@
 </head>
 <body>
   <div id="app">
-    <header><button id="settingsBtn" class="nav-button"><i class="fas fa-cog"></i></button>
-        <button id="settingsBtn" class="hidden nav-button" title="Settings" onclick="window.location.href='settings.html'">
-  <img src="images/gear.png" alt="Settings" style="width: 24px; height: 24px;">
-</button>
+    <header><a id="settingsBtn" href="settings.html" class="nav-button" title="Settings">
+  <i class="fas fa-cog"></i>
+</a>
+        <a id="settingsBtn" href="settings.html" class="nav-button" title="Settings">
+  <i class="fas fa-cog"></i>
+</a>
   <button id="homeBtn" class="hidden">🏠</button><div id="scoreInfo" style="margin-left: auto;">
         <span id="questionCounter"></span>
         <span id="correctCount"></span>
@@ -21,7 +23,9 @@
 
     <main>
       <div id="homeScreen">
-    <button id="settingsBtn" title="Settings" style="font-size: 1.5em; padding: 0.2em 0.4em;">⚙️</button>
+    <a id="settingsBtn" href="settings.html" class="nav-button" title="Settings">
+  <i class="fas fa-cog"></i>
+</a>
         
         <div id="logoBlock">
           <img src="images/sarahcare-logo.png" alt="SarahCare Logo" id="logoImg" />
