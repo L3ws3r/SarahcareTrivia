@@ -1,15 +1,21 @@
 
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 1rem;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 1rem;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
 }
 .nav-button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
+  font-size: 1.25rem;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  margin: 0.5rem;
 }
 .hidden {
-    display: none;
+  display: none;
 }

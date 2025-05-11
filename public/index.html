@@ -1,38 +1,33 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SarahCare Senior Trivia</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="script.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SarahCare Senior Trivia</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body class="white">
-    <div id="app">
-        <header>
-            <button id="settingsBtn" class="nav-button">
-                <img src="assets/gear.png" alt="Settings" style="width: 30px;" />
-            </button>
-            <button id="homeBtn" class="hidden nav-button">
-                <img src="assets/home.png" alt="Home" style="width: 30px;" />
-            </button>
-            <div id="scoreInfo" style="margin-left: auto;"></div>
-        </header>
-        <main id="homeScreen">
-            <div id="logoBlock"><img src="assets/sarahcare-logo.png" alt="SarahCare Logo" /></div>
-            <label>Choose a Category:</label>
-            <input type="text" id="customCategory" placeholder="Or type your own and press Enter..." />
-            <div id="presetCategories"></div>
-            <label>How many questions?</label>
-            <div id="questionCountOptions"></div>
-            <label>Number of choices:</label>
-            <div id="optionToggle"></div>
-        </main>
-        <main id="gameScreen" class="hidden"></main>
-        <main id="settingsScreen" class="hidden">
-            <h2>Settings</h2>
-            <p>Settings page works!</p>
-        </main>
-    </div>
+  <div id="app">
+    <header>
+      <button id="settingsBtn" class="nav-button" onclick="location.href='settings.html'" title="Settings">⚙️</button>
+      <button id="homeBtn" class="nav-button hidden" onclick="location.reload()" title="Home">🏠</button>
+    </header>
+    <main id="homeScreen">
+      <h1><img src="images/sarahcare-logo.png" alt="SarahCare Logo" /></h1>
+      <h2>Senior Trivia</h2>
+      <label>Choose a Category:</label>
+      <input type="text" id="customCategory" placeholder="Or type your own and press Enter..."/>
+      <div id="presetCategories"></div>
+      <label>How many questions?</label>
+      <div id="questionCountOptions"></div>
+      <label>Number of choices:</label>
+      <div id="optionToggle"></div>
+    </main>
+    <main id="gameScreen" class="hidden"></main>
+    <main id="settingsScreen" class="hidden"></main>
+    <main id="loadingScreen" class="hidden"></main>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
