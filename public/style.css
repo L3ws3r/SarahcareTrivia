@@ -215,21 +215,22 @@ body.lightyellow {
 }
 
 
-/* Updated Answer Button Styling */
+/* Forced Theme Answer Button Styling */
 
 .answer-button {
-  background-color: #dc3545;
-  color: white;
-  padding: 10px 20px;
-  font-size: 18px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  width: 300px;
-  margin: 10px auto;
-  display: block;
+  background-color: #dc3545 !important;
+  color: white !important;
+  padding: 10px 20px !important;
+  font-size: 18px !important;
+  border: none !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  width: 300px !important;
+  margin: 10px auto !important;
+  display: block !important;
+  text-align: center !important;
 }
 
 .answer-button:hover {
-  opacity: 0.85;
+  opacity: 0.85 !important;
 }

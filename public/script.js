@@ -134,7 +134,7 @@ function displayQuestion(q) {
   shuffled.forEach(choice => {
     const btn = document.createElement("button");
     btn.textContent = choice;
-    btn.classList.add("answer-button");
+    btn.classList.add("answer-button", "theme-button");
     btn.onclick = () => {
       if (answered) return;
       answered = true;
