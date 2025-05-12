@@ -2,28 +2,28 @@
 
 ## Setup
 
-1. Create an `.env` file in the root:
-   ```
+1. Create a `.env` file in the root:
+   \`\`\`
    OPENAI_API_KEY=your_openai_api_key_here
-   ```
+   \`\`\`
 
 2. Install dependencies:
-   ```
+   \`\`\`
    npm install
-   ```
+   \`\`\`
 
 3. Start the server:
-   ```
+   \`\`\`
    npm start
-   ```
+   \`\`\`
 
-The server will listen on the port specified in the `PORT` environment variable (default: 3000).
+The server listens on the port defined by `PORT` (default 3000).
 
-## Endpoint
+### Endpoint
 
-- **POST /ask**
+**POST** `/ask`
 
-  Request body:
+- Request body (JSON):
   ```json
   {
     "category": "General",
@@ -31,10 +31,10 @@ The server will listen on the port specified in the `PORT` environment variable 
   }
   ```
 
-  Response:
+- Response:
   ```json
   {
-    "question": "Your generated question?",
+    "question": "Sample question?",
     "answers": ["A", "B", "C", "D"],
     "correctIndex": 2
   }
