@@ -1,32 +1,38 @@
-require("dotenv").config();
-const express = require("express");
-const axios = require("axios");
-const cors = require("cors");
+import express from 'express';
+import cors from 'cors';
+import { Configuration, OpenAIApi } from 'openai';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.post("/ask", async (req, res) => {
+const openai = new OpenAIApi(new Configuration({
+  apiKey: process.env.OPENAI_API_KEY
+}));
+
+app.post('/ask', async (req, res) => {
+  const { category, answerCount } = req.body;
   try {
-    const { prompt } = req.body;
-    const response = await axios.post(
-      "https://api.openai.com/v1/chat/completions",
-      {
-        model: "gpt-4",
-        messages: [{ role: "user", content: prompt }],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-        },
-      }
-    );
-    res.json(response.data);
-  } catch (error) {
-    console.error(error.response?.data || error.message);
-    res.status(500).json({ error: "Failed to connect to OpenAI." });
+    const promptText = `Generate one multiple-choice trivia question in JSON format with these keys: "question" (string), "answers" (array of ${answerCount} strings), and "correctIndex" (number). Category: "${category}".`;
+    const completion = await openai.createCompletion({
+      model: 'text-davinci-003',
+      prompt: promptText,
+      max_tokens: 200,
+      temperature: 0.7,
+    });
+    const text = completion.data.choices[0].text.trim();
+    const payload = JSON.parse(text);
+    res.json(payload);
+  } catch (err) {
+    console.error('Error generating trivia:', err);
+    res.status(500).json({ error: 'Failed to generate question' });
   }
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
