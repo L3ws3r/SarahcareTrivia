@@ -12,41 +12,36 @@ app.use(express.json());
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 app.post('/ask', async (req, res) => {
-  const { category, answerCount } = req.body;
-  if (!category || !answerCount) {
-    return res.status(400).json({ error: 'Missing category or answerCount' });
-  }
-
-  // Prompt now includes a funFact field
-  const prompt = `
-Generate ONE multiple-choice trivia question in JSON ONLY, with these keys:
-"question": string
-"answers": array of ${answerCount} strings
-"correctIndex": integer (0-${answerCount - 1})
-"funFact": string (a brief, interesting fact related to the question)
-
-Category: "${category}"
-Respond with pure JSON only.
-  `.trim();
-
+  const { prompt } = req.body;
+  const start = Date.now();
   try {
+    const aiStart = Date.now();
     const chatRes = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.7,
-      max_tokens: 250,
+      max_tokens: 350,
     });
-
+    const aiEnd = Date.now();
+    console.log('OpenAI API time:', (aiEnd - aiStart) + 'ms');
+    console.log('Total /ask handler time:', (Date.now() - start) + 'ms');
     let text = chatRes.choices[0].message.content.trim();
-    // Strip any leading/trailing markdown or text
-    const start = text.indexOf('{');
-    const end = text.lastIndexOf('}');
-    if (start >= 0 && end >= 0) {
-      text = text.slice(start, end + 1);
+
+    // Try to extract valid JSON (strip markdown, text, etc.)
+    const jsonStart = text.indexOf('{');
+    const jsonEnd = text.lastIndexOf('}');
+    if (jsonStart >= 0 && jsonEnd >= 0) {
+      text = text.slice(jsonStart, jsonEnd + 1);
     }
 
-    const payload = JSON.parse(text);
-    // Ensure defaults if model omits funFact
+    let payload;
+    try {
+      payload = JSON.parse(text);
+    } catch (jsonErr) {
+      console.error('AI did not return valid JSON. Full output:', text);
+      return res.status(500).json({ error: 'AI did not return valid JSON', raw: text });
+    }
+
     if (!payload.funFact) payload.funFact = 'No fun fact provided.';
     return res.json(payload);
 
