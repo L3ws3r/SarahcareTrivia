@@ -12,7 +12,20 @@ app.use(express.json());
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 app.post('/ask', async (req, res) => {
-  const { prompt } = req.body;
+  let { prompt, category, answerCount } = req.body;
+  // Fallback to legacy logic if prompt missing
+  if (!prompt) {
+    prompt = `
+      Generate ONE multiple-choice trivia question in JSON ONLY, with these keys:
+      "question": string
+      "answers": array of ${answerCount || 4} strings
+      "correctIndex": integer (0-${(answerCount || 4) - 1})
+      "funFact": string (a brief, interesting fact related to the question)
+
+      Category: "${category || 'General Knowledge'}"
+      Respond with pure JSON only.
+    `.trim();
+  }
   const start = Date.now();
   try {
     const aiStart = Date.now();
@@ -27,7 +40,7 @@ app.post('/ask', async (req, res) => {
     console.log('Total /ask handler time:', (Date.now() - start) + 'ms');
     let text = chatRes.choices[0].message.content.trim();
 
-    // Try to extract valid JSON (strip markdown, text, etc.)
+    // Extract valid JSON from the AI response
     const jsonStart = text.indexOf('{');
     const jsonEnd = text.lastIndexOf('}');
     if (jsonStart >= 0 && jsonEnd >= 0) {
