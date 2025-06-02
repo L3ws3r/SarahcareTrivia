@@ -14,19 +14,27 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // New: POST /trivia-question for frontend
 app.post('/trivia-question', async (req, res) => {
-  let { category, seen, model } = req.body;
+  let { category, seen, style = "fun", model } = req.body;
   const answerCount = 4;
-  const systemPrompt = `
-    Generate ONE multiple-choice trivia question in JSON ONLY, with these keys:
-    "question": string
-    "choices": array of ${answerCount} strings
-    "correct": string (the exact correct answer from the choices)
-    "funFact": string (a brief, interesting fact related to the question)
+  const adjectiveMap = {
+      fun: 'casual, humorous',
+      popular: 'well-known, crowd-pleasing',
+      challenging: 'harder, less obvious',
+      obscure: 'very little-known',
+      lighthearted: 'playful'
+    };
+    const adjective = adjectiveMap[style] || adjectiveMap['fun'];
+    const systemPrompt = `
+      Generate ONE ${adjective} multiple-choice trivia question in JSON ONLY, with these keys:
+      "question": string
+      "choices": array of 4 strings
+      "correct": string (the exact correct answer from the choices)
+      "funFact": string (a brief, interesting fact related to the question)
 
-    Category: "${category || 'General Knowledge'}"
-    Avoid duplicates from this list: ${seen && seen.length ? JSON.stringify(seen).slice(0, 400) : '[]'}
-    Respond with pure JSON only.
-  `.trim();
+      Category: "${category || 'General Knowledge'}"
+      Avoid duplicates from this list: ${seen && seen.length ? JSON.stringify(seen).slice(0, 400) : '[]'}
+      Respond with pure JSON only.
+    `.trim();
   try {
     const chatRes = await openai.chat.completions.create({
       model: model || 'gpt-3.5-turbo',
