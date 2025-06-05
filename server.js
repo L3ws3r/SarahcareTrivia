@@ -1,8 +1,9 @@
-
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import OpenAI from 'openai';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 
 dotenv.config();
 
@@ -12,108 +13,134 @@ app.use(express.json());
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+/**
+ * Utility — basic "answer leakage" detector.
+ * Returns true if the correct answer appears verbatim in the question
+ * OR if the majority of answer tokens (>60%) appear in the question stem.
+ */
+function leaksAnswer(question = '', answer = '') {
+  const q = question.toLowerCase();
+  const a = answer.toLowerCase().trim();
+  if (!q || !a) return false;
+  if (q.includes(a)) return true;
+  const tokens = a.split(/\s+/).filter(t => t.length > 2);
+  const hits = tokens.filter(t => q.includes(t)).length;
+  return tokens.length > 0 && hits / tokens.length > 0.6;
+}
+
+/**
+ * Utility — naive duplicate detector against a list of previous question texts.
+ * Declares duplicate if Jaccard similarity over tokens exceeds 0.6.
+ */
+function isDuplicate(question = '', seen = []) {
+  if (!question || !seen.length) return false;
+  const tokenize = str => new Set(str.toLowerCase().split(/\s+/).filter(t => t));
+  const A = tokenize(question);
+  for (const prev of seen) {
+    const B = tokenize(prev);
+    const inter = [...A].filter(x => B.has(x)).length;
+    const jaccard = inter / (A.size + B.size - inter);
+    if (jaccard > 0.6) return true;
+  }
+  return false;
+}
+
 // New: POST /trivia-question for frontend
 app.post('/trivia-question', async (req, res) => {
-  let { category, seen, style = "fun", model } = req.body;
+  let { category, style = 'fun', seen = [], model = 'gpt-3.5-turbo' } = req.body || {};
   const answerCount = 4;
   const adjectiveMap = {
-      fun: 'casual, humorous',
-      popular: 'well-known, crowd-pleasing',
-      challenging: 'harder, less obvious',
-      obscure: 'very little-known',
-      lighthearted: 'playful'
-    };
-    const adjective = adjectiveMap[style] || adjectiveMap['fun'];
-    const systemPrompt = `
-      Generate ONE ${adjective} multiple-choice trivia question in JSON ONLY, with these keys:
-      "question": string
-      "choices": array of 4 strings
-      "correct": string (the exact correct answer from the choices)
-      "funFact": string (a brief, interesting fact related to the question)
+    fun: 'casual, humorous',
+    popular: 'well‑known, crowd‑pleasing',
+    hard: 'challenging, less obvious',
+    obscure: 'very little‑known',
+    lighthearted: 'playful'
+  };
+  const adjective = adjectiveMap[style] || adjectiveMap['fun'];
 
-      Category: "${category || 'General Knowledge'}"
-      Avoid duplicates from this list: ${seen && seen.length ? JSON.stringify(seen).slice(0, 400) : '[]'}
-      Respond with pure JSON only.
-    `.trim();
-  try {
-    const chatRes = await openai.chat.completions.create({
-      model: model || 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: systemPrompt }],
-      temperature: 0.7,
-      max_tokens: 350,
-    });
-    let text = chatRes.choices[0].message.content.trim();
-    // Extract valid JSON from the AI response
-    const jsonStart = text.indexOf('{');
-    const jsonEnd = text.lastIndexOf('}');
-    if (jsonStart >= 0 && jsonEnd >= 0) {
-      text = text.slice(jsonStart, jsonEnd + 1);
-    }
-    let payload;
+  /**
+   * PROMPT with anti‑leak and anti‑duplicate rules.
+   * We send the full *question text* history so GPT can avoid overlaps semantically.
+   */
+  const basePrompt = ({ dupList }) => `
+You are generating ONE ${adjective} multiple‑choice trivia question.
+Return *only* valid JSON with keys:
+  "question": string
+  "choices": string[${answerCount}]
+  "correct": string  (must match one of the choices exactly)
+  "funFact": string  (brief extra fact)
+
+RULES (STRICT):
+1. Do **NOT** include the correct answer verbatim inside the question text.
+2. If your draft violates Rule 1, regenerate internally *before* answering.
+3. Avoid any topic already covered by the following previous questions:
+   ${dupList}
+4. Do NOT output anything except the JSON object.
+
+Category: "${category || 'General Knowledge'}"
+`.trim();
+
+  const maxAttempts = 6;
+  let attempts = 0;
+  let lastError = null;
+
+  while (attempts < maxAttempts) {
+    const prompt = basePrompt({ dupList: JSON.stringify(seen).slice(0, 800) });
     try {
-      payload = JSON.parse(text);
-    } catch (jsonErr) {
-      return res.status(500).json({ error: 'AI did not return valid JSON', raw: text });
-    }
-    // Provide fallback defaults for required keys
-    if (!payload.choices && payload.answers) payload.choices = payload.answers;
-    if (!payload.correct && typeof payload.correctIndex === 'number' && Array.isArray(payload.choices))
-      payload.correct = payload.choices[payload.correctIndex];
-    if (!payload.funFact) payload.funFact = 'No fun fact provided.';
-    if (!payload.question || !payload.choices || !payload.correct)
-      return res.status(500).json({ error: 'AI output missing required fields', raw: payload });
-    return res.json({
-      question: payload.question,
-      choices: payload.choices,
-      correct: payload.correct,
-      funFact: payload.funFact
-    });
-  } catch (err) {
-    return res.status(500).json({ error: err.message });
-  }
-});
+      const chatRes = await openai.chat.completions.create({
+        model,
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.7,
+        max_tokens: 350
+      });
 
-// Legacy route /ask for manual queries
-app.post('/ask', async (req, res) => {
-  let { prompt, category, answerCount } = req.body;
-  // Fallback to legacy logic if prompt missing
-  if (!prompt) {
-    prompt = `
-      Generate ONE multiple-choice trivia question in JSON ONLY, with these keys:
-      "question": string
-      "answers": array of ${answerCount || 4} strings
-      "correctIndex": integer (0-${(answerCount || 4) - 1})
-      "funFact": string (a brief, interesting fact related to the question)
+      let text = chatRes.choices[0].message.content.trim();
+      // Extract JSON
+      const jsonStart = text.indexOf('{');
+      const jsonEnd = text.lastIndexOf('}');
+      if (jsonStart >= 0 && jsonEnd >= 0) {
+        text = text.slice(jsonStart, jsonEnd + 1);
+      }
+      const payload = JSON.parse(text);
 
-      Category: "${category || 'General Knowledge'}"
-      Respond with pure JSON only.
-    `.trim();
-  }
-  try {
-    const chatRes = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.7,
-      max_tokens: 350,
-    });
-    let text = chatRes.choices[0].message.content.trim();
-    // Extract valid JSON from the AI response
-    const jsonStart = text.indexOf('{');
-    const jsonEnd = text.lastIndexOf('}');
-    if (jsonStart >= 0 && jsonEnd >= 0) {
-      text = text.slice(jsonStart, jsonEnd + 1);
+      // Fallback: map legacy keys
+      if (!payload.choices && payload.answers) payload.choices = payload.answers;
+      if (!payload.correct && typeof payload.correctIndex === 'number') {
+        payload.correct = payload.choices?.[payload.correctIndex];
+      }
+      if (!payload.funFact) payload.funFact = 'No fun fact provided.';
+
+      // Validation
+      if (!payload.question || !payload.choices || !payload.correct) {
+        lastError = 'AI output missing required fields';
+        attempts++;
+        continue;
+      }
+
+      // Anti‑leak check
+      if (leaksAnswer(payload.question, payload.correct)) {
+        lastError = 'Answer leaked in question, retrying…';
+        attempts++;
+        continue;
+      }
+      // Duplicate check
+      if (isDuplicate(payload.question, seen)) {
+        lastError = 'Duplicate question, retrying…';
+        attempts++;
+        continue;
+      }
+
+      // Success — return to client
+      return res.json(payload);
+
+    } catch (err) {
+      lastError = err.message;
+      attempts++;
     }
-    let payload;
-    try {
-      payload = JSON.parse(text);
-    } catch (jsonErr) {
-      return res.status(500).json({ error: 'AI did not return valid JSON', raw: text });
-    }
-    if (!payload.funFact) payload.funFact = 'No fun fact provided.';
-    return res.json(payload);
-  } catch (err) {
-    return res.status(500).json({ error: err.message });
   }
+
+  // If we get here, all attempts failed
+  return res.status(500).json({ error: `Failed after ${maxAttempts} attempts: ${lastError}` });
 });
 
 const PORT = process.env.PORT || 3000;
