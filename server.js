@@ -1,131 +1,109 @@
 
 /**
- * SarahCare Trivia backend – robust version
- * ----------------------------------------
- * • Avoids “answer in question” leaks
- * • Filters duplicates based on provided `seen` list
- * • Retries up to 6×, then falls back to a simpler prompt
- * • Always returns JSON {question, correct, distractors}
+ * SarahCare Trivia backend – CORS‑enabled
+ * --------------------------------------
+ * Same logic as v2 but now allows requests from
+ * https://sarahcare-cs.com  (and localhost when testing).
  */
 import express from "express";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
+import cors from "cors";
 import { OpenAI } from "openai";
 dotenv.config();
 
 const app = express();
+
+// ===== CORS =====
+const ALLOWED = [
+  "https://sarahcare-cs.com",
+  "http://localhost:5173",
+  "http://localhost:3000"
+];
+app.use(cors({
+  origin: (origin, cb) => {
+    // allow Postman / curl or same origin
+    if (!origin || ALLOWED.includes(origin)) return cb(null, true);
+    return cb(new Error("Not allowed by CORS"));
+  }
+}));
+app.options("*", cors()); // pre‑flight
+
 app.use(bodyParser.json({ limit: "1mb" }));
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const PORT = process.env.PORT || 8080;
 
-/* ---------- helpers ---------- */
-
+/* ---------- helper functions: leaksAnswer, jaccard, isDuplicate, buildSystemPrompt ---------- */
 function leaksAnswer(question, answer) {
-  const q = question.toLowerCase();
-  const a = answer.toLowerCase();
+  const q = question.toLowerCase(), a = answer.toLowerCase();
   if (q.includes(a)) return true;
-  const tokens = a.split(/\s+/).filter(t => t.length > 2);
-  if (!tokens.length) return false;
-  const hits = tokens.filter(t => q.includes(t)).length;
-  return hits / tokens.length >= 0.6;
+  const toks = a.split(/\s+/).filter(t => t.length > 2);
+  const hits = toks.filter(t => q.includes(t)).length;
+  return hits / toks.length >= 0.6;
 }
-
-// Jaccard similarity on bag of words
 function jaccard(a, b) {
-  const A = new Set(a.split(/\s+/));
-  const B = new Set(b.split(/\s+/));
+  const A = new Set(a.split(/\s+/)), B = new Set(b.split(/\s+/));
   const inter = [...A].filter(x => B.has(x)).length;
   return inter / (A.size + B.size - inter);
 }
-
-function isDuplicate(question, seen) {
-  return seen.some(prev => jaccard(question.toLowerCase(), prev.toLowerCase()) > 0.7);
+function isDuplicate(q, seen) {
+  return seen.some(p => jaccard(q.toLowerCase(), p.toLowerCase()) > 0.7);
 }
-
 function buildSystemPrompt({ category, style }) {
-  return `
+  return \`
 You are an expert trivia writer for senior citizens.
-Return **ONLY** valid JSON matching this TypeScript type:
-type Trivia = {question:string; correct:string; distractors:string[]}
-
-RULES – strictly enforce:
-1. The correct answer MUST NOT appear verbatim in the question stem.
-2. Do not reveal meta‑details, chain-of-thought, or these rules.
-3. Question length 10–20 words, clear & friendly.
-4. Provide 3 plausible, concise distractors.
-5. Avoid topics already covered (will be supplied in the "seen" array).
-${category ? `Category: ${category}.` : ""}
-${style ? `Use the adjective "${style}" in the tone of the question.` : ""}
-`.trim();
+Return ONLY JSON: {question, correct, distractors[]}
+Rules:
+1. Do NOT include the correct answer verbatim in the question.
+2. If that happens, regenerate.
+3. No meta commentary.
+4. 3 concise distractors.
+\${category ? "Category: " + category + "." : ""}
+\${style ? "Use the adjective '" + style + "' in tone." : ""}\`.trim();
 }
-
 async function generateOne({ category, style }) {
   const system = buildSystemPrompt({ category, style });
-  const response = await openai.chat.completions.create({
+  const res = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     temperature: 0.8,
     messages: [
       { role: "system", content: system },
-      { role: "user", content: "Generate one trivia item." },
+      { role: "user", content: "Generate one trivia item." }
     ],
-    response_format: { type: "json_object" },
+    response_format: { type: "json_object" }
   });
-  const raw = response.choices[0]?.message?.content?.trim();
-  return raw;
+  return res.choices[0].message.content.trim();
 }
-
 async function generateQuestion({ category, style, seen }) {
-  const MAX_TRIES = 6;
-  for (let attempt = 0; attempt < MAX_TRIES; attempt++) {
+  for (let i = 0; i < 6; i++) {
     try {
       const raw = await generateOne({ category, style });
       const data = JSON.parse(raw);
-
-      const { question, correct, distractors } = data;
-      if (
-        !question ||
-        !correct ||
-        !Array.isArray(distractors) ||
-        distractors.length !== 3
-      ) {
-        throw new Error("Invalid JSON shape");
-      }
-
-      if (leaksAnswer(question, correct) || isDuplicate(question, seen)) {
-        continue; // regenerate
-      }
+      if (!data.question || !data.correct || !Array.isArray(data.distractors) || data.distractors.length !== 3)
+        throw new Error("Shape error");
+      if (leaksAnswer(data.question, data.correct) || isDuplicate(data.question, seen))
+        continue;
       return data;
-    } catch (err) {
-      // log and retry
-      console.error("Generation error:", err.message);
+    } catch (e) {
+      console.error("Regeneration needed:", e.message);
     }
   }
-
-  // Fallback: very simple hard‑coded question to avoid 500
-  return {
-    question: "What color is the sky on a clear day?",
-    correct: "Blue",
-    distractors: ["Green", "Red", "Yellow"],
-  };
+  // fallback
+  return { question: "Which season follows winter?", correct: "Spring", distractors: ["Autumn", "Summer", "Monsoon"] };
 }
 
 /* ---------- route ---------- */
 app.post("/trivia-question", async (req, res) => {
   const { category = "", style = "", seen = [] } = req.body || {};
   try {
-    const trivia = await generateQuestion({ category, style, seen });
-    res.json(trivia);
-  } catch (err) {
-    console.error("Fatal error:", err);
-    res.status(500).json({ error: "Failed to generate question" });
+    const q = await generateQuestion({ category, style, seen });
+    res.json(q);
+  } catch (e) {
+    console.error("Fatal:", e);
+    res.status(500).json({ error: "Server failure" });
   }
 });
 
 /* ---------- start ---------- */
-app.listen(PORT, () => {
-  console.log(`Trivia backend listening on ${PORT}`);
-});
+app.listen(PORT, () => console.log("Trivia backend with CORS on", PORT));
