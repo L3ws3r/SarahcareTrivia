@@ -1,10 +1,10 @@
-/* server.js — hot‑fix: robust duplicate logic & crash‑proof */
+
+/* server.js — Add funFact to response */
 import OpenAI from 'openai';
 import express from 'express';
 import cors from 'cors';
 import { tokenize, leaksAnswer, shuffle } from './utils.js';
 
-/* local jaccard + duplicate helper — independent of utils implementation */
 function jaccard(a, b) {
   const A = new Set(tokenize(a));
   const B = new Set(tokenize(b));
@@ -34,21 +34,26 @@ const MAX_TRIES = 6;
 app.post('/trivia-question', async (req, res) => {
   const { category = 'General', style = 'fun', seen = [], seenAnswers = [] } = req.body || {};
 
-  const systemPrompt = `You are a trivia generator for seniors. 
+  const systemPrompt = `You are a trivia generator for seniors.
 Do NOT reuse any of these answers: ${seenAnswers.join(', ')}.
 Avoid repeating these question texts:
 ${seen.join('\n')}
-Return JSON {question, correct, distractors}. Avoid leaking the answer in the question.`;
+Return a JSON object with four keys: 
+- "question": the trivia question
+- "correct": the correct answer string
+- "distractors": an array of three wrong answer strings
+- "funFact": a short fun fact related to the question topic.
+
+Make sure "funFact" is a standalone sentence and does not contain spoilers of the answer.`;
 
   for (let i = 0; i < MAX_TRIES; i++) {
     let data;
-
     try {
       const chat = await openai.chat.completions.create({
         model: 'gpt-4o',
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Provide one ${style} ${category} trivia question with 3 distractors.` }
+          { role: 'user', content: `Provide one ${style} ${category} trivia question for seniors with 3 distractors and a fun fact.` }
         ],
         response_format: { type: 'json_object' }
       });
@@ -66,11 +71,12 @@ Return JSON {question, correct, distractors}. Avoid leaking the answer in the qu
     return res.json(data);
   }
 
-  // graceful fallback so we never 502
+  // fallback with basic funFact
   const fallback = {
     question: 'Which planet is known as the Red Planet?',
     correct: 'Mars',
-    distractors: ['Venus', 'Jupiter', 'Mercury']
+    distractors: ['Venus', 'Jupiter', 'Mercury'],
+    funFact: 'Mars is home to the tallest mountain in the solar system, Olympus Mons.'
   };
   fallback.answers = shuffle([fallback.correct, ...fallback.distractors]);
   res.json(fallback);
