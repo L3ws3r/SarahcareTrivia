@@ -4,7 +4,6 @@ import OpenAI from 'openai';
 import express from 'express';
 import cors from 'cors';
 import { tokenize, leaksAnswer, shuffle } from './utils.js';
-const USE_DEMO = process.env.USE_DEMO === 'true';
 
 
 function jaccard(a, b) {
@@ -35,17 +34,6 @@ const MAX_TRIES = 6;
 
 app.post('/trivia-question', async (req, res) => {
   // Quick static response for local testing
-  if (USE_DEMO) {
-    const demo = {
-      question: "Which band released 'Bohemian Rhapsody' in 1975?",
-      correct: "Queen",
-      distractors: ['Led Zeppelin', 'Pink Floyd', 'The Beatles'],
-      funFact: "'Bohemian Rhapsody' spent nine weeks at #1 on the UK Singles Chart.",
-      imageUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=60'
-    };
-    demo.answers = shuffle([demo.correct, ...demo.distractors]);
-    return res.json(demo);
-  }
   
   
   const { category = 'General', style = 'fun', seen = [], seenAnswers = [] } = req.body || {};
